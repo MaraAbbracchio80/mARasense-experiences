@@ -161,6 +161,7 @@
           width="1.02"
           height="1.42"
           material="shader: flat; transparent: true; opacity: 1"
+          visible="false"
         ></a-plane>
       </a-entity>
     </a-entity>
@@ -174,10 +175,12 @@
     const sceneEl = document.getElementById("arScene");
     const target0 = document.getElementById("target0");
     const smoothWrapper = document.getElementById("smoothWrapper");
+    const videoPlane = document.getElementById("videoPlane");
     const video = document.getElementById("paintingVideo");
 
     let targetVisible = false;
     let smoothingInitialized = false;
+    let videoFinished = false;
 
     const smoothed = {
       position: new THREE.Vector3(),
@@ -197,6 +200,16 @@
 
     function hideHint() {
       scanText.style.display = "none";
+    }
+
+    function showVideoPlane() {
+      videoPlane.setAttribute("visible", true);
+      videoPlane.object3D.visible = true;
+    }
+
+    function hideVideoPlane() {
+      videoPlane.setAttribute("visible", false);
+      videoPlane.object3D.visible = false;
     }
 
     async function playFromStart() {
@@ -241,6 +254,7 @@
           await mindarSystem.start();
           startScreen.style.display = "none";
           showHint();
+          hideVideoPlane();
           setDebug("AR avviata. Ricerca target...");
         } catch (err) {
           console.error(err);
@@ -268,8 +282,14 @@
     target0.addEventListener("targetFound", async () => {
       targetVisible = true;
       hideHint();
-      setDebug("target trovato");
       initializeSmoothing();
+
+      if (videoFinished) {
+        videoFinished = false;
+      }
+
+      showVideoPlane();
+      setDebug("target trovato");
       await playFromStart();
     });
 
@@ -278,6 +298,7 @@
       smoothingInitialized = false;
       video.pause();
       video.currentTime = 0;
+      hideVideoPlane();
       showHint("Target perso. Riinquadra il quadro.");
       setDebug("target perso");
     });
@@ -285,8 +306,11 @@
     video.addEventListener("ended", () => {
       video.pause();
       video.currentTime = 0;
+      videoFinished = true;
+      hideVideoPlane();
+
       if (targetVisible) {
-        showHint("Video finito. Sposta e riinquadra il quadro per farlo ripartire.");
+        showHint("Video finito. Esci e rientra sul quadro per farlo ripartire.");
         setDebug("video terminato");
       }
     });
