@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Living Painting - Video AR</title>
+  <title>Living Painting - Overlay Test</title>
 
   <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
@@ -32,19 +32,6 @@
       padding: 24px;
     }
 
-    #startScreen h1 {
-      margin: 0 0 12px 0;
-      font-size: 24px;
-    }
-
-    #startScreen p {
-      margin: 0 0 20px 0;
-      font-size: 15px;
-      max-width: 340px;
-      line-height: 1.5;
-      color: #ddd;
-    }
-
     #startButton {
       background: #8A2BE2;
       color: #fff;
@@ -53,6 +40,7 @@
       padding: 14px 22px;
       font-size: 16px;
       cursor: pointer;
+      margin-top: 14px;
     }
 
     #debugBox {
@@ -72,15 +60,25 @@
     }
 
     a-scene {
-      width: 100vw;
-      height: 100vh;
+      position: fixed !important;
+      inset: 0;
+      width: 100vw !important;
+      height: 100vh !important;
+    }
+
+    video, canvas {
+      position: fixed !important;
+      inset: 0;
+      width: 100vw !important;
+      height: 100vh !important;
+      object-fit: cover !important;
     }
   </style>
 </head>
 <body>
   <div id="startScreen">
     <h1>Living Painting</h1>
-    <p>Premi Avvia esperienza e inquadra il quadro. Quando il target viene trovato, il video comparirà sopra l'opera.</p>
+    <p>Premi Avvia esperienza e inquadra il quadro. Se tutto è corretto, vedrai un pannello viola sopra il dipinto.</p>
     <button id="startButton">Avvia esperienza</button>
   </div>
 
@@ -88,38 +86,32 @@
 
   <a-scene
     id="arScene"
-    embedded
     vr-mode-ui="enabled: false"
     device-orientation-permission-ui="enabled: false"
     loading-screen="enabled: false"
-    renderer="colorManagement: true, physicallyCorrectLights"
+    renderer="colorManagement: true; physicallyCorrectLights: true; alpha: true"
     color-space="sRGB"
     mindar-image="imageTargetSrc: ./targets.mind; uiLoading: yes; uiScanning: yes; uiError: yes; autoStart: false;"
   >
-    <a-assets>
-      <video
-        id="paintingVideo"
-        src="https://www.w3schools.com/html/mov_bbb.mp4"
-        preload="auto"
-        loop
-        muted
-        playsinline
-        webkit-playsinline
-        crossorigin="anonymous"
-      ></video>
-    </a-assets>
-
     <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
     <a-entity id="target0" mindar-image-target="targetIndex: 0">
       <a-plane
-        id="videoPlane"
-        src="#paintingVideo"
+        id="panel"
+        color="#8A2BE2"
+        opacity="0.9"
         position="0 0 0"
         width="1"
         height="1.35"
-        material="shader: flat; transparent: true; opacity: 1"
       ></a-plane>
+
+      <a-text
+        value="Living Painting"
+        color="#ffffff"
+        align="center"
+        width="2"
+        position="0 0 0.01"
+      ></a-text>
     </a-entity>
   </a-scene>
 
@@ -129,7 +121,6 @@
     const debugBox = document.getElementById("debugBox");
     const sceneEl = document.getElementById("arScene");
     const target0 = document.getElementById("target0");
-    const video = document.getElementById("paintingVideo");
 
     function setDebug(text) {
       debugBox.textContent = "Stato: " + text;
@@ -156,7 +147,6 @@
         } catch (err) {
           console.error(err);
           setDebug("errore avvio AR");
-          alert("Errore nell'avvio AR. Riprova.");
           startButton.disabled = false;
           startButton.textContent = "Riprova";
         }
@@ -177,19 +167,12 @@
       setDebug("errore MindAR");
     });
 
-    target0.addEventListener("targetFound", async () => {
+    target0.addEventListener("targetFound", () => {
       setDebug("target trovato");
-      try {
-        video.currentTime = 0;
-        await video.play();
-      } catch (e) {
-        console.warn("Play video bloccato:", e);
-      }
     });
 
     target0.addEventListener("targetLost", () => {
       setDebug("target perso");
-      video.pause();
     });
   </script>
 </body>
