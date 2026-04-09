@@ -2,25 +2,309 @@
 <html lang="it">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Food Explosion</title>
-  <link rel="stylesheet" href="../../shared/css/style.css" />
-</head>
-<body class="demo-page">
-  <div class="demo-shell">
-    <div class="demo-topbar">
-      <h1>Food Explosion</h1>
-      <a href="../../index.html">Torna alla home</a>
-    </div>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Food Explosion - mARasense</title>
 
-    <section class="demo-panel">
-      <p>
-        Demo 2: esperienza WebAR per piatti, menu o card con ingredienti in 3D.
-      </p>
-      <div class="placeholder">
-        Qui collegheremo MindAR + Three.js e il target del piatto.
-      </div>
-    </section>
+  <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+
+  <style>
+    html, body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #000;
+      font-family: Arial, sans-serif;
+    }
+
+    #startScreen {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at center, #1a120d 0%, #000 78%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 10000;
+      color: #fff;
+      text-align: center;
+      padding: 24px;
+    }
+
+    #startScreen h1 {
+      margin: 0 0 12px 0;
+      font-size: 28px;
+    }
+
+    #startScreen p {
+      margin: 0 0 20px 0;
+      font-size: 15px;
+      max-width: 340px;
+      line-height: 1.5;
+      color: #ddd;
+    }
+
+    #startButton {
+      background: #ff7a00;
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      padding: 14px 22px;
+      font-size: 16px;
+      cursor: pointer;
+      box-shadow: 0 0 24px rgba(255, 122, 0, 0.28);
+    }
+
+    #debugBox {
+      position: fixed;
+      top: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 9999;
+      background: rgba(0,0,0,0.68);
+      color: #fff;
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 14px;
+      text-align: center;
+      max-width: 92vw;
+      line-height: 1.4;
+      backdrop-filter: blur(4px);
+    }
+
+    #scanText {
+      position: fixed;
+      left: 50%;
+      bottom: 36px;
+      transform: translateX(-50%);
+      z-index: 9998;
+      color: #fff;
+      font-size: 14px;
+      background: rgba(0,0,0,0.60);
+      padding: 10px 14px;
+      border-radius: 10px;
+      white-space: nowrap;
+      backdrop-filter: blur(4px);
+      display: none;
+    }
+
+    a-scene {
+      position: fixed !important;
+      inset: 0;
+      width: 100vw !important;
+      height: 100vh !important;
+      z-index: 10;
+    }
+
+    video {
+      position: fixed !important;
+      inset: 0;
+      width: 100vw !important;
+      height: 100vh !important;
+      object-fit: cover !important;
+      z-index: 1 !important;
+      background: transparent !important;
+    }
+
+    canvas {
+      position: fixed !important;
+      inset: 0;
+      width: 100vw !important;
+      height: 100vh !important;
+      object-fit: cover !important;
+      z-index: 2 !important;
+      background: transparent !important;
+    }
+  </style>
+</head>
+<body>
+  <div id="startScreen">
+    <h1>Food Explosion</h1>
+    <p>Premi Avvia esperienza e inquadra il piatto. Gli ingredienti compariranno sopra l'immagine.</p>
+    <button id="startButton">Avvia esperienza</button>
   </div>
+
+  <div id="debugBox">Stato: attesa avvio</div>
+  <div id="scanText">Inquadra bene il piatto</div>
+
+  <a-scene
+    id="arScene"
+    vr-mode-ui="enabled: false"
+    device-orientation-permission-ui="enabled: false"
+    loading-screen="enabled: false"
+    renderer="colorManagement: true; physicallyCorrectLights: true; alpha: true"
+    color-space="sRGB"
+    mindar-image="imageTargetSrc: ./targets.mind; uiLoading: no; uiScanning: no; uiError: no; autoStart: false;"
+  >
+    <a-assets>
+      <img id="ingredient1" src="./assets/images/ingredient1.png" />
+      <img id="ingredient2" src="./assets/images/ingredient2.png" />
+      <img id="ingredient3" src="./assets/images/ingredient3.png" />
+    </a-assets>
+
+    <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+
+    <a-entity id="target0" mindar-image-target="targetIndex: 0">
+
+      <a-plane
+        id="ing1"
+        src="#ingredient1"
+        position="-0.55 0.35 0"
+        width="0.38"
+        height="0.38"
+        material="shader: flat; transparent: true; opacity: 0"
+        animation="property: position; from: 0 0 0; to: -0.55 0.35 0; dur: 900; startEvents: explode"
+        animation__fade="property: material.opacity; from: 0; to: 1; dur: 600; startEvents: explode"
+      ></a-plane>
+
+      <a-plane
+        id="ing2"
+        src="#ingredient2"
+        position="0.55 0.28 0"
+        width="0.34"
+        height="0.34"
+        material="shader: flat; transparent: true; opacity: 0"
+        animation="property: position; from: 0 0 0; to: 0.55 0.28 0; dur: 950; startEvents: explode"
+        animation__fade="property: material.opacity; from: 0; to: 1; dur: 650; startEvents: explode"
+      ></a-plane>
+
+      <a-plane
+        id="ing3"
+        src="#ingredient3"
+        position="0 -0.48 0"
+        width="0.42"
+        height="0.42"
+        material="shader: flat; transparent: true; opacity: 0"
+        animation="property: position; from: 0 0 0; to: 0 -0.48 0; dur: 1000; startEvents: explode"
+        animation__fade="property: material.opacity; from: 0; to: 1; dur: 700; startEvents: explode"
+      ></a-plane>
+
+      <a-text
+        id="foodTitle"
+        value="Ingredienti"
+        color="#ffffff"
+        align="center"
+        width="2.2"
+        position="0 0.72 0"
+        visible="false"
+      ></a-text>
+
+    </a-entity>
+  </a-scene>
+
+  <script>
+    const startScreen = document.getElementById("startScreen");
+    const startButton = document.getElementById("startButton");
+    const debugBox = document.getElementById("debugBox");
+    const scanText = document.getElementById("scanText");
+    const sceneEl = document.getElementById("arScene");
+    const target0 = document.getElementById("target0");
+    const ing1 = document.getElementById("ing1");
+    const ing2 = document.getElementById("ing2");
+    const ing3 = document.getElementById("ing3");
+    const foodTitle = document.getElementById("foodTitle");
+
+    let targetVisible = false;
+    let exploded = false;
+
+    function setDebug(text) {
+      debugBox.textContent = "Stato: " + text;
+      console.log(text);
+    }
+
+    function showHint(text = "Inquadra bene il piatto") {
+      scanText.textContent = text;
+      scanText.style.display = "block";
+    }
+
+    function hideHint() {
+      scanText.style.display = "none";
+    }
+
+    function resetIngredients() {
+      ing1.setAttribute("position", "0 0 0");
+      ing2.setAttribute("position", "0 0 0");
+      ing3.setAttribute("position", "0 0 0");
+
+      ing1.setAttribute("material", "shader: flat; transparent: true; opacity: 0");
+      ing2.setAttribute("material", "shader: flat; transparent: true; opacity: 0");
+      ing3.setAttribute("material", "shader: flat; transparent: true; opacity: 0");
+
+      foodTitle.setAttribute("visible", false);
+      exploded = false;
+    }
+
+    function explodeIngredients() {
+      if (exploded) return;
+
+      ing1.emit("explode");
+      ing2.emit("explode");
+      ing3.emit("explode");
+      foodTitle.setAttribute("visible", true);
+      exploded = true;
+    }
+
+    startButton.addEventListener("click", async () => {
+      startButton.disabled = true;
+      startButton.textContent = "Avvio...";
+
+      const startAR = async () => {
+        const mindarSystem = sceneEl.systems["mindar-image-system"];
+        if (!mindarSystem) {
+          setDebug("mindar-image-system non trovato");
+          startButton.disabled = false;
+          startButton.textContent = "Riprova";
+          return;
+        }
+
+        try {
+          await mindarSystem.start();
+          startScreen.style.display = "none";
+          showHint();
+          setDebug("AR avviata. Ricerca target...");
+        } catch (err) {
+          console.error(err);
+          setDebug("errore avvio AR");
+          startButton.disabled = false;
+          startButton.textContent = "Riprova";
+        }
+      };
+
+      if (sceneEl.hasLoaded) {
+        startAR();
+      } else {
+        sceneEl.addEventListener("loaded", startAR, { once: true });
+      }
+    });
+
+    sceneEl.addEventListener("arReady", () => {
+      setDebug("MindAR pronto");
+    });
+
+    sceneEl.addEventListener("arError", () => {
+      setDebug("errore MindAR");
+    });
+
+    target0.addEventListener("targetFound", () => {
+      targetVisible = true;
+      hideHint();
+      setDebug("target trovato");
+      explodeIngredients();
+    });
+
+    target0.addEventListener("targetLost", () => {
+      targetVisible = false;
+      resetIngredients();
+      showHint("Target perso. Riinquadra il piatto.");
+      setDebug("target perso");
+    });
+
+    setInterval(() => {
+      if (!targetVisible && startScreen.style.display === "none") {
+        showHint();
+      }
+    }, 800);
+  </script>
 </body>
 </html>
