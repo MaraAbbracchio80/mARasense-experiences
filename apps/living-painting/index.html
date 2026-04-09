@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Living Painting - Test Tracking</title>
+  <title>Living Painting - Debug Tracking</title>
 
   <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
@@ -26,23 +26,10 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      z-index: 99999;
+      z-index: 10000;
       color: #fff;
       text-align: center;
       padding: 24px;
-    }
-
-    #startScreen h1 {
-      margin: 0 0 12px 0;
-      font-size: 24px;
-    }
-
-    #startScreen p {
-      margin: 0 0 20px 0;
-      font-size: 15px;
-      max-width: 320px;
-      line-height: 1.5;
-      color: #ddd;
     }
 
     #startButton {
@@ -53,22 +40,41 @@
       padding: 14px 22px;
       font-size: 16px;
       cursor: pointer;
+      margin-top: 14px;
     }
 
-    #hint {
+    #debugBox {
       position: fixed;
       top: 14px;
       left: 50%;
       transform: translateX(-50%);
       z-index: 9999;
-      background: rgba(0, 0, 0, 0.72);
+      background: rgba(0,0,0,0.78);
       color: #fff;
       padding: 10px 14px;
       border-radius: 10px;
       font-size: 14px;
       text-align: center;
-      max-width: 90vw;
+      max-width: 92vw;
+      line-height: 1.4;
+    }
+
+    #cameraTest {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover;
+      background: #000;
       display: none;
+      z-index: 1;
+    }
+
+    #arWrap {
+      position: fixed;
+      inset: 0;
+      display: none;
+      z-index: 2;
     }
 
     a-scene {
@@ -80,71 +86,144 @@
 <body>
   <div id="startScreen">
     <h1>Living Painting</h1>
-    <p>Premi il pulsante e inquadra l'immagine target. Se il tracking funziona, comparirà il riquadro viola.</p>
+    <p>Premi Avvia esperienza. Poi inquadra il target da un altro schermo o da una stampa.</p>
     <button id="startButton">Avvia esperienza</button>
   </div>
 
-  <div id="hint">Inquadra bene l'immagine target</div>
+  <div id="debugBox">Stato: attesa avvio</div>
 
-  <a-scene
-    id="arScene"
-    embedded
-    vr-mode-ui="enabled: false"
-    device-orientation-permission-ui="enabled: false"
-    loading-screen="enabled: false"
-    renderer="colorManagement: true, physicallyCorrectLights"
-    color-space="sRGB"
-    mindar-image="imageTargetSrc: ./targets.mind; uiLoading: yes; uiScanning: yes; uiError: yes; autoStart: false;"
-  >
-    <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+  <video id="cameraTest" autoplay playsinline muted></video>
 
-    <a-entity mindar-image-target="targetIndex: 0">
-      <a-plane
-        color="#8A2BE2"
-        opacity="0.85"
-        position="0 0 0"
-        width="1"
-        height="0.7"
-      ></a-plane>
+  <div id="arWrap">
+    <a-scene
+      id="arScene"
+      embedded
+      vr-mode-ui="enabled: false"
+      device-orientation-permission-ui="enabled: false"
+      loading-screen="enabled: false"
+      renderer="colorManagement: true, physicallyCorrectLights"
+      color-space="sRGB"
+      mindar-image="imageTargetSrc: ./targets.mind; uiLoading: yes; uiScanning: yes; uiError: yes; autoStart: false;"
+    >
+      <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
-      <a-text
-        value="Tracking OK"
-        color="#ffffff"
-        align="center"
-        width="2"
-        position="0 0 0.01"
-      ></a-text>
-    </a-entity>
-  </a-scene>
+      <a-entity id="target0" mindar-image-target="targetIndex: 0">
+        <a-plane
+          color="#8A2BE2"
+          opacity="0.85"
+          position="0 0 0"
+          width="1"
+          height="0.7"
+        ></a-plane>
+
+        <a-text
+          value="Tracking OK"
+          color="#ffffff"
+          align="center"
+          width="2"
+          position="0 0 0.01"
+        ></a-text>
+      </a-entity>
+    </a-scene>
+  </div>
 
   <script>
     const startScreen = document.getElementById("startScreen");
     const startButton = document.getElementById("startButton");
-    const hint = document.getElementById("hint");
-    const sceneEl = document.querySelector("#arScene");
+    const debugBox = document.getElementById("debugBox");
+    const cameraTest = document.getElementById("cameraTest");
+    const arWrap = document.getElementById("arWrap");
+    const sceneEl = document.getElementById("arScene");
+    const target0 = document.getElementById("target0");
+
+    function setDebug(text) {
+      debugBox.textContent = "Stato: " + text;
+      console.log(text);
+    }
+
+    async function testCamera() {
+      setDebug("test camera in corso...");
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: "environment" },
+          audio: false
+        });
+        cameraTest.srcObject = stream;
+        cameraTest.style.display = "block";
+        setDebug("camera OK");
+        return stream;
+      } catch (err) {
+        setDebug("camera BLOCCATA o non disponibile");
+        alert("La fotocamera non parte. Apri la pagina in Chrome/Safari diretto e consenti l'accesso alla camera.");
+        throw err;
+      }
+    }
 
     startButton.addEventListener("click", async () => {
       startButton.disabled = true;
       startButton.textContent = "Avvio...";
 
-      const startAR = () => {
-        const mindarSystem = sceneEl.systems["mindar-image-system"];
-        if (!mindarSystem) {
-          startButton.disabled = false;
-          startButton.textContent = "Riprova";
-          return;
+      let testStream;
+      try {
+        testStream = await testCamera();
+      } catch (e) {
+        startButton.disabled = false;
+        startButton.textContent = "Riprova";
+        return;
+      }
+
+      setTimeout(async () => {
+        if (testStream) {
+          testStream.getTracks().forEach(track => track.stop());
+          cameraTest.srcObject = null;
+          cameraTest.style.display = "none";
         }
 
-        mindarSystem.start();
-        startScreen.style.display = "none";
-        hint.style.display = "block";
-      };
+        arWrap.style.display = "block";
+        setDebug("inizializzo MindAR...");
 
-      if (sceneEl.hasLoaded) {
-        startAR();
-      } else {
-        sceneEl.addEventListener("loaded", startAR, { once: true });
-      }
+        const startAR = async () => {
+          const mindarSystem = sceneEl.systems["mindar-image-system"];
+          if (!mindarSystem) {
+            setDebug("mindar-image-system non trovato");
+            startButton.disabled = false;
+            startButton.textContent = "Riprova";
+            return;
+          }
+
+          try {
+            await mindarSystem.start();
+            startScreen.style.display = "none";
+            setDebug("AR avviata. Inquadra il target da un altro schermo o da stampa.");
+          } catch (err) {
+            console.error(err);
+            setDebug("errore avvio AR");
+            alert("Errore nell'avvio AR. Prova in Chrome/Safari diretto.");
+          }
+        };
+
+        if (sceneEl.hasLoaded) {
+          startAR();
+        } else {
+          sceneEl.addEventListener("loaded", startAR, { once: true });
+        }
+      }, 1200);
+    });
+
+    sceneEl.addEventListener("arReady", () => {
+      setDebug("MindAR pronto");
+    });
+
+    sceneEl.addEventListener("arError", () => {
+      setDebug("errore MindAR");
+    });
+
+    target0.addEventListener("targetFound", () => {
+      setDebug("target trovato");
+    });
+
+    target0.addEventListener("targetLost", () => {
+      setDebug("target perso");
     });
   </script>
 </body>
