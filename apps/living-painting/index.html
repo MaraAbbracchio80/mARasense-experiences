@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Living Painting - Overlay Test</title>
+  <title>Living Painting - mARasense</title>
 
   <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
@@ -21,7 +21,7 @@
     #startScreen {
       position: fixed;
       inset: 0;
-      background: #000;
+      background: radial-gradient(circle at center, #161616 0%, #000 75%);
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -32,6 +32,20 @@
       padding: 24px;
     }
 
+    #startScreen h1 {
+      margin: 0 0 12px 0;
+      font-size: 28px;
+      letter-spacing: 0.5px;
+    }
+
+    #startScreen p {
+      margin: 0 0 20px 0;
+      font-size: 15px;
+      max-width: 340px;
+      line-height: 1.5;
+      color: #ddd;
+    }
+
     #startButton {
       background: #8A2BE2;
       color: #fff;
@@ -40,7 +54,7 @@
       padding: 14px 22px;
       font-size: 16px;
       cursor: pointer;
-      margin-top: 14px;
+      box-shadow: 0 0 24px rgba(138, 43, 226, 0.35);
     }
 
     #debugBox {
@@ -49,7 +63,7 @@
       left: 50%;
       transform: translateX(-50%);
       z-index: 9999;
-      background: rgba(0,0,0,0.78);
+      background: rgba(0,0,0,0.72);
       color: #fff;
       padding: 10px 14px;
       border-radius: 10px;
@@ -57,6 +71,85 @@
       text-align: center;
       max-width: 92vw;
       line-height: 1.4;
+      backdrop-filter: blur(4px);
+    }
+
+    #scanGuide {
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      display: none;
+      pointer-events: none;
+    }
+
+    #scanFrame {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: min(62vw, 320px);
+      height: min(84vw, 430px);
+      transform: translate(-50%, -50%);
+      border: 2px solid rgba(255,255,255,0.55);
+      border-radius: 20px;
+      box-shadow:
+        0 0 0 9999px rgba(0,0,0,0.16),
+        0 0 25px rgba(138, 43, 226, 0.20);
+      overflow: hidden;
+    }
+
+    #scanFrame::before,
+    #scanFrame::after {
+      content: "";
+      position: absolute;
+      width: 36px;
+      height: 36px;
+      border-color: #8A2BE2;
+      border-style: solid;
+    }
+
+    #scanFrame::before {
+      top: 10px;
+      left: 10px;
+      border-width: 4px 0 0 4px;
+      border-top-left-radius: 10px;
+    }
+
+    #scanFrame::after {
+      right: 10px;
+      bottom: 10px;
+      border-width: 0 4px 4px 0;
+      border-bottom-right-radius: 10px;
+    }
+
+    #scanLine {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, #8A2BE2, #ffffff, #8A2BE2, transparent);
+      box-shadow: 0 0 16px rgba(138, 43, 226, 0.9);
+      animation: scanMove 2.4s linear infinite;
+    }
+
+    @keyframes scanMove {
+      0%   { top: 0; }
+      50%  { top: calc(100% - 3px); }
+      100% { top: 0; }
+    }
+
+    #scanText {
+      position: absolute;
+      left: 50%;
+      bottom: calc(50% - min(42vw, 215px) - 56px);
+      transform: translateX(-50%);
+      color: #fff;
+      font-size: 14px;
+      background: rgba(0,0,0,0.60);
+      padding: 10px 14px;
+      border-radius: 10px;
+      white-space: nowrap;
+      backdrop-filter: blur(4px);
     }
 
     a-scene {
@@ -64,25 +157,45 @@
       inset: 0;
       width: 100vw !important;
       height: 100vh !important;
+      z-index: 10;
     }
 
-    video, canvas {
+    video {
       position: fixed !important;
       inset: 0;
       width: 100vw !important;
       height: 100vh !important;
       object-fit: cover !important;
+      z-index: 1 !important;
+      background: transparent !important;
+    }
+
+    canvas {
+      position: fixed !important;
+      inset: 0;
+      width: 100vw !important;
+      height: 100vh !important;
+      object-fit: cover !important;
+      z-index: 2 !important;
+      background: transparent !important;
     }
   </style>
 </head>
 <body>
   <div id="startScreen">
     <h1>Living Painting</h1>
-    <p>schiaccia Avvia esperienza e inquadra il quadro. Se tutto è corretto, vedrai un pannello viola sopra il dipinto.</p>
+    <p>Premi Avvia esperienza e inquadra il quadro. Durante la ricerca vedrai una guida di scansione invece dello schermo nero.</p>
     <button id="startButton">Avvia esperienza</button>
   </div>
 
   <div id="debugBox">Stato: attesa avvio</div>
+
+  <div id="scanGuide">
+    <div id="scanFrame">
+      <div id="scanLine"></div>
+    </div>
+    <div id="scanText">Inquadra il quadro dentro la cornice</div>
+  </div>
 
   <a-scene
     id="arScene"
@@ -91,7 +204,7 @@
     loading-screen="enabled: false"
     renderer="colorManagement: true; physicallyCorrectLights: true; alpha: true"
     color-space="sRGB"
-    mindar-image="imageTargetSrc: ./targets.mind; uiLoading: yes; uiScanning: yes; uiError: yes; autoStart: false;"
+    mindar-image="imageTargetSrc: ./targets.mind; uiLoading: no; uiScanning: no; uiError: no; autoStart: false;"
   >
     <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
@@ -99,7 +212,7 @@
       <a-plane
         id="panel"
         color="#8A2BE2"
-        opacity="0.9"
+        opacity="0.90"
         position="0 0 0"
         width="1"
         height="1.35"
@@ -119,12 +232,25 @@
     const startScreen = document.getElementById("startScreen");
     const startButton = document.getElementById("startButton");
     const debugBox = document.getElementById("debugBox");
+    const scanGuide = document.getElementById("scanGuide");
+    const scanText = document.getElementById("scanText");
     const sceneEl = document.getElementById("arScene");
     const target0 = document.getElementById("target0");
+
+    let targetVisible = false;
 
     function setDebug(text) {
       debugBox.textContent = "Stato: " + text;
       console.log(text);
+    }
+
+    function showScanGuide(message = "Inquadra il quadro dentro la cornice") {
+      scanText.textContent = message;
+      scanGuide.style.display = "block";
+    }
+
+    function hideScanGuide() {
+      scanGuide.style.display = "none";
     }
 
     startButton.addEventListener("click", async () => {
@@ -143,7 +269,8 @@
         try {
           await mindarSystem.start();
           startScreen.style.display = "none";
-          setDebug("AR avviata. Inquadra il quadro.");
+          showScanGuide();
+          setDebug("AR avviata. Ricerca target...");
         } catch (err) {
           console.error(err);
           setDebug("errore avvio AR");
@@ -168,12 +295,22 @@
     });
 
     target0.addEventListener("targetFound", () => {
+      targetVisible = true;
+      hideScanGuide();
       setDebug("target trovato");
     });
 
     target0.addEventListener("targetLost", () => {
+      targetVisible = false;
+      showScanGuide("Target perso. Riinquadra il quadro.");
       setDebug("target perso");
     });
+
+    setInterval(() => {
+      if (!targetVisible && startScreen.style.display === "none") {
+        showScanGuide();
+      }
+    }, 800);
   </script>
 </body>
 </html>
