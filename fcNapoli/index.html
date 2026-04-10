@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>FC Napoli AR</title>
+
+  <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+
+  <style>
+    html, body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(#ccecff, #6bbcff);
+    }
+
+    a-scene {
+      position: fixed !important;
+      inset: 0 !important;
+      width: 100vw !important;
+      height: 100vh !important;
+      z-index: 1;
+    }
+
+    canvas.a-canvas {
+      width: 100vw !important;
+      height: 100vh !important;
+    }
+
+    .overlay {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 20;
+      padding: 18px;
+      background: linear-gradient(180deg, #dff4ff 0%, #78c7ff 100%);
+    }
+
+    .card {
+      width: min(560px, 100%);
+      background: rgba(255,255,255,.92);
+      border-radius: 22px;
+      padding: 18px;
+      text-align: center;
+      box-shadow: 0 18px 55px rgba(0,0,0,.20);
+    }
+
+    .title {
+      font-size: 22px;
+      font-weight: 900;
+      color: #005b96;
+    }
+
+    .sub {
+      font-size: 14px;
+      margin-top: 10px;
+      color: #003f6b;
+    }
+
+    .btn {
+      margin-top: 15px;
+      border: none;
+      border-radius: 999px;
+      padding: 12px 18px;
+      font-weight: 900;
+      cursor: pointer;
+      background: #0088d1;
+      color: white;
+    }
+
+    .video-layer {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 25;
+      display: none;
+      align-items: flex-start;
+      justify-content: center;
+      padding-top: 8vh;
+    }
+
+    .video-wrap {
+      width: min(80vw, 380px);
+      aspect-ratio: 9/16;
+      opacity: 0;
+      transform: scale(0.75);
+      transition: all 0.4s ease;
+    }
+
+    .video-wrap.show {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    #playerVideo {
+      width: 100%;
+      height: 100%;
+      border-radius: 18px;
+      object-fit: contain;
+      background: black;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="overlay" id="ui">
+  <div class="card">
+    <div class="title">FC Napoli AR</div>
+    <div class="sub">Inquadra una maglietta per vedere il video</div>
+    <button class="btn" id="startBtn">Avvia esperienza</button>
+  </div>
+</div>
+
+<div class="video-layer" id="videoLayer">
+  <div class="video-wrap" id="videoWrap">
+    <video id="playerVideo" playsinline webkit-playsinline preload="auto"></video>
+  </div>
+</div>
+
+<a-scene
+  mindar-image="imageTargetSrc: targets.mind; autoStart:false;"
+  embedded
+  vr-mode-ui="enabled:false"
+  device-orientation-permission-ui="enabled:false">
+
+  <a-camera position="0 0 0" look-controls="enabled:false"></a-camera>
+
+  <a-entity id="t0" mindar-image-target="targetIndex:0"></a-entity>
+  <a-entity id="t1" mindar-image-target="targetIndex:1"></a-entity>
+  <a-entity id="t2" mindar-image-target="targetIndex:2"></a-entity>
+
+</a-scene>
+
+<script>
+const startBtn = document.getElementById("startBtn");
+const ui = document.getElementById("ui");
+
+const videoLayer = document.getElementById("videoLayer");
+const videoWrap = document.getElementById("videoWrap");
+const playerVideo = document.getElementById("playerVideo");
+
+const scene = document.querySelector("a-scene");
+
+const t0 = document.getElementById("t0");
+const t1 = document.getElementById("t1");
+const t2 = document.getElementById("t2");
+
+/* 🔥 I TUOI LINK */
+const videoMap = {
+  0: "https://video.wixstatic.com/video/047e10_a711bf4044e8402c828703302889b24a/480p/mp4/file.mp4",
+  1: "https://video.wixstatic.com/video/047e10_857d03036ed64a8db729b6a03e15184c/720p/mp4/file.mp4",
+  2: "https://video.wixstatic.com/video/047e10_32d3a2b588dc45858baae2a12965e009/1080p/mp4/file.mp4"
+};
+
+let playing = false;
+
+function showVideo(){
+  videoLayer.style.display = "flex";
+  requestAnimationFrame(()=>videoWrap.classList.add("show"));
+}
+
+function hideVideo(){
+  videoWrap.classList.remove("show");
+  setTimeout(()=>videoLayer.style.display="none",200);
+}
+
+async function playVideo(index){
+  if(playing) return;
+
+  playing = true;
+
+  playerVideo.src = videoMap[index];
+  playerVideo.load();
+
+  showVideo();
+
+  try{
+    await playerVideo.play();
+  }catch(e){
+    console.log("play error", e);
+  }
+}
+
+function reset(){
+  playing = false;
+  playerVideo.pause();
+  playerVideo.currentTime = 0;
+  hideVideo();
+}
+
+startBtn.onclick = async ()=>{
+  await scene.systems["mindar-image-system"].start();
+  ui.style.display="none";
+};
+
+t0.addEventListener("targetFound", ()=>playVideo(0));
+t1.addEventListener("targetFound", ()=>playVideo(1));
+t2.addEventListener("targetFound", ()=>playVideo(2));
+
+playerVideo.addEventListener("ended", ()=>{
+  reset();
+});
+</script>
+
+</body>
+</html>

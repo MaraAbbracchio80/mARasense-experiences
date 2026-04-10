@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+  <title>Cappellino AR – NDA</title>
+
+  <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+
+  <style>
+    html, body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(#ffd6e3, #f7b2c7);
+    }
+
+    a-scene {
+      position: fixed !important;
+      inset: 0 !important;
+      width: 100vw !important;
+      height: 100vh !important;
+    }
+
+    canvas.a-canvas {
+      width: 100vw !important;
+      height: 100vh !important;
+    }
+
+    .overlay {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 20;
+      background: linear-gradient(#ffd6e3, #f7b2c7);
+    }
+
+    .card {
+      width: min(520px, 100%);
+      background: rgba(255,255,255,.9);
+      border-radius: 22px;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 18px 50px rgba(0,0,0,.18);
+    }
+
+    .btn {
+      border: none;
+      border-radius: 999px;
+      padding: 12px 18px;
+      font-weight: 800;
+      cursor: pointer;
+      background: #ff4d88;
+      color: white;
+    }
+
+    .badge {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.7);
+      font-size: 14px;
+      z-index: 30;
+    }
+
+    #frameCanvas {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="badge" id="status">AR pronta</div>
+
+  <div class="overlay" id="ui">
+    <div class="card">
+      <h2>Cappellino AR Experience</h2>
+      <p>Tocca avvia e inquadra uno dei due oggetti target</p>
+      <button class="btn" id="startBtn">Avvia esperienza</button>
+    </div>
+  </div>
+
+  <canvas id="frameCanvas" width="512" height="288"></canvas>
+
+  <a-scene
+    mindar-image="imageTargetSrc: targets.mind; autoStart:false;"
+    embedded
+    vr-mode-ui="enabled:false"
+    device-orientation-permission-ui="enabled:false">
+
+    <a-assets>
+      <audio id="audio1" preload="auto" playsinline>
+        <source src="./assets/audio/audioavatarnda.mp3" type="audio/mpeg">
+      </audio>
+    </a-assets>
+
+    <a-camera position="0 0 0" look-controls="enabled:false"></a-camera>
+
+    <!-- Target 0 -->
+    <a-entity id="target0" mindar-image-target="targetIndex:0">
+      <a-plane
+        id="plane0"
+        width="1.25"
+        height="0.703125"
+        visible="false"
+        material="shader:flat; src:#frameCanvas; transparent:true; alphaTest:0.01">
+      </a-plane>
+    </a-entity>
+
+    <!-- Target 1 -->
+    <a-entity id="target1" mindar-image-target="targetIndex:1">
+      <a-plane
+        id="plane1"
+        width="1.25"
+        height="0.703125"
+        visible="false"
+        material="shader:flat; src:#frameCanvas; transparent:true; alphaTest:0.01">
+      </a-plane>
+    </a-entity>
+
+  </a-scene>
+
+  <script>
+    const startBtn = document.getElementById("startBtn");
+    const ui = document.getElementById("ui");
+    const status = document.getElementById("status");
+    const scene = document.querySelector("a-scene");
+
+    const target0 = document.getElementById("target0");
+    const target1 = document.getElementById("target1");
+    const plane0 = document.getElementById("plane0");
+    const plane1 = document.getElementById("plane1");
+    const audio1 = document.getElementById("audio1");
+
+    const frameCanvas = document.getElementById("frameCanvas");
+    const ctx = frameCanvas.getContext("2d");
+
+    const TILE_W = 512;
+    const TILE_H = 288;
+    const COLS = 8;
+
+    const FPS = 25;
+    const TOTAL_FRAMES = 582; // ultimo sprite con 6 frame
+
+    const spriteDefs = [
+      { src: "./assets/avatar/sprite_1.png",  start: 0,   count: 64 },
+      { src: "./assets/avatar/sprite_2.png",  start: 64,  count: 64 },
+      { src: "./assets/avatar/sprite_3.png",  start: 128, count: 64 },
+      { src: "./assets/avatar/sprite_4.png",  start: 192, count: 64 },
+      { src: "./assets/avatar/sprite_5.png",  start: 256, count: 64 },
+      { src: "./assets/avatar/sprite_6.png",  start: 320, count: 64 },
+      { src: "./assets/avatar/sprite_7.png",  start: 384, count: 64 },
+      { src: "./assets/avatar/sprite_8.png",  start: 448, count: 64 },
+      { src: "./assets/avatar/sprite_9.png",  start: 512, count: 64 },
+      { src: "./assets/avatar/sprite_10.png", start: 576, count: 6 }
+    ];
+
+    let sprites = [];
+    let spritesLoaded = false;
+    let animTimer = null;
+    let experienceStarted = false;
+    let activeTarget = null;
+
+    function setStatus(text) {
+      status.innerText = text;
+    }
+
+    function refreshTexture() {
+      [plane0, plane1].forEach(plane => {
+        const mat = plane.components.material;
+        if (mat && mat.material && mat.material.map) {
+          mat.material.map.needsUpdate = true;
+        }
+      });
+    }
+
+    async function loadSprites() {
+      if (spritesLoaded) return;
+
+      sprites = await Promise.all(
+        spriteDefs.map(def => new Promise((resolve, reject) => {
+          const img = new Image();
+          img.onload = () => resolve({ ...def, img });
+          img.onerror = () => reject(new Error("Errore caricamento " + def.src));
+          img.src = def.src + "?v=11";
+        }))
+      );
+
+      spritesLoaded = true;
+    }
+
+    function getSprite(frame) {
+      for (const s of sprites) {
+        if (frame >= s.start && frame < s.start + s.count) {
+          return s;
+        }
+      }
+      return sprites[0];
+    }
+
+    function drawFrame(frame) {
+      if (!spritesLoaded) return;
+
+      const sprite = getSprite(frame);
+      const local = frame - sprite.start;
+
+      const col = local % COLS;
+      const row = Math.floor(local / COLS);
+
+      const sx = col * TILE_W;
+      const sy = row * TILE_H;
+
+      ctx.clearRect(0, 0, frameCanvas.width, frameCanvas.height);
+
+      ctx.drawImage(
+        sprite.img,
+        sx, sy, TILE_W, TILE_H,
+        0, 0, frameCanvas.width, frameCanvas.height
+      );
+
+      refreshTexture();
+    }
+
+    function stopAnimation() {
+      if (animTimer) {
+        clearInterval(animTimer);
+        animTimer = null;
+      }
+    }
+
+    function startAnimation() {
+      stopAnimation();
+
+      let frame = 0;
+      drawFrame(frame);
+
+      animTimer = setInterval(() => {
+        frame++;
+
+        if (frame >= TOTAL_FRAMES) {
+          frame = TOTAL_FRAMES - 1;
+          drawFrame(frame);
+          stopAnimation();
+          return;
+        }
+
+        drawFrame(frame);
+      }, 1000 / FPS);
+    }
+
+    async function unlockAudio() {
+      try {
+        await audio1.play();
+        audio1.pause();
+        audio1.currentTime = 0;
+      } catch (e) {}
+    }
+
+    function stopAudio() {
+      try {
+        audio1.pause();
+        audio1.currentTime = 0;
+      } catch (e) {}
+    }
+
+    function hideAllPlanes() {
+      plane0.setAttribute("visible", false);
+      plane1.setAttribute("visible", false);
+    }
+
+    async function startExperienceOn(targetIndex) {
+      if (experienceStarted) return;
+
+      experienceStarted = true;
+      activeTarget = targetIndex;
+
+      hideAllPlanes();
+
+      if (targetIndex === 0) {
+        plane0.setAttribute("visible", true);
+      } else if (targetIndex === 1) {
+        plane1.setAttribute("visible", true);
+      }
+
+      setStatus("AR avviata");
+
+      if (!spritesLoaded) {
+        setStatus("Carico animazione...");
+        await loadSprites();
+      }
+
+      drawFrame(0);
+      startAnimation();
+
+      try {
+        audio1.currentTime = 0;
+        await audio1.play();
+      } catch (e) {
+        console.error("audio play:", e);
+      }
+    }
+
+    startBtn.onclick = async () => {
+      await unlockAudio();
+      await scene.systems["mindar-image-system"].start();
+      ui.style.display = "none";
+      setStatus("Inquadra uno dei target");
+    };
+
+    target0.addEventListener("targetFound", async () => {
+      await startExperienceOn(0);
+    });
+
+    target1.addEventListener("targetFound", async () => {
+      await startExperienceOn(1);
+    });
+
+    // targetLost ignorato: il video continua senza interruzioni
+    target0.addEventListener("targetLost", () => {});
+    target1.addEventListener("targetLost", () => {});
+
+    audio1.addEventListener("ended", () => {
+      stopAnimation();
+      setStatus("Esperienza terminata");
+    });
+  </script>
+
+</body>
+</html>

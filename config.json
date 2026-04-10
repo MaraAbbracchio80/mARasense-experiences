@@ -1,0 +1,19 @@
+{
+  "title": "NDA Experience",
+  "subtitle": "Tocca “Avvia esperienza”, consenti la fotocamera, poi inquadra l’immagine.",
+  "targetsMind": "targets.mind",
+  "targets": [
+    {
+      "name": "La nostra storia",
+      "src": "https://video.wixstatic.com/video/XXXX/1080p/mp4/file.mp4"
+    },
+    {
+      "name": "Curiosità & momenti",
+      "src": "https://video.wixstatic.com/video/YYYY/1080p/mp4/file.mp4"
+    },
+    {
+      "name": "Grazie",
+      "src": "https://video.wixstatic.com/video/ZZZZ/1080p/mp4/file.mp4"
+    }
+  ]
+}
