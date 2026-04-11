@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Auguri di Pasqua AR – Fabbricanti di Emozioni</title>
+
+  <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+
+  <style>
+    html, body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(#fff1c9, #f6d998);
+    }
+
+    a-scene {
+      position: fixed !important;
+      inset: 0 !important;
+      width: 100vw !important;
+      height: 100vh !important;
+      z-index: 1;
+    }
+
+    canvas.a-canvas {
+      width: 100vw !important;
+      height: 100vh !important;
+    }
+
+    .overlay {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 20;
+      padding: 18px;
+      background:
+        radial-gradient(circle at 50% 25%, rgba(255,255,255,.20), rgba(255,255,255,0) 55%),
+        linear-gradient(180deg, #fff4d9 0%, #f6d998 100%);
+    }
+
+    .card {
+      width: min(560px, 100%);
+      background: rgba(255,255,255,.92);
+      border: 1px solid rgba(255,255,255,.75);
+      border-radius: 22px;
+      padding: 18px;
+      text-align: center;
+      box-shadow: 0 18px 55px rgba(0,0,0,.20);
+      backdrop-filter: blur(10px);
+    }
+
+    .title {
+      margin: 2px 0 6px;
+      font-size: 22px;
+      font-weight: 900;
+      color: #7a4f00;
+    }
+
+    .sub {
+      margin: 0 0 12px;
+      font-size: 14px;
+      color: rgba(80,55,8,.85);
+      line-height: 1.45;
+    }
+
+    .row {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      border: none;
+      border-radius: 999px;
+      padding: 12px 18px;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 10px 24px rgba(0,0,0,.18);
+      background: #d49a24;
+      color: white;
+      font-size: 16px;
+    }
+
+    .pill {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      right: 10px;
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      z-index: 30;
+      pointer-events: none;
+    }
+
+    .badge {
+      pointer-events: auto;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.76);
+      border: 1px solid rgba(255,255,255,.92);
+      color: rgba(80,55,8,.9);
+      font-size: 13px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 12px 30px rgba(0,0,0,.18);
+    }
+
+    .badge strong {
+      color: #7a4f00;
+      font-weight: 900;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .video-layer {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 25;
+      display: none;
+      align-items: flex-start;
+      justify-content: center;
+      padding-top: 8vh;
+      box-sizing: border-box;
+      pointer-events: none;
+    }
+
+    .video-wrap {
+      position: relative;
+      width: min(80vw, 380px);
+      height: auto;
+      aspect-ratio: 9 / 16;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transform: scale(0.75) translateY(40px);
+      transition:
+        transform 420ms cubic-bezier(.2,.8,.2,1),
+        opacity 320ms ease-out;
+      will-change: transform, opacity;
+    }
+
+    .video-wrap.show {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+
+    #auguriVideo {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      border-radius: 20px;
+      background: #000;
+      display: block;
+      box-shadow:
+        0 24px 70px rgba(0,0,0,.28),
+        0 0 0 1px rgba(255,255,255,.18) inset;
+    }
+
+    .video-wrap::before {
+      content: "";
+      position: absolute;
+      inset: 8%;
+      border-radius: 28px;
+      background: radial-gradient(circle, rgba(255,215,120,.30), rgba(255,215,120,0) 70%);
+      filter: blur(16px);
+      z-index: -1;
+      opacity: 0;
+      transition: opacity 420ms ease-out;
+    }
+
+    .video-wrap.show::before {
+      opacity: 1;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="pill">
+    <div class="badge" id="status"><strong>AR</strong> Pronta ✨</div>
+    <div class="badge hidden" id="page">Inquadra il biglietto</div>
+  </div>
+
+  <div class="overlay" id="ui">
+    <div class="card">
+      <div class="title">Auguri di Pasqua AR</div>
+      <div class="sub"><strong>Fabbricanti di Emozioni</strong></div>
+      <div class="sub">Tocca “Avvia esperienza”, consenti la fotocamera, poi inquadra il biglietto di Pasqua.</div>
+      <div class="row">
+        <button class="btn" id="startBtn">Avvia esperienza</button>
+      </div>
+      <div class="sub" style="margin-top:10px;font-size:12.5px;">
+        Consiglio: luce buona + target fermo per 1–2 secondi.
+      </div>
+    </div>
+  </div>
+
+  <div class="video-layer" id="videoLayer">
+    <div class="video-wrap" id="videoWrap">
+      <video
+        id="auguriVideo"
+        playsinline
+        webkit-playsinline
+        preload="auto"
+        muted
+        crossorigin="anonymous">
+        <source src="https://video.wixstatic.com/video/047e10_81895633e5a449a080cbd1dac2523d5e/1080p/mp4/file.mp4" type="video/mp4">
+      </video>
+    </div>
+  </div>
+
+  <audio id="audioAuguri" preload="auto">
+    <source src="./assets/Buona-Pasqua.mp3" type="audio/mpeg">
+  </audio>
+
+  <a-scene
+    mindar-image="imageTargetSrc: targets.mind; autoStart: false; uiLoading: no; uiError: no;"
+    embedded
+    vr-mode-ui="enabled:false"
+    device-orientation-permission-ui="enabled:false">
+
+    <a-camera position="0 0 0" look-controls="enabled:false"></a-camera>
+    <a-entity id="t0" mindar-image-target="targetIndex: 0"></a-entity>
+
+  </a-scene>
+
+  <script>
+    const ui = document.getElementById("ui");
+    const startBtn = document.getElementById("startBtn");
+    const status = document.getElementById("status");
+    const page = document.getElementById("page");
+
+    const videoLayer = document.getElementById("videoLayer");
+    const videoWrap = document.getElementById("videoWrap");
+    const auguriVideo = document.getElementById("auguriVideo");
+    const audioAuguri = document.getElementById("audioAuguri");
+
+    const scene = document.querySelector("a-scene");
+    const target = document.getElementById("t0");
+
+    let experienceStarted = false;
+
+    function setStatus(text) {
+      status.textContent = "AR " + text;
+    }
+
+    function stopVideo() {
+      try {
+        auguriVideo.pause();
+        auguriVideo.currentTime = 0;
+      } catch (e) {}
+    }
+
+    function stopAudio() {
+      try {
+        audioAuguri.pause();
+        audioAuguri.currentTime = 0;
+      } catch (e) {}
+    }
+
+    async function unlockMedia() {
+      try {
+        auguriVideo.muted = true;
+        await auguriVideo.play();
+        auguriVideo.pause();
+        auguriVideo.currentTime = 0;
+      } catch (e) {}
+
+      try {
+        await audioAuguri.play();
+        audioAuguri.pause();
+        audioAuguri.currentTime = 0;
+      } catch (e) {}
+    }
+
+    function showVideo() {
+      videoLayer.style.display = "flex";
+
+      requestAnimationFrame(() => {
+        videoWrap.classList.add("show");
+      });
+    }
+
+    function hideVideo() {
+      videoWrap.classList.remove("show");
+
+      setTimeout(() => {
+        videoLayer.style.display = "none";
+      }, 220);
+    }
+
+    async function startExperience() {
+      if (experienceStarted) return;
+      experienceStarted = true;
+
+      setStatus("Trovato ✅");
+      page.textContent = "Video in riproduzione…";
+
+      stopVideo();
+      stopAudio();
+      showVideo();
+
+      try {
+        auguriVideo.muted = true;
+        auguriVideo.currentTime = 0;
+        await auguriVideo.play();
+      } catch (e) {
+        console.error("video play:", e);
+        setStatus("Errore video");
+      }
+
+      try {
+        audioAuguri.currentTime = 0;
+        await audioAuguri.play();
+      } catch (e) {
+        console.error("audio play:", e);
+      }
+    }
+
+    startBtn.addEventListener("click", async () => {
+      try {
+        await unlockMedia();
+        await scene.systems["mindar-image-system"].start();
+        ui.style.display = "none";
+        setStatus("Inquadra il biglietto ✨");
+        page.classList.remove("hidden");
+        page.textContent = "Inquadra il biglietto";
+      } catch (e) {
+        console.error("start ar:", e);
+        setStatus("Errore avvio AR");
+      }
+    });
+
+    target.addEventListener("targetFound", async () => {
+      await startExperience();
+    });
+
+    target.addEventListener("targetLost", () => {
+      // ignorato volutamente:
+      // una volta trovato, video e audio continuano fino alla fine
+    });
+
+    auguriVideo.addEventListener("ended", () => {
+      stopAudio();
+      setStatus("Esperienza terminata");
+      page.textContent = "Video terminato";
+      hideVideo();
+    });
+  </script>
+
+</body>
+</html>

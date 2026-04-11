@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>NDA Wedding Experience – Luca & Lucia</title>
+
+  <!-- A-Frame + MindAR -->
+  <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+
+  <style>
+    html, body { margin:0; width:100%; height:100%; overflow:hidden; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial; }
+    body { background: linear-gradient(#ffd6e3, #f7b2c7); }
+
+    .overlay {
+      position: fixed; inset: 0;
+      display:flex; align-items:center; justify-content:center;
+      z-index: 20;
+      padding: 18px;
+      background:
+        radial-gradient(circle at 50% 25%, rgba(255,255,255,.35), rgba(255,255,255,0) 55%),
+        linear-gradient(#ffd6e3, #f7b2c7);
+    }
+    .card {
+      width: min(520px, 100%);
+      background: rgba(255,255,255,.88);
+      border: 1px solid rgba(255,255,255,.6);
+      border-radius: 22px;
+      padding: 18px;
+      text-align:center;
+      box-shadow: 0 18px 50px rgba(0,0,0,.18);
+      backdrop-filter: blur(10px);
+    }
+    .title { margin: 2px 0 6px; font-size: 20px; font-weight: 800; color:#2b1220; }
+    .sub { margin: 0 0 12px; font-size: 14px; color: rgba(43,18,32,.75); line-height: 1.4; }
+
+    .row { display:flex; gap:10px; justify-content:center; flex-wrap:wrap; }
+    .btn {
+      border: none; border-radius: 999px;
+      padding: 12px 18px;
+      font-weight: 800;
+      cursor: pointer;
+      background: rgba(255,255,255,.95);
+      color: #2b1220;
+      box-shadow: 0 10px 24px rgba(0,0,0,.12);
+    }
+    .btn.primary { background: #ff4d88; color: white; }
+
+    .pill {
+      position: fixed; top: 10px; left: 10px; right: 10px;
+      display:flex; justify-content:space-between; gap:10px;
+      z-index: 30;
+      pointer-events:none;
+    }
+    .badge {
+      pointer-events:auto;
+      display:inline-flex; align-items:center; gap:8px;
+      padding: 10px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.55);
+      border: 1px solid rgba(255,255,255,.8);
+      color: rgba(43,18,32,.85);
+      font-size: 13px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 12px 30px rgba(0,0,0,.12);
+    }
+    .badge strong { font-weight: 900; }
+    .hidden { display:none !important; }
+  </style>
+</head>
+
+<body>
+
+<!-- Top badges -->
+<div class="pill">
+  <div class="badge" id="status"><strong>AR</strong> Pronto ✨</div>
+  <div class="badge hidden" id="page">Pagina: —</div>
+</div>
+
+<!-- Start overlay -->
+<div class="overlay" id="ui">
+  <div class="card">
+    <div class="title">NDA Wedding Experience</div>
+    <div class="sub">Tocca “Avvia esperienza”, consenti la fotocamera, poi inquadra una pagina AR.</div>
+    <div class="row">
+      <button class="btn primary" id="startBtn">Avvia esperienza</button>
+      <button class="btn" id="helpBtn">Come funziona</button>
+    </div>
+    <div class="sub" style="margin-top:10px;font-size:12.5px;">
+      Consiglio: luce buona + pagina ferma 1–2 sec.
+    </div>
+  </div>
+</div>
+
+<!-- AR Scene -->
+<a-scene
+  mindar-image="imageTargetSrc: targets.mind; autoStart: false; uiLoading: no; uiError: no;"
+  embedded
+  vr-mode-ui="enabled: false"
+  device-orientation-permission-ui="enabled: false">
+
+  <a-assets>
+    <!-- 0: PRESENTAZIONE -->
+    <video id="v0" crossorigin="anonymous"
+      src="video/presentazione.mp4"
+      preload="auto" playsinline webkit-playsinline muted></video>
+
+    <!-- 1: INVITO -->
+    <video id="v1" crossorigin="anonymous"
+      src="video/invito.mp4"
+      preload="auto" playsinline webkit-playsinline muted></video>
+
+    <!-- 2: NONNI -->
+    <video id="v2" crossorigin="anonymous"
+      src="video/nonni.mp4"
+      preload="auto" playsinline webkit-playsinline muted></video>
+
+    <!-- 3: GRAZIE -->
+    <video id="v3" crossorigin="anonymous"
+      src="video/grazie.mp4"
+      preload="auto" playsinline webkit-playsinline muted></video>
+  </a-assets>
+
+  <a-camera position="0 0 0" look-controls="enabled:false"></a-camera>
+
+  <a-entity mindar-image-target="targetIndex: 0">
+    <a-plane width="1" height="1" material="shader: flat; src: #v0"></a-plane>
+  </a-entity>
+
+  <a-entity mindar-image-target="targetIndex: 1">
+    <a-plane width="1" height="1" material="shader: flat; src: #v1"></a-plane>
+  </a-entity>
+
+  <a-entity mindar-image-target="targetIndex: 2">
+    <a-plane width="1" height="1" material="shader: flat; src: #v2"></a-plane>
+  </a-entity>
+
+  <a-entity mindar-image-target="targetIndex: 3">
+    <a-plane width="1" height="1" material="shader: flat; src: #v3"></a-plane>
+  </a-entity>
+
+</a-scene>
+
+<script>
+  const ui = document.getElementById("ui");
+  const startBtn = document.getElementById("startBtn");
+  const helpBtn = document.getElementById("helpBtn");
+  const status = document.getElementById("status");
+  const page = document.getElementById("page");
+  const scene = document.querySelector("a-scene");
+
+  const vids = [
+    { el: document.getElementById("v0"), name: "Presentazione" },
+    { el: document.getElementById("v1"), name: "Invito" },
+    { el: document.getElementById("v2"), name: "Nonni" },
+    { el: document.getElementById("v3"), name: "Grazie" }
+  ];
+
+  let activeIdx = null;
+
+  function setStatus(text){ status.textContent = "AR " + text; }
+  function showPage(name){
+    page.classList.remove("hidden");
+    page.textContent = "Pagina: " + name;
+  }
+  function hidePage(){ page.classList.add("hidden"); page.textContent = "Pagina: —"; }
+
+  function stopAll(){
+    vids.forEach(v => {
+      try { v.el.pause(); v.el.currentTime = 0; } catch(e){}
+    });
+  }
+
+  async function unlockVideos() {
+    for (const v of vids) {
+      try {
+        v.el.muted = true;
+        await v.el.play();
+        v.el.pause();
+        v.el.currentTime = 0;
+      } catch(e){}
+    }
+  }
+
+  // Audio button (iOS-friendly)
+  const audioBtn = document.createElement("button");
+  audioBtn.className = "btn";
+  audioBtn.textContent = "Attiva audio";
+  audioBtn.style.position = "fixed";
+  audioBtn.style.bottom = "14px";
+  audioBtn.style.left = "50%";
+  audioBtn.style.transform = "translateX(-50%)";
+  audioBtn.style.zIndex = "40";
+  audioBtn.style.display = "none";
+  document.body.appendChild(audioBtn);
+
+  audioBtn.addEventListener("click", async () => {
+    if (activeIdx === null) return;
+    const v = vids[activeIdx].el;
+    v.muted = false;
+    try { await v.play(); } catch(e){}
+    audioBtn.style.display = "none";
+  });
+
+  helpBtn.addEventListener("click", () => {
+    alert("1) Tocca 'Avvia esperienza'\n2) Consenti la fotocamera\n3) Inquadra una pagina AR");
+  });
+
+  startBtn.addEventListener("click", async () => {
+    await unlockVideos();
+    await scene.systems["mindar-image-system"].start();
+    ui.style.display = "none";
+    setStatus("Inquadra una pagina ✨");
+  });
+
+  document.querySelectorAll("[mindar-image-target]").forEach((el, i) => {
+    el.addEventListener("targetFound", async () => {
+      activeIdx = i;
+      showPage(vids[i].name);
+      stopAll();
+      const v = vids[i].el;
+      v.muted = true;
+      try { await v.play(); } catch(e){}
+      audioBtn.style.display = "inline-block";
+    });
+
+    el.addEventListener("targetLost", () => {
+      if (activeIdx === i) {
+        activeIdx = null;
+        hidePage();
+        audioBtn.style.display = "none";
+        stopAll();
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
