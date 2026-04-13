@@ -1,37 +1,43 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Magic Object</title>
 
   <style>
-    body {
+    html, body {
       margin: 0;
+      width: 100%;
+      height: 100%;
       overflow: hidden;
-      font-family: Arial;
-      background: black;
+      background: #000;
+      font-family: Arial, sans-serif;
     }
 
-    video {
+    #camera {
       position: fixed;
       inset: 0;
       width: 100%;
       height: 100%;
       object-fit: cover;
       z-index: 1;
+      background: #000;
     }
 
-    canvas {
+    #threeCanvas {
       position: fixed;
       inset: 0;
+      width: 100%;
+      height: 100%;
       z-index: 2;
+      pointer-events: none;
     }
 
     #startScreen {
       position: fixed;
       inset: 0;
-      background: #000;
+      background: radial-gradient(circle, #101626, #000);
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -39,9 +45,10 @@
       z-index: 10;
       color: white;
       text-align: center;
+      padding: 24px;
     }
 
-    button {
+    #startBtn {
       margin-top: 20px;
       padding: 14px 24px;
       font-size: 16px;
@@ -49,104 +56,178 @@
       border: none;
       border-radius: 12px;
       color: white;
+      cursor: pointer;
+    }
+
+    #debug {
+      position: fixed;
+      top: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 20;
+      background: rgba(0,0,0,0.65);
+      color: white;
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 14px;
+      max-width: 92vw;
+      text-align: center;
     }
   </style>
 </head>
 <body>
 
-<div id="startScreen">
-  <h1>Magic Object</h1>
-  <p>Tocca lo schermo per attivare l’oggetto</p>
-  <button id="startBtn">Avvia</button>
-</div>
+  <div id="startScreen">
+    <h1>Magic Object</h1>
+    <p>Tocca il pulsante per attivare camera e modello 3D</p>
+    <button id="startBtn">riAvvia 2</button>
+  </div>
 
-<video id="camera" autoplay playsinline muted></video>
+  <div id="debug">Stato: pagina caricata</div>
 
-<script type="module">
-  alert("JS CARICATO");
-import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160/build/three.module.js';
-import { GLTFLoader } from 'https://cdn.jsdelivr.net/npm/three@0.160/examples/jsm/loaders/GLTFLoader.js';
+  <video id="camera" autoplay playsinline muted></video>
+  <canvas id="threeCanvas"></canvas>
 
-let scene, camera3D, renderer, model;
+  <script src="https://unpkg.com/three@0.128.0/build/three.min.js"></script>
+  <script src="https://unpkg.com/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
 
-// ✅ CAMERA CON DEBUG
-async function startCamera() {
-  const video = document.getElementById("camera");
+  <script>
+    alert("JS CARICATO");
 
-  alert("Richiesta camera...");
+    const startBtn = document.getElementById("startBtn");
+    const startScreen = document.getElementById("startScreen");
+    const debug = document.getElementById("debug");
+    const video = document.getElementById("camera");
+    const canvas = document.getElementById("threeCanvas");
 
-  const stream = await navigator.mediaDevices.getUserMedia({
-    video: { facingMode: "environment" }
-  });
+    let scene, camera3D, renderer, model;
+    let started = false;
 
-  alert("Camera attiva");
+    function setDebug(text) {
+      debug.textContent = "Stato: " + text;
+      console.log(text);
+    }
 
-  video.srcObject = stream;
-}
+    async function startCamera() {
+      setDebug("richiesta camera...");
+      alert("Richiesta camera...");
 
-function init3D() {
-  scene = new THREE.Scene();
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: {
+          facingMode: { ideal: "environment" }
+        },
+        audio: false
+      });
 
-  camera3D = new THREE.PerspectiveCamera(
-    70,
-    window.innerWidth / window.innerHeight,
-    0.01,
-    100
-  );
+      video.srcObject = stream;
 
-  camera3D.position.z = 2;
+      await new Promise((resolve) => {
+        video.onloadedmetadata = () => {
+          video.play().then(resolve).catch(resolve);
+        };
+      });
 
-  renderer = new THREE.WebGLRenderer({ alpha: true });
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  document.body.appendChild(renderer.domElement);
+      alert("Camera attiva");
+      setDebug("camera attiva");
+    }
 
-  const light = new THREE.HemisphereLight(0xffffff, 0xbbbbff, 1);
-  scene.add(light);
+    function init3D() {
+      setDebug("inizializzo 3D...");
 
-  loadModel();
+      scene = new THREE.Scene();
 
-  animate();
-}
+      camera3D = new THREE.PerspectiveCamera(
+        70,
+        window.innerWidth / window.innerHeight,
+        0.01,
+        100
+      );
+      camera3D.position.z = 2;
 
-function loadModel() {
-  const loader = new GLTFLoader();
+      renderer = new THREE.WebGLRenderer({
+        canvas: canvas,
+        alpha: true,
+        antialias: true
+      });
+      renderer.setPixelRatio(window.devicePixelRatio || 1);
+      renderer.setSize(window.innerWidth, window.innerHeight);
 
-  loader.load('./assets/models/object.glb', (gltf) => {
-    model = gltf.scene;
-    model.scale.set(0.5, 0.5, 0.5);
-    scene.add(model);
-  });
-}
+      const hemi = new THREE.HemisphereLight(0xffffff, 0x8899bb, 1.2);
+      scene.add(hemi);
 
-function animate() {
-  requestAnimationFrame(animate);
+      const dir = new THREE.DirectionalLight(0xffffff, 0.8);
+      dir.position.set(1, 2, 3);
+      scene.add(dir);
 
-  if (model) {
-    model.rotation.y += 0.01;
-  }
+      loadModel();
+      animate();
 
-  renderer.render(scene, camera3D);
-}
+      setDebug("3D avviato");
+    }
 
-// ✅ CLICK
-document.getElementById("startBtn").addEventListener("click", async () => {
-  try {
-    console.log("CLICK OK");
+    function loadModel() {
+      setDebug("carico modello...");
 
-    await startCamera();
-    console.log("CAMERA OK");
+      const loader = new THREE.GLTFLoader();
 
-    document.getElementById("startScreen").style.display = "none";
+      loader.load(
+        "./assets/models/object.glb",
+        function(gltf) {
+          model = gltf.scene;
+          model.scale.set(0.5, 0.5, 0.5);
+          model.position.set(0, 0, 0);
+          scene.add(model);
+          setDebug("modello caricato");
+        },
+        undefined,
+        function(error) {
+          console.error(error);
+          setDebug("errore caricamento modello");
+          alert("Errore caricamento object.glb");
+        }
+      );
+    }
 
-    init3D();
-    console.log("3D OK");
+    function animate() {
+      requestAnimationFrame(animate);
 
-  } catch (err) {
-    console.error("ERRORE:", err);
-    alert("Errore camera: " + err.message);
-  }
-});
-</script>
+      if (model) {
+        model.rotation.y += 0.01;
+      }
 
+      if (renderer && scene && camera3D) {
+        renderer.render(scene, camera3D);
+      }
+    }
+
+    startBtn.onclick = async function() {
+      if (started) return;
+      started = true;
+
+      try {
+        setDebug("click ok");
+        alert("CLICK OK");
+
+        await startCamera();
+
+        startScreen.style.display = "none";
+
+        init3D();
+      } catch (err) {
+        console.error(err);
+        setDebug("errore: " + err.message);
+        alert("Errore: " + err.message);
+        started = false;
+      }
+    };
+
+    window.addEventListener("resize", function() {
+      if (!camera3D || !renderer) return;
+
+      camera3D.aspect = window.innerWidth / window.innerHeight;
+      camera3D.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+  </script>
 </body>
 </html>
