@@ -1,3 +1,16 @@
+async function startCamera() {
+  const video = document.getElementById("camera");
+
+  alert("Richiesta camera...");
+
+  const stream = await navigator.mediaDevices.getUserMedia({
+    video: { facingMode: "environment" }
+  });
+
+  alert("Camera attiva");
+
+  video.srcObject = stream;
+}
 <!DOCTYPE html>
 <html lang="it">
 <head>
