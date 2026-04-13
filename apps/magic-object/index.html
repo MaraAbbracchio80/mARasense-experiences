@@ -124,10 +124,21 @@ function animate() {
 }
 
 document.getElementById("startBtn").addEventListener("click", async () => {
-  document.getElementById("startScreen").style.display = "none";
+  try {
+    console.log("CLICK OK");
 
-  await startCamera();
-  init3D();
+    await startCamera();
+    console.log("CAMERA OK");
+
+    document.getElementById("startScreen").style.display = "none";
+
+    init3D();
+    console.log("3D OK");
+
+  } catch (err) {
+    console.error("ERRORE:", err);
+    alert("Errore camera: " + err.message);
+  }
 });
 </script>
 
