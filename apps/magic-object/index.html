@@ -73,6 +73,7 @@
       font-size: 14px;
       text-align: center;
       backdrop-filter: blur(4px);
+      white-space: nowrap;
     }
   </style>
 </head>
@@ -80,7 +81,7 @@
 
   <div id="startScreen">
     <h1>Magic Object</h1>
-    <p>Tocca il pulsante per attivare camera ed effetto particellare premium</p>
+    <p>Tocca il pulsante per attivare camera, audio ed effetto premium</p>
     <button id="startBtn">Avvia esperienza</button>
   </div>
 
@@ -88,6 +89,8 @@
 
   <video id="camera" autoplay playsinline muted></video>
   <canvas id="threeCanvas"></canvas>
+
+  <audio id="fxAudio" preload="auto" src="./assets/audio/aggressive-sci-fi.mp3"></audio>
 
   <script src="https://unpkg.com/three@0.128.0/build/three.min.js"></script>
 
@@ -97,10 +100,12 @@
     const hint = document.getElementById("hint");
     const video = document.getElementById("camera");
     const canvas = document.getElementById("threeCanvas");
+    const fxAudio = document.getElementById("fxAudio");
 
     let scene, camera3D, renderer;
     let logoMesh = null;
     let glowMesh = null;
+    let shockwaveMesh = null;
     let particles = null;
     let particleMaterial = null;
     let particleGeometry = null;
@@ -127,6 +132,14 @@
           video.play().then(resolve).catch(resolve);
         };
       });
+    }
+
+    function playEffectAudio() {
+      try {
+        fxAudio.pause();
+        fxAudio.currentTime = 0;
+        fxAudio.play().catch(() => {});
+      } catch (e) {}
     }
 
     function init3D() {
@@ -163,7 +176,7 @@
       animate();
 
       window.addEventListener("pointerdown", () => {
-        if (!logoTexture) return;
+        if (!logoTexture || startScreen.style.display !== "none") return;
         restartEffect();
       });
     }
@@ -176,6 +189,7 @@
           logoTexture = texture;
           createLogo();
           createGlow();
+          createShockwave();
           restartEffect();
           hint.style.display = "block";
         },
@@ -219,7 +233,7 @@
         glowMesh.material.dispose();
       }
 
-      const geometry = new THREE.PlaneGeometry(1.8, 1.8);
+      const geometry = new THREE.PlaneGeometry(1.9, 1.9);
       const material = new THREE.ShaderMaterial({
         transparent: true,
         depthWrite: false,
@@ -241,8 +255,8 @@
             vec2 p = vUv - vec2(0.5);
             float d = length(p);
             float glow = smoothstep(0.55, 0.0, d);
-            vec3 color = mix(vec3(0.0, 0.5, 1.0), vec3(0.7, 0.95, 1.0), glow);
-            gl_FragColor = vec4(color, glow * 0.45 * uOpacity);
+            vec3 color = mix(vec3(0.0, 0.5, 1.0), vec3(0.8, 0.97, 1.0), glow);
+            gl_FragColor = vec4(color, glow * 0.42 * uOpacity);
           }
         `
       });
@@ -250,6 +264,28 @@
       glowMesh = new THREE.Mesh(geometry, material);
       glowMesh.position.set(0, 0, -0.02);
       scene.add(glowMesh);
+    }
+
+    function createShockwave() {
+      if (shockwaveMesh) {
+        scene.remove(shockwaveMesh);
+        shockwaveMesh.geometry.dispose();
+        shockwaveMesh.material.dispose();
+      }
+
+      const geometry = new THREE.RingGeometry(0.2, 0.24, 64);
+      const material = new THREE.MeshBasicMaterial({
+        color: 0x88eeff,
+        transparent: true,
+        opacity: 0,
+        side: THREE.DoubleSide,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false
+      });
+
+      shockwaveMesh = new THREE.Mesh(geometry, material);
+      shockwaveMesh.position.set(0, 0, 0.01);
+      scene.add(shockwaveMesh);
     }
 
     function createParticlesFromLogoShape() {
@@ -264,7 +300,7 @@
       const sampleCanvas = document.createElement("canvas");
       const ctx = sampleCanvas.getContext("2d", { willReadFrequently: true });
 
-      const maxDim = 220;
+      const maxDim = 240;
       const aspect = img.width / img.height;
 
       if (img.width >= img.height) {
@@ -282,6 +318,7 @@
       const positions = [];
       const offsets = [];
       const sizes = [];
+      const colors = [];
 
       const widthWorld = 1.45;
       const heightWorld = widthWorld / aspect;
@@ -289,9 +326,12 @@
       for (let y = 0; y < sampleCanvas.height; y += 2) {
         for (let x = 0; x < sampleCanvas.width; x += 2) {
           const i = (y * sampleCanvas.width + x) * 4;
-          const alpha = imageData[i + 3];
+          const r = imageData[i] / 255;
+          const g = imageData[i + 1] / 255;
+          const b = imageData[i + 2] / 255;
+          const a = imageData[i + 3];
 
-          if (alpha > 40) {
+          if (a > 40) {
             const px = (x / sampleCanvas.width - 0.5) * widthWorld;
             const py = -(y / sampleCanvas.height - 0.5) * heightWorld;
             const pz = (Math.random() - 0.5) * 0.02;
@@ -299,8 +339,8 @@
             positions.push(px, py, pz);
 
             const angle = Math.atan2(py, px);
-            const radiusBoost = 0.35 + Math.random() * 0.9;
-            const randomSpread = 0.12 + Math.random() * 0.35;
+            const radiusBoost = 0.35 + Math.random() * 0.95;
+            const randomSpread = 0.10 + Math.random() * 0.30;
 
             offsets.push(
               px + Math.cos(angle) * radiusBoost + (Math.random() - 0.5) * randomSpread,
@@ -308,7 +348,8 @@
               pz + (Math.random() - 0.5) * 0.9
             );
 
-            sizes.push(0.012 + Math.random() * 0.016);
+            sizes.push(0.010 + Math.random() * 0.014);
+            colors.push(r, g, b);
           }
         }
       }
@@ -317,11 +358,13 @@
       particleGeometry.setAttribute("position", new THREE.Float32BufferAttribute(positions, 3));
       particleGeometry.setAttribute("aOffset", new THREE.Float32BufferAttribute(offsets, 3));
       particleGeometry.setAttribute("aSize", new THREE.Float32BufferAttribute(sizes, 1));
+      particleGeometry.setAttribute("color", new THREE.Float32BufferAttribute(colors, 3));
 
       particleMaterial = new THREE.ShaderMaterial({
         transparent: true,
         depthWrite: false,
         blending: THREE.AdditiveBlending,
+        vertexColors: true,
         uniforms: {
           uProgress: { value: 0 },
           uOpacity: { value: 1 }
@@ -331,6 +374,7 @@
           attribute float aSize;
           uniform float uProgress;
           varying float vAlpha;
+          varying vec3 vColor;
 
           void main() {
             vec3 displaced = mix(position, aOffset, uProgress);
@@ -338,18 +382,19 @@
             gl_PointSize = aSize * 900.0 / -mvPosition.z;
             gl_Position = projectionMatrix * mvPosition;
             vAlpha = 1.0 - uProgress;
+            vColor = color;
           }
         `,
         fragmentShader: `
           uniform float uOpacity;
           varying float vAlpha;
+          varying vec3 vColor;
 
           void main() {
             vec2 uv = gl_PointCoord - vec2(0.5);
             float d = length(uv);
             float alpha = smoothstep(0.5, 0.0, d) * vAlpha * uOpacity;
-            vec3 color = mix(vec3(0.0, 0.7, 1.0), vec3(0.85, 0.97, 1.0), 0.5);
-            gl_FragColor = vec4(color, alpha);
+            gl_FragColor = vec4(vColor, alpha);
           }
         `
       });
@@ -360,7 +405,7 @@
     }
 
     function restartEffect() {
-      if (!logoMesh || !glowMesh) return;
+      if (!logoMesh || !glowMesh || !shockwaveMesh) return;
 
       if (particles) {
         scene.remove(particles);
@@ -378,12 +423,18 @@
       glowMesh.material.uniforms.uOpacity.value = 0;
       glowMesh.scale.set(0.7, 0.7, 0.7);
 
+      shockwaveMesh.visible = true;
+      shockwaveMesh.material.opacity = 0;
+      shockwaveMesh.scale.set(0.4, 0.4, 0.4);
+
+      playEffectAudio();
+
       phase = "logo-in";
       phaseStart = clock.getElapsedTime();
     }
 
     function updateEffect(time) {
-      if (!logoMesh || !glowMesh) return;
+      if (!logoMesh || !glowMesh || !shockwaveMesh) return;
 
       const t = time - phaseStart;
 
@@ -398,6 +449,10 @@
         glowMesh.material.uniforms.uOpacity.value = eased;
         glowMesh.scale.setScalar(0.72 + eased * 0.28);
 
+        const shockP = Math.min(t / 0.7, 1);
+        shockwaveMesh.material.opacity = (1 - shockP) * 0.75;
+        shockwaveMesh.scale.setScalar(0.4 + shockP * 2.4);
+
         if (p >= 1) {
           phase = "hold";
           phaseStart = time;
@@ -409,6 +464,8 @@
 
         glowMesh.material.uniforms.uOpacity.value = 1;
         glowMesh.scale.setScalar(1 + Math.sin(time * 2.2) * 0.04);
+
+        shockwaveMesh.material.opacity = 0;
 
         if (t >= 0.9) {
           createParticlesFromLogoShape();
@@ -435,6 +492,7 @@
         if (p >= 1) {
           logoMesh.visible = false;
           glowMesh.visible = false;
+          shockwaveMesh.visible = false;
           phase = "done";
           phaseStart = time;
         }
