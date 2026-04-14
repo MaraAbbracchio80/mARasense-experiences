@@ -31,7 +31,6 @@
       width: 100%;
       height: 100%;
       z-index: 2;
-      pointer-events: none;
     }
 
     #startScreen {
@@ -59,18 +58,18 @@
       cursor: pointer;
     }
 
-    #debug {
+    #hint {
       position: fixed;
-      top: 14px;
+      bottom: 28px;
       left: 50%;
       transform: translateX(-50%);
-      z-index: 20;
-      background: rgba(0,0,0,0.65);
+      z-index: 11;
       color: white;
+      background: rgba(0,0,0,0.55);
       padding: 10px 14px;
       border-radius: 10px;
+      display: none;
       font-size: 14px;
-      max-width: 92vw;
       text-align: center;
     }
   </style>
@@ -79,39 +78,38 @@
 
   <div id="startScreen">
     <h1>Magic Object</h1>
-    <p>Tocca il pulsante per attivare camera e modello 3D</p>
-    <button id="startBtn">riAvvia 2</button>
+    <p>Tocca il pulsante per attivare camera ed effetto particellare</p>
+    <button id="startBtn">Avvia esperienza</button>
   </div>
 
-  <div id="debug">Stato: pagina caricata</div>
+  <div id="hint">Tocca lo schermo per rilanciare l’effetto</div>
 
   <video id="camera" autoplay playsinline muted></video>
   <canvas id="threeCanvas"></canvas>
 
   <script src="https://unpkg.com/three@0.128.0/build/three.min.js"></script>
-  <script src="https://unpkg.com/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
 
   <script>
-    alert("JS CARICATO");
-
     const startBtn = document.getElementById("startBtn");
     const startScreen = document.getElementById("startScreen");
-    const debug = document.getElementById("debug");
+    const hint = document.getElementById("hint");
     const video = document.getElementById("camera");
     const canvas = document.getElementById("threeCanvas");
 
-    let scene, camera3D, renderer, model;
-    let started = false;
+    let scene, camera3D, renderer;
+    let logoMesh = null;
+    let particles = null;
+    let particleMaterial = null;
+    let particleGeometry = null;
+    let logoTexture = null;
 
-    function setDebug(text) {
-      debug.textContent = "Stato: " + text;
-      console.log(text);
-    }
+    let started = false;
+    let phase = "idle";
+    let phaseStart = 0;
+
+    const clock = new THREE.Clock();
 
     async function startCamera() {
-      setDebug("richiesta camera...");
-      alert("Richiesta camera...");
-
       const stream = await navigator.mediaDevices.getUserMedia({
         video: {
           facingMode: { ideal: "environment" }
@@ -126,14 +124,9 @@
           video.play().then(resolve).catch(resolve);
         };
       });
-
-      alert("Camera attiva");
-      setDebug("camera attiva");
     }
 
     function init3D() {
-      setDebug("inizializzo 3D...");
-
       scene = new THREE.Scene();
 
       camera3D = new THREE.PerspectiveCamera(
@@ -142,7 +135,7 @@
         0.01,
         100
       );
-      camera3D.position.z = 2;
+      camera3D.position.set(0, 0, 2.4);
 
       renderer = new THREE.WebGLRenderer({
         canvas: canvas,
@@ -152,48 +145,211 @@
       renderer.setPixelRatio(window.devicePixelRatio || 1);
       renderer.setSize(window.innerWidth, window.innerHeight);
 
-      const hemi = new THREE.HemisphereLight(0xffffff, 0x8899bb, 1.2);
+      const hemi = new THREE.HemisphereLight(0xffffff, 0x445577, 1.15);
       scene.add(hemi);
 
-      const dir = new THREE.DirectionalLight(0xffffff, 0.8);
-      dir.position.set(1, 2, 3);
-      scene.add(dir);
+      const dir1 = new THREE.DirectionalLight(0xffffff, 1.0);
+      dir1.position.set(1.5, 2, 3);
+      scene.add(dir1);
 
-      loadModel();
+      const dir2 = new THREE.DirectionalLight(0xffffff, 0.5);
+      dir2.position.set(-2, 1, 2);
+      scene.add(dir2);
+
+      loadLogoTexture();
       animate();
 
-      setDebug("3D avviato");
+      window.addEventListener("pointerdown", () => {
+        if (!logoTexture) return;
+        restartEffect();
+      });
     }
 
-    function loadModel() {
-      setDebug("carico modello...");
-
-      const loader = new THREE.GLTFLoader();
-
+    function loadLogoTexture() {
+      const loader = new THREE.TextureLoader();
       loader.load(
-        "./assets/models/object.glb",
-        function(gltf) {
-          model = gltf.scene;
-          model.scale.set(0.5, 0.5, 0.5);
-          model.position.set(0, 0, 0);
-          scene.add(model);
-          setDebug("modello caricato");
+        "./assets/images/logo.png",
+        (texture) => {
+          logoTexture = texture;
+          createLogo();
+          restartEffect();
+          hint.style.display = "block";
         },
         undefined,
-        function(error) {
-          console.error(error);
-          setDebug("errore caricamento modello");
-          alert("Errore caricamento object.glb");
+        (err) => {
+          console.error("Errore caricamento logo.png:", err);
         }
       );
+    }
+
+    function createLogo() {
+      if (logoMesh) {
+        scene.remove(logoMesh);
+        logoMesh.geometry.dispose();
+        logoMesh.material.dispose();
+      }
+
+      const geometry = new THREE.PlaneGeometry(1.4, 1.4);
+      const material = new THREE.MeshBasicMaterial({
+        map: logoTexture,
+        transparent: true,
+        opacity: 0
+      });
+
+      logoMesh = new THREE.Mesh(geometry, material);
+      logoMesh.position.set(0, 0, 0);
+      scene.add(logoMesh);
+    }
+
+    function createParticlesFromLogo() {
+      if (particles) {
+        scene.remove(particles);
+        particleGeometry.dispose();
+        particleMaterial.dispose();
+        particles = null;
+      }
+
+      const count = 1600;
+      const positions = new Float32Array(count * 3);
+      const offsets = new Float32Array(count * 3);
+      const sizes = new Float32Array(count);
+
+      for (let i = 0; i < count; i++) {
+        const i3 = i * 3;
+
+        const x = (Math.random() - 0.5) * 1.1;
+        const y = (Math.random() - 0.5) * 1.1;
+        const z = (Math.random() - 0.5) * 0.12;
+
+        positions[i3] = x;
+        positions[i3 + 1] = y;
+        positions[i3 + 2] = z;
+
+        const spread = 0.9 + Math.random() * 0.9;
+        offsets[i3] = x * spread + (Math.random() - 0.5) * 0.4;
+        offsets[i3 + 1] = y * spread + (Math.random() - 0.5) * 0.4;
+        offsets[i3 + 2] = z + (Math.random() - 0.5) * 0.8;
+
+        sizes[i] = 0.015 + Math.random() * 0.02;
+      }
+
+      particleGeometry = new THREE.BufferGeometry();
+      particleGeometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+      particleGeometry.setAttribute("aOffset", new THREE.BufferAttribute(offsets, 3));
+      particleGeometry.setAttribute("aSize", new THREE.BufferAttribute(sizes, 1));
+
+      particleMaterial = new THREE.ShaderMaterial({
+        transparent: true,
+        depthWrite: false,
+        blending: THREE.AdditiveBlending,
+        uniforms: {
+          uProgress: { value: 0 },
+          uOpacity: { value: 1 }
+        },
+        vertexShader: `
+          attribute vec3 aOffset;
+          attribute float aSize;
+          uniform float uProgress;
+          varying float vAlpha;
+
+          void main() {
+            vec3 newPosition = mix(position, aOffset, uProgress);
+            vec4 mvPosition = modelViewMatrix * vec4(newPosition, 1.0);
+            gl_PointSize = aSize * 900.0 / -mvPosition.z;
+            gl_Position = projectionMatrix * mvPosition;
+            vAlpha = 1.0 - uProgress;
+          }
+        `,
+        fragmentShader: `
+          uniform float uOpacity;
+          varying float vAlpha;
+
+          void main() {
+            vec2 uv = gl_PointCoord - vec2(0.5);
+            float d = length(uv);
+            float alpha = smoothstep(0.5, 0.0, d) * vAlpha * uOpacity;
+            gl_FragColor = vec4(0.1, 0.8, 1.0, alpha);
+          }
+        `
+      });
+
+      particles = new THREE.Points(particleGeometry, particleMaterial);
+      particles.position.set(0, 0, 0.02);
+      scene.add(particles);
+    }
+
+    function restartEffect() {
+      if (!logoMesh) return;
+
+      if (particles) {
+        scene.remove(particles);
+        particleGeometry.dispose();
+        particleMaterial.dispose();
+        particles = null;
+      }
+
+      logoMesh.visible = true;
+      logoMesh.material.opacity = 0;
+      logoMesh.scale.set(0.7, 0.7, 0.7);
+      logoMesh.rotation.set(0, 0, 0);
+
+      phase = "logo-in";
+      phaseStart = clock.getElapsedTime();
+    }
+
+    function updateEffect(time) {
+      if (!logoMesh) return;
+
+      const t = time - phaseStart;
+
+      if (phase === "logo-in") {
+        const p = Math.min(t / 1.2, 1);
+        const eased = 1 - Math.pow(1 - p, 3);
+
+        logoMesh.material.opacity = eased;
+        logoMesh.scale.setScalar(0.7 + eased * 0.3);
+        logoMesh.rotation.y = (1 - eased) * 0.5;
+
+        if (p >= 1) {
+          phase = "hold";
+          phaseStart = time;
+        }
+      } else if (phase === "hold") {
+        logoMesh.material.opacity = 1;
+        logoMesh.rotation.y += 0.01;
+
+        if (t >= 0.8) {
+          createParticlesFromLogo();
+          phase = "explode";
+          phaseStart = time;
+        }
+      } else if (phase === "explode") {
+        const p = Math.min(t / 1.8, 1);
+
+        logoMesh.material.opacity = Math.max(1 - p * 2.2, 0);
+        logoMesh.scale.setScalar(1 + p * 0.15);
+        logoMesh.rotation.y += 0.02;
+
+        if (particles) {
+          particleMaterial.uniforms.uProgress.value = p;
+          particleMaterial.uniforms.uOpacity.value = 1 - p * 0.15;
+          particles.rotation.z += 0.002;
+          particles.rotation.y += 0.004;
+        }
+
+        if (p >= 1) {
+          logoMesh.visible = false;
+          phase = "done";
+          phaseStart = time;
+        }
+      }
     }
 
     function animate() {
       requestAnimationFrame(animate);
 
-      if (model) {
-        model.rotation.y += 0.01;
-      }
+      const time = clock.getElapsedTime();
+      updateEffect(time);
 
       if (renderer && scene && camera3D) {
         renderer.render(scene, camera3D);
@@ -205,18 +361,11 @@
       started = true;
 
       try {
-        setDebug("click ok");
-        alert("CLICK OK");
-
         await startCamera();
-
         startScreen.style.display = "none";
-
         init3D();
       } catch (err) {
         console.error(err);
-        setDebug("errore: " + err.message);
-        alert("Errore: " + err.message);
         started = false;
       }
     };
