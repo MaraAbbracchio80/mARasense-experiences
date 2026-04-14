@@ -13,6 +13,7 @@
       overflow: hidden;
       background: #000;
       font-family: Arial, sans-serif;
+      touch-action: manipulation;
     }
 
     #camera {
@@ -85,7 +86,7 @@
     <button id="startBtn">Avvia esperienza</button>
   </div>
 
-  <div id="hint">Tocca lo schermo per rilanciare l’effetto</div>
+  <div id="hint">Tocca lo schermo per spostare e rilanciare l’effetto</div>
 
   <video id="camera" autoplay playsinline muted></video>
   <canvas id="threeCanvas"></canvas>
@@ -114,6 +115,9 @@
     let started = false;
     let phase = "idle";
     let phaseStart = 0;
+
+    let effectCenter = new THREE.Vector3(0, 0, 0);
+    let targetCenter = new THREE.Vector3(0, 0, 0);
 
     const clock = new THREE.Clock();
 
@@ -175,10 +179,19 @@
       loadLogoTexture();
       animate();
 
-      window.addEventListener("pointerdown", () => {
-        if (!logoTexture || startScreen.style.display !== "none") return;
-        restartEffect();
-      });
+      window.addEventListener("pointerdown", onPointerDown);
+    }
+
+    function onPointerDown(event) {
+      if (!logoTexture || startScreen.style.display !== "none") return;
+
+      const x = (event.clientX / window.innerWidth) * 2 - 1;
+      const y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+      // Mappa semplice schermo -> scena
+      targetCenter.set(x * 0.9, y * 1.4, 0);
+
+      restartEffect();
     }
 
     function loadLogoTexture() {
@@ -222,7 +235,7 @@
       });
 
       logoMesh = new THREE.Mesh(geometry, material);
-      logoMesh.position.set(0, 0, 0.02);
+      logoMesh.position.copy(effectCenter).add(new THREE.Vector3(0, 0, 0.02));
       scene.add(logoMesh);
     }
 
@@ -262,7 +275,7 @@
       });
 
       glowMesh = new THREE.Mesh(geometry, material);
-      glowMesh.position.set(0, 0, -0.02);
+      glowMesh.position.copy(effectCenter).add(new THREE.Vector3(0, 0, -0.02));
       scene.add(glowMesh);
     }
 
@@ -284,7 +297,7 @@
       });
 
       shockwaveMesh = new THREE.Mesh(geometry, material);
-      shockwaveMesh.position.set(0, 0, 0.01);
+      shockwaveMesh.position.copy(effectCenter).add(new THREE.Vector3(0, 0, 0.01));
       scene.add(shockwaveMesh);
     }
 
@@ -381,7 +394,7 @@
             vec4 mvPosition = modelViewMatrix * vec4(displaced, 1.0);
             gl_PointSize = aSize * 900.0 / -mvPosition.z;
             gl_Position = projectionMatrix * mvPosition;
-            vAlpha = 1.0 - uProgress;
+            vAlpha = 1.0 - abs(uProgress - 0.5) * 2.0;
             vColor = color;
           }
         `,
@@ -400,7 +413,7 @@
       });
 
       particles = new THREE.Points(particleGeometry, particleMaterial);
-      particles.position.set(0, 0, 0.05);
+      particles.position.copy(effectCenter).add(new THREE.Vector3(0, 0, 0.05));
       scene.add(particles);
     }
 
@@ -414,27 +427,51 @@
         particles = null;
       }
 
-      logoMesh.visible = true;
-      logoMesh.material.opacity = 0;
-      logoMesh.scale.set(0.82, 0.82, 0.82);
-      logoMesh.rotation.set(0, 0, 0);
-
-      glowMesh.visible = true;
-      glowMesh.material.uniforms.uOpacity.value = 0;
-      glowMesh.scale.set(0.7, 0.7, 0.7);
-
-      shockwaveMesh.visible = true;
-      shockwaveMesh.material.opacity = 0;
-      shockwaveMesh.scale.set(0.4, 0.4, 0.4);
-
       playEffectAudio();
 
       phase = "logo-in";
       phaseStart = clock.getElapsedTime();
+
+      logoMesh.visible = true;
+      logoMesh.material.opacity = 0;
+      logoMesh.scale.set(0.82, 0.82, 0.82);
+      logoMesh.rotation.set(0, 0, 0);
+      logoMesh.position.copy(effectCenter).add(new THREE.Vector3(0, 0, 0.02));
+
+      glowMesh.visible = true;
+      glowMesh.material.uniforms.uOpacity.value = 0;
+      glowMesh.scale.set(0.7, 0.7, 0.7);
+      glowMesh.position.copy(effectCenter).add(new THREE.Vector3(0, 0, -0.02));
+
+      shockwaveMesh.visible = true;
+      shockwaveMesh.material.opacity = 0;
+      shockwaveMesh.scale.set(0.4, 0.4, 0.4);
+      shockwaveMesh.position.copy(effectCenter).add(new THREE.Vector3(0, 0, 0.01));
     }
 
     function updateEffect(time) {
       if (!logoMesh || !glowMesh || !shockwaveMesh) return;
+
+      // Centro con inerzia morbida
+      effectCenter.lerp(targetCenter, 0.08);
+
+      if (logoMesh.visible) logoMesh.position.x = effectCenter.x;
+      if (logoMesh.visible) logoMesh.position.y = effectCenter.y + Math.sin(time * 1.8) * 0.02;
+
+      if (glowMesh.visible) {
+        glowMesh.position.x = effectCenter.x;
+        glowMesh.position.y = effectCenter.y;
+      }
+
+      if (shockwaveMesh.visible) {
+        shockwaveMesh.position.x = effectCenter.x;
+        shockwaveMesh.position.y = effectCenter.y;
+      }
+
+      if (particles) {
+        particles.position.x = effectCenter.x;
+        particles.position.y = effectCenter.y;
+      }
 
       const t = time - phaseStart;
 
@@ -444,7 +481,7 @@
 
         logoMesh.material.opacity = eased;
         logoMesh.scale.setScalar(0.82 + eased * 0.18);
-        logoMesh.position.y = Math.sin(time * 1.6) * 0.015;
+        logoMesh.rotation.z = Math.sin(time * 1.2) * 0.02;
 
         glowMesh.material.uniforms.uOpacity.value = eased;
         glowMesh.scale.setScalar(0.72 + eased * 0.28);
@@ -459,7 +496,6 @@
         }
       } else if (phase === "hold") {
         logoMesh.material.opacity = 1;
-        logoMesh.position.y = Math.sin(time * 1.8) * 0.02;
         logoMesh.rotation.z = Math.sin(time * 1.4) * 0.03;
 
         glowMesh.material.uniforms.uOpacity.value = 1;
@@ -467,24 +503,23 @@
 
         shockwaveMesh.material.opacity = 0;
 
-        if (t >= 0.9) {
+        if (t >= 0.8) {
           createParticlesFromLogoShape();
           phase = "explode";
           phaseStart = time;
         }
       } else if (phase === "explode") {
-        const p = Math.min(t / 1.8, 1);
+        const p = Math.min(t / 1.5, 1);
 
         logoMesh.material.opacity = Math.max(1 - p * 2.4, 0);
         logoMesh.scale.setScalar(1 + p * 0.08);
-        logoMesh.rotation.z = Math.sin(time * 8.0) * 0.01;
 
         glowMesh.material.uniforms.uOpacity.value = Math.max(1 - p * 0.9, 0);
         glowMesh.scale.setScalar(1 + p * 0.55);
 
         if (particles) {
           particleMaterial.uniforms.uProgress.value = p;
-          particleMaterial.uniforms.uOpacity.value = 1 - p * 0.08;
+          particleMaterial.uniforms.uOpacity.value = 1;
           particles.rotation.z += 0.0015;
           particles.rotation.y = Math.sin(time * 0.8) * 0.12;
         }
@@ -493,6 +528,44 @@
           logoMesh.visible = false;
           glowMesh.visible = false;
           shockwaveMesh.visible = false;
+          phase = "reform";
+          phaseStart = time;
+        }
+      } else if (phase === "reform") {
+        const p = Math.min(t / 1.5, 1);
+
+        if (particles) {
+          particleMaterial.uniforms.uProgress.value = 1 - p;
+          particleMaterial.uniforms.uOpacity.value = 1;
+          particles.rotation.z *= 0.985;
+          particles.rotation.y *= 0.985;
+        }
+
+        if (p >= 1) {
+          if (particles) {
+            scene.remove(particles);
+            particleGeometry.dispose();
+            particleMaterial.dispose();
+            particles = null;
+          }
+
+          logoMesh.visible = true;
+          glowMesh.visible = true;
+          shockwaveMesh.visible = false;
+
+          logoMesh.material.opacity = 1;
+          logoMesh.scale.set(1, 1, 1);
+          glowMesh.material.uniforms.uOpacity.value = 1;
+
+          phase = "final-hold";
+          phaseStart = time;
+        }
+      } else if (phase === "final-hold") {
+        logoMesh.rotation.z = Math.sin(time * 1.1) * 0.018;
+        logoMesh.scale.setScalar(1 + Math.sin(time * 1.7) * 0.015);
+        glowMesh.scale.setScalar(1 + Math.sin(time * 2.0) * 0.03);
+
+        if (t >= 1.4) {
           phase = "done";
           phaseStart = time;
         }
