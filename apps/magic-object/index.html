@@ -115,6 +115,7 @@
     let started = false;
     let phase = "idle";
     let phaseStart = 0;
+    let reformAudioPlayed = false;
 
     let effectCenter = new THREE.Vector3(0, 0, 0);
     let targetCenter = new THREE.Vector3(0, 0, 0);
@@ -138,10 +139,13 @@
       });
     }
 
-    function playEffectAudio() {
+    function playEffectAudio(reset = true, volume = 1) {
       try {
-        fxAudio.pause();
-        fxAudio.currentTime = 0;
+        fxAudio.volume = volume;
+        if (reset) {
+          fxAudio.pause();
+          fxAudio.currentTime = 0;
+        }
         fxAudio.play().catch(() => {});
       } catch (e) {}
     }
@@ -188,7 +192,6 @@
       const x = (event.clientX / window.innerWidth) * 2 - 1;
       const y = -(event.clientY / window.innerHeight) * 2 + 1;
 
-      // Mappa semplice schermo -> scena
       targetCenter.set(x * 0.9, y * 1.4, 0);
 
       restartEffect();
@@ -427,7 +430,8 @@
         particles = null;
       }
 
-      playEffectAudio();
+      reformAudioPlayed = false;
+      playEffectAudio(true, 1);
 
       phase = "logo-in";
       phaseStart = clock.getElapsedTime();
@@ -452,7 +456,6 @@
     function updateEffect(time) {
       if (!logoMesh || !glowMesh || !shockwaveMesh) return;
 
-      // Centro con inerzia morbida
       effectCenter.lerp(targetCenter, 0.08);
 
       if (logoMesh.visible) logoMesh.position.x = effectCenter.x;
@@ -476,7 +479,7 @@
       const t = time - phaseStart;
 
       if (phase === "logo-in") {
-        const p = Math.min(t / 1.1, 1);
+        const p = Math.min(t / 1.4, 1);
         const eased = 1 - Math.pow(1 - p, 3);
 
         logoMesh.material.opacity = eased;
@@ -486,9 +489,9 @@
         glowMesh.material.uniforms.uOpacity.value = eased;
         glowMesh.scale.setScalar(0.72 + eased * 0.28);
 
-        const shockP = Math.min(t / 0.7, 1);
+        const shockP = Math.min(t / 0.9, 1);
         shockwaveMesh.material.opacity = (1 - shockP) * 0.75;
-        shockwaveMesh.scale.setScalar(0.4 + shockP * 2.4);
+        shockwaveMesh.scale.setScalar(0.4 + shockP * 2.8);
 
         if (p >= 1) {
           phase = "hold";
@@ -503,24 +506,24 @@
 
         shockwaveMesh.material.opacity = 0;
 
-        if (t >= 0.8) {
+        if (t >= 1.2) {
           createParticlesFromLogoShape();
           phase = "explode";
           phaseStart = time;
         }
       } else if (phase === "explode") {
-        const p = Math.min(t / 1.5, 1);
+        const p = Math.min(t / 2.2, 1);
 
-        logoMesh.material.opacity = Math.max(1 - p * 2.4, 0);
-        logoMesh.scale.setScalar(1 + p * 0.08);
+        logoMesh.material.opacity = Math.max(1 - p * 2.2, 0);
+        logoMesh.scale.setScalar(1 + p * 0.12);
 
-        glowMesh.material.uniforms.uOpacity.value = Math.max(1 - p * 0.9, 0);
-        glowMesh.scale.setScalar(1 + p * 0.55);
+        glowMesh.material.uniforms.uOpacity.value = Math.max(1 - p * 0.8, 0);
+        glowMesh.scale.setScalar(1 + p * 0.75);
 
         if (particles) {
           particleMaterial.uniforms.uProgress.value = p;
           particleMaterial.uniforms.uOpacity.value = 1;
-          particles.rotation.z += 0.0015;
+          particles.rotation.z += 0.0012;
           particles.rotation.y = Math.sin(time * 0.8) * 0.12;
         }
 
@@ -532,13 +535,18 @@
           phaseStart = time;
         }
       } else if (phase === "reform") {
-        const p = Math.min(t / 1.5, 1);
+        const p = Math.min(t / 2.0, 1);
+
+        if (!reformAudioPlayed && t > 0.15) {
+          reformAudioPlayed = true;
+          playEffectAudio(true, 0.9);
+        }
 
         if (particles) {
           particleMaterial.uniforms.uProgress.value = 1 - p;
           particleMaterial.uniforms.uOpacity.value = 1;
-          particles.rotation.z *= 0.985;
-          particles.rotation.y *= 0.985;
+          particles.rotation.z *= 0.988;
+          particles.rotation.y *= 0.988;
         }
 
         if (p >= 1) {
@@ -565,7 +573,7 @@
         logoMesh.scale.setScalar(1 + Math.sin(time * 1.7) * 0.015);
         glowMesh.scale.setScalar(1 + Math.sin(time * 2.0) * 0.03);
 
-        if (t >= 1.4) {
+        if (t >= 1.2) {
           phase = "done";
           phaseStart = time;
         }
