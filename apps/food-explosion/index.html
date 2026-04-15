@@ -99,20 +99,23 @@
 
     video:not(#foodVideo) {
       position: fixed !important;
-      inset: 0;
-      width: 100vw !important;
-      height: 100vh !important;
-      object-fit: cover !important;
+      top: 50% !important;
+      left: 50% !important;
+      min-width: 100vw !important;
+      min-height: 100vh !important;
+      width: auto !important;
+      height: auto !important;
+      transform: translate(-50%, -50%) !important;
       z-index: 1 !important;
       background: transparent !important;
     }
 
     canvas {
       position: fixed !important;
-      inset: 0;
+      top: 0 !important;
+      left: 0 !important;
       width: 100vw !important;
       height: 100vh !important;
-      object-fit: cover !important;
       z-index: 2 !important;
       background: transparent !important;
     }
@@ -137,6 +140,12 @@
 
   <div id="debugBox">Stato: attesa avvio</div>
   <div id="scanText">Inquadra bene la pizza</div>
+
+  <audio
+    id="foodAudio"
+    preload="auto"
+    src="./assets/audio/stomp-the-competition.mp3"
+  ></audio>
 
   <a-scene
     id="arScene"
@@ -166,9 +175,9 @@
         <a-plane
           id="videoPlane"
           src="#foodVideo"
-          position="0 0 0.04"
-          width="1.30"
-          height="1.30"
+          position="-0.04 0.02 0.04"
+          width="1.00"
+          height="1.45"
           material="shader: flat; transparent: true; opacity: 1"
           visible="false"
         ></a-plane>
@@ -186,6 +195,7 @@
     const smoothWrapper = document.getElementById("smoothWrapper");
     const videoPlane = document.getElementById("videoPlane");
     const foodVideo = document.getElementById("foodVideo");
+    const foodAudio = document.getElementById("foodAudio");
 
     let targetVisible = false;
     let smoothingInitialized = false;
@@ -221,13 +231,45 @@
       videoPlane.object3D.visible = false;
     }
 
-    async function playFromStart() {
+    async function playVideoFromStart() {
       try {
         foodVideo.pause();
         foodVideo.currentTime = 0;
         await foodVideo.play();
       } catch (e) {
         console.warn("Errore play video:", e);
+      }
+    }
+
+    async function unlockAudio() {
+      try {
+        foodAudio.volume = 0.01;
+        await foodAudio.play();
+        foodAudio.pause();
+        foodAudio.currentTime = 0;
+        foodAudio.volume = 1;
+      } catch (e) {
+        console.warn("Audio unlock non riuscito:", e);
+      }
+    }
+
+    async function playAudioFromStart() {
+      try {
+        foodAudio.pause();
+        foodAudio.currentTime = 0;
+        foodAudio.volume = 1;
+        await foodAudio.play();
+      } catch (e) {
+        console.warn("Errore play audio:", e);
+      }
+    }
+
+    function stopAudio() {
+      try {
+        foodAudio.pause();
+        foodAudio.currentTime = 0;
+      } catch (e) {
+        console.warn("Errore stop audio:", e);
       }
     }
 
@@ -249,6 +291,8 @@
     startButton.addEventListener("click", async () => {
       startButton.disabled = true;
       startButton.textContent = "Avvio...";
+
+      await unlockAudio();
 
       const startAR = async () => {
         const mindarSystem = sceneEl.systems["mindar-image-system"];
@@ -299,15 +343,20 @@
 
       showVideoPlane();
       setDebug("target trovato");
-      await playFromStart();
+
+      await playVideoFromStart();
+      await playAudioFromStart();
     });
 
     target0.addEventListener("targetLost", () => {
       targetVisible = false;
       smoothingInitialized = false;
+
       foodVideo.pause();
       foodVideo.currentTime = 0;
+      stopAudio();
       hideVideoPlane();
+
       showHint("Target perso. Riinquadra la pizza.");
       setDebug("target perso");
     });
@@ -315,6 +364,8 @@
     foodVideo.addEventListener("ended", () => {
       foodVideo.pause();
       foodVideo.currentTime = 0;
+      stopAudio();
+
       videoFinished = true;
       hideVideoPlane();
 
