@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Food Explosion - Premium</title>
+  <title>Food Explosion - Video AR</title>
 
   <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
@@ -121,7 +121,7 @@
 <body>
   <div id="startScreen">
     <h1>Food Explosion</h1>
-    <p>Premi Avvia esperienza e inquadra la pizza. Il gusto prenderà vita sopra il piatto.</p>
+    <p>Premi Avvia esperienza e inquadra la pizza. Il video partirà sopra il piatto.</p>
     <button id="startButton">Avvia esperienza</button>
   </div>
 
@@ -138,108 +138,30 @@
     mindar-image="imageTargetSrc: ./targets.mind; uiLoading: no; uiScanning: no; uiError: no; autoStart: false;"
   >
     <a-assets>
-      <img id="ingredient1" src="./assets/images/ingredient1.png" />
-      <img id="ingredient2" src="./assets/images/ingredient2.png" />
-      <img id="ingredient3" src="./assets/images/ingredient3.png" />
-      <img id="glow" src="./assets/images/glow.png" />
-      <img id="smoke" src="./assets/images/smoke.png" />
-      <img id="spark" src="./assets/images/spark.png" />
+      <video
+        id="foodVideo"
+        src="./assets/videos/il-gusto-prende-vita.mp4"
+        preload="auto"
+        playsinline
+        webkit-playsinline
+        crossorigin="anonymous"
+      ></video>
     </a-assets>
 
     <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
     <a-entity id="target0" mindar-image-target="targetIndex: 0">
-
-      <!-- GLOW CALDO -->
-      <a-plane
-        id="glowFx"
-        src="#glow"
-        position="0 0 0.01"
-        width="1.45"
-        height="1.45"
-        material="shader: flat; transparent: true; opacity: 0"
-      ></a-plane>
-
-      <!-- SMOKE -->
-      <a-plane
-        id="smokeFx"
-        src="#smoke"
-        position="0 0.15 0.02"
-        width="1.2"
-        height="0.8"
-        material="shader: flat; transparent: true; opacity: 0"
-      ></a-plane>
-
-      <!-- SPARK 1 -->
-      <a-plane
-        id="spark1"
-        src="#spark"
-        position="-0.42 0.18 0.03"
-        width="0.22"
-        height="0.22"
-        material="shader: flat; transparent: true; opacity: 0"
-      ></a-plane>
-
-      <!-- SPARK 2 -->
-      <a-plane
-        id="spark2"
-        src="#spark"
-        position="0.42 -0.08 0.03"
-        width="0.18"
-        height="0.18"
-        material="shader: flat; transparent: true; opacity: 0"
-      ></a-plane>
-
-      <!-- INGREDIENTI -->
-      <a-plane
-        id="ing1"
-        src="#ingredient1"
-        position="-0.55 0.32 0.04"
-        width="0.42"
-        height="0.42"
-        material="shader: flat; transparent: true; opacity: 0"
-      ></a-plane>
-
-      <a-plane
-        id="ing2"
-        src="#ingredient2"
-        position="0.54 0.24 0.04"
-        width="0.34"
-        height="0.34"
-        material="shader: flat; transparent: true; opacity: 0"
-      ></a-plane>
-
-      <a-plane
-        id="ing3"
-        src="#ingredient3"
-        position="0 -0.48 0.04"
-        width="0.40"
-        height="0.40"
-        material="shader: flat; transparent: true; opacity: 0"
-      ></a-plane>
-
-      <!-- HEADLINE -->
-      <a-text
-        id="headline"
-        value="Calda, filante, irresistibile"
-        color="#fff7e6"
-        align="center"
-        width="2.4"
-        position="0 0.72 0.05"
-        visible="false"
-      ></a-text>
-
-      <!-- SUBLINE -->
-      <a-text
-        id="subline"
-        value="Scopri gli ingredienti che la rendono speciale"
-        color="#ffd9b0"
-        align="center"
-        width="2.2"
-        position="0 0.56 0.05"
-        visible="false"
-      ></a-text>
-
+      <a-entity id="smoothWrapper">
+        <a-plane
+          id="videoPlane"
+          src="#foodVideo"
+          position="0 0 0.04"
+          width="1.30"
+          height="1.30"
+          material="shader: flat; transparent: true; opacity: 1"
+          visible="false"
+        ></a-plane>
+      </a-entity>
     </a-entity>
   </a-scene>
 
@@ -250,22 +172,19 @@
     const scanText = document.getElementById("scanText");
     const sceneEl = document.getElementById("arScene");
     const target0 = document.getElementById("target0");
-
-    const glowFx = document.getElementById("glowFx");
-    const smokeFx = document.getElementById("smokeFx");
-    const spark1 = document.getElementById("spark1");
-    const spark2 = document.getElementById("spark2");
-
-    const ing1 = document.getElementById("ing1");
-    const ing2 = document.getElementById("ing2");
-    const ing3 = document.getElementById("ing3");
-
-    const headline = document.getElementById("headline");
-    const subline = document.getElementById("subline");
+    const smoothWrapper = document.getElementById("smoothWrapper");
+    const videoPlane = document.getElementById("videoPlane");
+    const foodVideo = document.getElementById("foodVideo");
 
     let targetVisible = false;
-    let sceneStarted = false;
-    let startTime = 0;
+    let smoothingInitialized = false;
+    let videoFinished = false;
+
+    const smoothed = {
+      position: new THREE.Vector3(),
+      quaternion: new THREE.Quaternion(),
+      scale: new THREE.Vector3(1, 1, 1)
+    };
 
     function setDebug(text) {
       debugBox.textContent = "Stato: " + text;
@@ -281,130 +200,39 @@
       scanText.style.display = "none";
     }
 
-    function setOpacity(el, value) {
-      el.setAttribute("material", "shader: flat; transparent: true; opacity: " + value);
+    function showVideoPlane() {
+      videoPlane.setAttribute("visible", true);
+      videoPlane.object3D.visible = true;
     }
 
-    function resetScene() {
-      setOpacity(glowFx, 0);
-      setOpacity(smokeFx, 0);
-      setOpacity(spark1, 0);
-      setOpacity(spark2, 0);
-      setOpacity(ing1, 0);
-      setOpacity(ing2, 0);
-      setOpacity(ing3, 0);
-
-      glowFx.setAttribute("scale", "0.8 0.8 0.8");
-      smokeFx.setAttribute("scale", "0.9 0.9 0.9");
-      spark1.setAttribute("scale", "0.6 0.6 0.6");
-      spark2.setAttribute("scale", "0.6 0.6 0.6");
-
-      ing1.setAttribute("position", "0 0 0.04");
-      ing2.setAttribute("position", "0 0 0.04");
-      ing3.setAttribute("position", "0 0 0.04");
-
-      ing1.setAttribute("rotation", "0 0 0");
-      ing2.setAttribute("rotation", "0 0 0");
-      ing3.setAttribute("rotation", "0 0 0");
-
-      headline.setAttribute("visible", false);
-      subline.setAttribute("visible", false);
-
-      sceneStarted = false;
-      startTime = 0;
+    function hideVideoPlane() {
+      videoPlane.setAttribute("visible", false);
+      videoPlane.object3D.visible = false;
     }
 
-    function startPremiumSequence() {
-      if (sceneStarted) return;
-      sceneStarted = true;
-      startTime = performance.now();
-    }
-
-    function animatePremiumScene(now) {
-      if (!sceneStarted || !targetVisible) return;
-
-      const t = (now - startTime) / 1000;
-
-      // GLOW
-      if (t < 0.8) {
-        const p = t / 0.8;
-        setOpacity(glowFx, 0.85 * p);
-        const s = 0.8 + p * 0.35;
-        glowFx.setAttribute("scale", `${s} ${s} ${s}`);
-      } else {
-        const pulse = 1 + Math.sin(now * 0.004) * 0.04;
-        glowFx.setAttribute("scale", `${pulse} ${pulse} ${pulse}`);
-        setOpacity(glowFx, 0.85);
-      }
-
-      // SMOKE
-      if (t > 0.25) {
-        const p = Math.min((t - 0.25) / 0.9, 1);
-        setOpacity(smokeFx, 0.55 * p);
-        const s = 0.9 + p * 0.18;
-        smokeFx.setAttribute("scale", `${s} ${s} ${s}`);
-        const y = 0.15 + Math.sin(now * 0.0015) * 0.03;
-        smokeFx.setAttribute("position", `0 ${y} 0.02`);
-      }
-
-      // SPARKS
-      if (t > 0.15) {
-        const p = Math.min((t - 0.15) / 0.5, 1);
-        setOpacity(spark1, 0.8 * p);
-        setOpacity(spark2, 0.7 * p);
-
-        const s1 = 0.7 + Math.sin(now * 0.006) * 0.08;
-        const s2 = 0.7 + Math.cos(now * 0.005) * 0.08;
-
-        spark1.setAttribute("scale", `${s1} ${s1} ${s1}`);
-        spark2.setAttribute("scale", `${s2} ${s2} ${s2}`);
-      }
-
-      // INGREDIENTE 1
-      if (t > 0.45) {
-        const p = Math.min((t - 0.45) / 0.75, 1);
-        setOpacity(ing1, p);
-        const x = -0.55 * p;
-        const y = 0.32 * p + Math.sin(now * 0.0022) * 0.03;
-        const rot = Math.sin(now * 0.0018) * 8;
-        ing1.setAttribute("position", `${x} ${y} 0.04`);
-        ing1.setAttribute("rotation", `0 0 ${rot}`);
-      }
-
-      // INGREDIENTE 2
-      if (t > 0.7) {
-        const p = Math.min((t - 0.7) / 0.75, 1);
-        setOpacity(ing2, p);
-        const x = 0.54 * p;
-        const y = 0.24 * p + Math.cos(now * 0.0020) * 0.025;
-        const rot = Math.cos(now * 0.0016) * 10;
-        ing2.setAttribute("position", `${x} ${y} 0.04`);
-        ing2.setAttribute("rotation", `0 0 ${rot}`);
-      }
-
-      // INGREDIENTE 3
-      if (t > 0.95) {
-        const p = Math.min((t - 0.95) / 0.8, 1);
-        setOpacity(ing3, p);
-        const x = 0;
-        const y = -0.48 * p + Math.sin(now * 0.0024) * 0.02;
-        const rot = Math.sin(now * 0.0017) * 6;
-        ing3.setAttribute("position", `${x} ${y} 0.04`);
-        ing3.setAttribute("rotation", `0 0 ${rot}`);
-      }
-
-      // TESTI
-      if (t > 1.1) {
-        headline.setAttribute("visible", true);
-      }
-      if (t > 1.4) {
-        subline.setAttribute("visible", true);
+    async function playFromStart() {
+      try {
+        foodVideo.pause();
+        foodVideo.currentTime = 0;
+        await foodVideo.play();
+      } catch (e) {
+        console.warn("Errore play video:", e);
       }
     }
 
-    function tick(now) {
-      animatePremiumScene(now);
-      requestAnimationFrame(tick);
+    function initializeSmoothing() {
+      const targetObj = target0.object3D;
+      const wrapperObj = smoothWrapper.object3D;
+
+      smoothed.position.copy(targetObj.position);
+      smoothed.quaternion.copy(targetObj.quaternion);
+      smoothed.scale.copy(targetObj.scale);
+
+      wrapperObj.position.copy(smoothed.position);
+      wrapperObj.quaternion.copy(smoothed.quaternion);
+      wrapperObj.scale.copy(smoothed.scale);
+
+      smoothingInitialized = true;
     }
 
     startButton.addEventListener("click", async () => {
@@ -423,6 +251,7 @@
         try {
           await mindarSystem.start();
           startScreen.style.display = "none";
+          hideVideoPlane();
           showHint();
           setDebug("AR avviata. Ricerca target...");
         } catch (err) {
@@ -448,18 +277,65 @@
       setDebug("errore MindAR");
     });
 
-    target0.addEventListener("targetFound", () => {
+    target0.addEventListener("targetFound", async () => {
       targetVisible = true;
       hideHint();
+      initializeSmoothing();
+
+      if (videoFinished) {
+        videoFinished = false;
+      }
+
+      showVideoPlane();
       setDebug("target trovato");
-      startPremiumSequence();
+      await playFromStart();
     });
 
     target0.addEventListener("targetLost", () => {
       targetVisible = false;
-      resetScene();
+      smoothingInitialized = false;
+      foodVideo.pause();
+      foodVideo.currentTime = 0;
+      hideVideoPlane();
       showHint("Target perso. Riinquadra la pizza.");
       setDebug("target perso");
+    });
+
+    foodVideo.addEventListener("ended", () => {
+      foodVideo.pause();
+      foodVideo.currentTime = 0;
+      videoFinished = true;
+      hideVideoPlane();
+
+      if (targetVisible) {
+        showHint("Video finito. Esci e rientra sul target per farlo ripartire.");
+        setDebug("video terminato");
+      }
+    });
+
+    sceneEl.addEventListener("renderstart", () => {
+      const renderer = sceneEl.renderer;
+
+      renderer.setAnimationLoop(() => {
+        renderer.render(sceneEl.object3D, sceneEl.camera);
+
+        if (!targetVisible || !smoothingInitialized) return;
+
+        const targetObj = target0.object3D;
+        const wrapperObj = smoothWrapper.object3D;
+
+        const positionLerp = 0.12;
+        const rotationLerp = 0.10;
+        const scaleLerp = 0.12;
+
+        smoothed.position.lerp(targetObj.position, positionLerp);
+        smoothed.quaternion.slerp(targetObj.quaternion, rotationLerp);
+        smoothed.scale.lerp(targetObj.scale, scaleLerp);
+
+        wrapperObj.position.copy(smoothed.position);
+        wrapperObj.quaternion.copy(smoothed.quaternion);
+        wrapperObj.scale.copy(smoothed.scale);
+      });
     });
 
     setInterval(() => {
@@ -467,8 +343,6 @@
         showHint();
       }
     }, 800);
-
-    requestAnimationFrame(tick);
   </script>
 </body>
 </html>
