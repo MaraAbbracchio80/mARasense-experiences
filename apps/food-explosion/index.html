@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Food Explosion - mARasense</title>
+  <title>Food Explosion - Premium</title>
 
   <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
@@ -21,7 +21,7 @@
     #startScreen {
       position: fixed;
       inset: 0;
-      background: radial-gradient(circle at center, #1a120d 0%, #000 78%);
+      background: radial-gradient(circle at center, #2a160c 0%, #000 78%);
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -121,12 +121,12 @@
 <body>
   <div id="startScreen">
     <h1>Food Explosion</h1>
-    <p>Premi Avvia esperienza e inquadra il piatto. Gli ingredienti compariranno sopra l'immagine.</p>
+    <p>Premi Avvia esperienza e inquadra la pizza. Il gusto prenderà vita sopra il piatto.</p>
     <button id="startButton">Avvia esperienza</button>
   </div>
 
   <div id="debugBox">Stato: attesa avvio</div>
-  <div id="scanText">Inquadra bene il piatto</div>
+  <div id="scanText">Inquadra bene la pizza</div>
 
   <a-scene
     id="arScene"
@@ -141,52 +141,102 @@
       <img id="ingredient1" src="./assets/images/ingredient1.png" />
       <img id="ingredient2" src="./assets/images/ingredient2.png" />
       <img id="ingredient3" src="./assets/images/ingredient3.png" />
+      <img id="glow" src="./assets/images/glow.png" />
+      <img id="smoke" src="./assets/images/smoke.png" />
+      <img id="spark" src="./assets/images/spark.png" />
     </a-assets>
 
     <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
     <a-entity id="target0" mindar-image-target="targetIndex: 0">
 
+      <!-- GLOW CALDO -->
+      <a-plane
+        id="glowFx"
+        src="#glow"
+        position="0 0 0.01"
+        width="1.45"
+        height="1.45"
+        material="shader: flat; transparent: true; opacity: 0"
+      ></a-plane>
+
+      <!-- SMOKE -->
+      <a-plane
+        id="smokeFx"
+        src="#smoke"
+        position="0 0.15 0.02"
+        width="1.2"
+        height="0.8"
+        material="shader: flat; transparent: true; opacity: 0"
+      ></a-plane>
+
+      <!-- SPARK 1 -->
+      <a-plane
+        id="spark1"
+        src="#spark"
+        position="-0.42 0.18 0.03"
+        width="0.22"
+        height="0.22"
+        material="shader: flat; transparent: true; opacity: 0"
+      ></a-plane>
+
+      <!-- SPARK 2 -->
+      <a-plane
+        id="spark2"
+        src="#spark"
+        position="0.42 -0.08 0.03"
+        width="0.18"
+        height="0.18"
+        material="shader: flat; transparent: true; opacity: 0"
+      ></a-plane>
+
+      <!-- INGREDIENTI -->
       <a-plane
         id="ing1"
         src="#ingredient1"
-        position="-0.55 0.35 0"
-        width="0.38"
-        height="0.38"
+        position="-0.55 0.32 0.04"
+        width="0.42"
+        height="0.42"
         material="shader: flat; transparent: true; opacity: 0"
-        animation="property: position; from: 0 0 0; to: -0.55 0.35 0; dur: 900; startEvents: explode"
-        animation__fade="property: material.opacity; from: 0; to: 1; dur: 600; startEvents: explode"
       ></a-plane>
 
       <a-plane
         id="ing2"
         src="#ingredient2"
-        position="0.55 0.28 0"
+        position="0.54 0.24 0.04"
         width="0.34"
         height="0.34"
         material="shader: flat; transparent: true; opacity: 0"
-        animation="property: position; from: 0 0 0; to: 0.55 0.28 0; dur: 950; startEvents: explode"
-        animation__fade="property: material.opacity; from: 0; to: 1; dur: 650; startEvents: explode"
       ></a-plane>
 
       <a-plane
         id="ing3"
         src="#ingredient3"
-        position="0 -0.48 0"
-        width="0.42"
-        height="0.42"
+        position="0 -0.48 0.04"
+        width="0.40"
+        height="0.40"
         material="shader: flat; transparent: true; opacity: 0"
-        animation="property: position; from: 0 0 0; to: 0 -0.48 0; dur: 1000; startEvents: explode"
-        animation__fade="property: material.opacity; from: 0; to: 1; dur: 700; startEvents: explode"
       ></a-plane>
 
+      <!-- HEADLINE -->
       <a-text
-        id="foodTitle"
-        value="Ingredienti"
-        color="#ffffff"
+        id="headline"
+        value="Calda, filante, irresistibile"
+        color="#fff7e6"
+        align="center"
+        width="2.4"
+        position="0 0.72 0.05"
+        visible="false"
+      ></a-text>
+
+      <!-- SUBLINE -->
+      <a-text
+        id="subline"
+        value="Scopri gli ingredienti che la rendono speciale"
+        color="#ffd9b0"
         align="center"
         width="2.2"
-        position="0 0.72 0"
+        position="0 0.56 0.05"
         visible="false"
       ></a-text>
 
@@ -200,20 +250,29 @@
     const scanText = document.getElementById("scanText");
     const sceneEl = document.getElementById("arScene");
     const target0 = document.getElementById("target0");
+
+    const glowFx = document.getElementById("glowFx");
+    const smokeFx = document.getElementById("smokeFx");
+    const spark1 = document.getElementById("spark1");
+    const spark2 = document.getElementById("spark2");
+
     const ing1 = document.getElementById("ing1");
     const ing2 = document.getElementById("ing2");
     const ing3 = document.getElementById("ing3");
-    const foodTitle = document.getElementById("foodTitle");
+
+    const headline = document.getElementById("headline");
+    const subline = document.getElementById("subline");
 
     let targetVisible = false;
-    let exploded = false;
+    let sceneStarted = false;
+    let startTime = 0;
 
     function setDebug(text) {
       debugBox.textContent = "Stato: " + text;
       console.log(text);
     }
 
-    function showHint(text = "Inquadra bene il piatto") {
+    function showHint(text = "Inquadra bene la pizza") {
       scanText.textContent = text;
       scanText.style.display = "block";
     }
@@ -222,27 +281,130 @@
       scanText.style.display = "none";
     }
 
-    function resetIngredients() {
-      ing1.setAttribute("position", "0 0 0");
-      ing2.setAttribute("position", "0 0 0");
-      ing3.setAttribute("position", "0 0 0");
-
-      ing1.setAttribute("material", "shader: flat; transparent: true; opacity: 0");
-      ing2.setAttribute("material", "shader: flat; transparent: true; opacity: 0");
-      ing3.setAttribute("material", "shader: flat; transparent: true; opacity: 0");
-
-      foodTitle.setAttribute("visible", false);
-      exploded = false;
+    function setOpacity(el, value) {
+      el.setAttribute("material", "shader: flat; transparent: true; opacity: " + value);
     }
 
-    function explodeIngredients() {
-      if (exploded) return;
+    function resetScene() {
+      setOpacity(glowFx, 0);
+      setOpacity(smokeFx, 0);
+      setOpacity(spark1, 0);
+      setOpacity(spark2, 0);
+      setOpacity(ing1, 0);
+      setOpacity(ing2, 0);
+      setOpacity(ing3, 0);
 
-      ing1.emit("explode");
-      ing2.emit("explode");
-      ing3.emit("explode");
-      foodTitle.setAttribute("visible", true);
-      exploded = true;
+      glowFx.setAttribute("scale", "0.8 0.8 0.8");
+      smokeFx.setAttribute("scale", "0.9 0.9 0.9");
+      spark1.setAttribute("scale", "0.6 0.6 0.6");
+      spark2.setAttribute("scale", "0.6 0.6 0.6");
+
+      ing1.setAttribute("position", "0 0 0.04");
+      ing2.setAttribute("position", "0 0 0.04");
+      ing3.setAttribute("position", "0 0 0.04");
+
+      ing1.setAttribute("rotation", "0 0 0");
+      ing2.setAttribute("rotation", "0 0 0");
+      ing3.setAttribute("rotation", "0 0 0");
+
+      headline.setAttribute("visible", false);
+      subline.setAttribute("visible", false);
+
+      sceneStarted = false;
+      startTime = 0;
+    }
+
+    function startPremiumSequence() {
+      if (sceneStarted) return;
+      sceneStarted = true;
+      startTime = performance.now();
+    }
+
+    function animatePremiumScene(now) {
+      if (!sceneStarted || !targetVisible) return;
+
+      const t = (now - startTime) / 1000;
+
+      // GLOW
+      if (t < 0.8) {
+        const p = t / 0.8;
+        setOpacity(glowFx, 0.85 * p);
+        const s = 0.8 + p * 0.35;
+        glowFx.setAttribute("scale", `${s} ${s} ${s}`);
+      } else {
+        const pulse = 1 + Math.sin(now * 0.004) * 0.04;
+        glowFx.setAttribute("scale", `${pulse} ${pulse} ${pulse}`);
+        setOpacity(glowFx, 0.85);
+      }
+
+      // SMOKE
+      if (t > 0.25) {
+        const p = Math.min((t - 0.25) / 0.9, 1);
+        setOpacity(smokeFx, 0.55 * p);
+        const s = 0.9 + p * 0.18;
+        smokeFx.setAttribute("scale", `${s} ${s} ${s}`);
+        const y = 0.15 + Math.sin(now * 0.0015) * 0.03;
+        smokeFx.setAttribute("position", `0 ${y} 0.02`);
+      }
+
+      // SPARKS
+      if (t > 0.15) {
+        const p = Math.min((t - 0.15) / 0.5, 1);
+        setOpacity(spark1, 0.8 * p);
+        setOpacity(spark2, 0.7 * p);
+
+        const s1 = 0.7 + Math.sin(now * 0.006) * 0.08;
+        const s2 = 0.7 + Math.cos(now * 0.005) * 0.08;
+
+        spark1.setAttribute("scale", `${s1} ${s1} ${s1}`);
+        spark2.setAttribute("scale", `${s2} ${s2} ${s2}`);
+      }
+
+      // INGREDIENTE 1
+      if (t > 0.45) {
+        const p = Math.min((t - 0.45) / 0.75, 1);
+        setOpacity(ing1, p);
+        const x = -0.55 * p;
+        const y = 0.32 * p + Math.sin(now * 0.0022) * 0.03;
+        const rot = Math.sin(now * 0.0018) * 8;
+        ing1.setAttribute("position", `${x} ${y} 0.04`);
+        ing1.setAttribute("rotation", `0 0 ${rot}`);
+      }
+
+      // INGREDIENTE 2
+      if (t > 0.7) {
+        const p = Math.min((t - 0.7) / 0.75, 1);
+        setOpacity(ing2, p);
+        const x = 0.54 * p;
+        const y = 0.24 * p + Math.cos(now * 0.0020) * 0.025;
+        const rot = Math.cos(now * 0.0016) * 10;
+        ing2.setAttribute("position", `${x} ${y} 0.04`);
+        ing2.setAttribute("rotation", `0 0 ${rot}`);
+      }
+
+      // INGREDIENTE 3
+      if (t > 0.95) {
+        const p = Math.min((t - 0.95) / 0.8, 1);
+        setOpacity(ing3, p);
+        const x = 0;
+        const y = -0.48 * p + Math.sin(now * 0.0024) * 0.02;
+        const rot = Math.sin(now * 0.0017) * 6;
+        ing3.setAttribute("position", `${x} ${y} 0.04`);
+        ing3.setAttribute("rotation", `0 0 ${rot}`);
+      }
+
+      // TESTI
+      if (t > 1.1) {
+        headline.setAttribute("visible", true);
+      }
+      if (t > 1.4) {
+        subline.setAttribute("visible", true);
+      }
+    }
+
+    function tick(now) {
+      animatePremiumScene(now);
+      requestAnimationFrame(tick);
     }
 
     startButton.addEventListener("click", async () => {
@@ -290,13 +452,13 @@
       targetVisible = true;
       hideHint();
       setDebug("target trovato");
-      explodeIngredients();
+      startPremiumSequence();
     });
 
     target0.addEventListener("targetLost", () => {
       targetVisible = false;
-      resetIngredients();
-      showHint("Target perso. Riinquadra il piatto.");
+      resetScene();
+      showHint("Target perso. Riinquadra la pizza.");
       setDebug("target perso");
     });
 
@@ -305,6 +467,8 @@
         showHint();
       }
     }, 800);
+
+    requestAnimationFrame(tick);
   </script>
 </body>
 </html>
