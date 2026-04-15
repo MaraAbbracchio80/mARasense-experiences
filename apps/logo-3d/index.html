@@ -95,15 +95,13 @@
   <div id="startScreen">
     <h1>Logo 3D</h1>
     <p>Premi Avvia esperienza, poi tocca o trascina sullo schermo per far apparire e spostare il logo 3D.</p>
-    <button id="startBtn">LOGO 3D</button>
+    <button id="startBtn">Avvia esperienza</button>
   </div>
 
   <div id="hint">Tocca per far apparire il logo, trascina per spostarlo</div>
 
   <video id="camera" autoplay playsinline muted></video>
   <canvas id="threeCanvas"></canvas>
-
-  <audio id="moveAudio" preload="auto" src="./assets/audio/sound-effects.mp3"></audio>
 
   <script src="https://unpkg.com/three@0.128.0/build/three.min.js"></script>
   <script src="https://unpkg.com/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
@@ -114,21 +112,18 @@
     const hint = document.getElementById("hint");
     const video = document.getElementById("camera");
     const canvas = document.getElementById("threeCanvas");
-    const moveAudio = document.getElementById("moveAudio");
 
     let scene, camera3D, renderer;
     let logoRoot = null;
     let logoModel = null;
     let glowMesh = null;
-    let ringMesh = null;
-    let particles = [];
+    let orbitParticles = [];
     let trailParticles = [];
 
     let started = false;
     let logoReady = false;
     let logoVisible = false;
     let isDragging = false;
-    let audioUnlocked = false;
 
     let targetPos = new THREE.Vector3(0, 0, 0);
     let currentPos = new THREE.Vector3(0, 0, 0);
@@ -138,9 +133,7 @@
 
     async function startCamera() {
       const stream = await navigator.mediaDevices.getUserMedia({
-        video: {
-          facingMode: { ideal: "environment" }
-        },
+        video: { facingMode: { ideal: "environment" } },
         audio: false
       });
 
@@ -151,31 +144,6 @@
           video.play().then(resolve).catch(resolve);
         };
       });
-    }
-
-    async function unlockAudio() {
-      try {
-        moveAudio.volume = 0.01;
-        await moveAudio.play();
-        moveAudio.pause();
-        moveAudio.currentTime = 0;
-        moveAudio.volume = 1;
-        audioUnlocked = true;
-      } catch (e) {
-        console.warn("Audio unlock non riuscito:", e);
-      }
-    }
-
-    async function playMoveSound() {
-      if (!audioUnlocked) return;
-      try {
-        moveAudio.pause();
-        moveAudio.currentTime = 0;
-        moveAudio.volume = 0.8;
-        await moveAudio.play();
-      } catch (e) {
-        console.warn("Play move sound fallito:", e);
-      }
     }
 
     function initThree() {
@@ -190,7 +158,7 @@
       camera3D.position.set(0, 0, 2.8);
 
       renderer = new THREE.WebGLRenderer({
-        canvas: canvas,
+        canvas,
         alpha: true,
         antialias: true
       });
@@ -209,8 +177,7 @@
       scene.add(dir2);
 
       createGlow();
-      createRing();
-      createParticles();
+      createOrbitParticles();
       createTrailParticles();
       loadLogo();
 
@@ -258,23 +225,7 @@
       scene.add(glowMesh);
     }
 
-    function createRing() {
-      const geometry = new THREE.RingGeometry(0.34, 0.40, 64);
-      const material = new THREE.MeshBasicMaterial({
-        color: 0x66dfff,
-        transparent: true,
-        opacity: 0,
-        side: THREE.DoubleSide,
-        blending: THREE.AdditiveBlending,
-        depthWrite: false
-      });
-
-      ringMesh = new THREE.Mesh(geometry, material);
-      ringMesh.visible = false;
-      scene.add(ringMesh);
-    }
-
-    function createParticles() {
+    function createOrbitParticles() {
       const particleCount = 18;
       const geometry = new THREE.SphereGeometry(0.015, 8, 8);
 
@@ -294,7 +245,7 @@
           offsetY: (Math.random() - 0.5) * 0.3
         };
         scene.add(p);
-        particles.push(p);
+        orbitParticles.push(p);
       }
     }
 
@@ -367,10 +318,10 @@
 
           centerAndScaleModel(logoModel, 1.2);
 
-          // Fix asse: non più sottosopra
+          // Fix asse: versione più probabile per un modello capovolto
           logoModel.rotation.x = -Math.PI / 2;
           logoModel.rotation.y = 0;
-          logoModel.rotation.z = Math.PI;
+          logoModel.rotation.z = 0;
 
           logoRoot.add(logoModel);
           logoRoot.visible = false;
@@ -429,21 +380,10 @@
       glowMesh.visible = true;
       glowMesh.material.uniforms.uOpacity.value = 0;
 
-      ringMesh.position.set(x, y, 0.03);
-      ringMesh.visible = true;
-      ringMesh.material.opacity = 0.95;
-      ringMesh.scale.set(0.4, 0.4, 0.4);
-
-      particles.forEach((p) => {
+      orbitParticles.forEach((p) => {
         p.visible = true;
         p.material.opacity = 0.9;
       });
-    }
-
-    function pulseRing() {
-      ringMesh.visible = true;
-      ringMesh.material.opacity = 0.95;
-      ringMesh.scale.set(0.45, 0.45, 0.45);
     }
 
     function onPointerDown(event) {
@@ -456,8 +396,6 @@
         showLogoAt(pos.x, pos.y);
       } else {
         targetPos.set(pos.x, pos.y, 0);
-        pulseRing();
-        playMoveSound();
       }
     }
 
@@ -466,21 +404,16 @@
 
       const pos = pointerToScene(event);
       targetPos.set(pos.x, pos.y, 0);
-
-      const dist = currentPos.distanceTo(targetPos);
-      if (dist > 0.04) {
-        pulseRing();
-      }
     }
 
     function onPointerUp() {
       isDragging = false;
     }
 
-    function updateParticles(time) {
+    function updateOrbitParticles(time) {
       if (!logoRoot || !logoRoot.visible) return;
 
-      particles.forEach((p, i) => {
+      orbitParticles.forEach((p, i) => {
         const d = p.userData;
         const a = time * d.speed + d.angle;
 
@@ -514,7 +447,6 @@
 
       logoRoot.position.copy(currentPos);
       glowMesh.position.set(currentPos.x, currentPos.y, -0.08);
-      ringMesh.position.set(currentPos.x, currentPos.y, 0.03);
 
       if (logoRoot.scale.x < 1) {
         const s = THREE.MathUtils.lerp(logoRoot.scale.x, 1, 0.09);
@@ -523,7 +455,7 @@
 
       logoRoot.position.y += Math.sin(time * 1.8) * 0.0025;
 
-      // rotazione continua
+      // Rotazione continua del gruppo
       logoRoot.rotation.y += 0.015;
       logoRoot.rotation.x = Math.sin(time * 0.8) * 0.06;
       logoRoot.rotation.z = Math.sin(time * 1.1) * 0.02;
@@ -532,17 +464,7 @@
       const glowScale = 1 + Math.sin(time * 2.1) * 0.05;
       glowMesh.scale.set(glowScale, glowScale, glowScale);
 
-      if (ringMesh.visible) {
-        ringMesh.rotation.z += 0.016;
-        ringMesh.material.opacity *= 0.965;
-        ringMesh.scale.multiplyScalar(1.012);
-
-        if (ringMesh.material.opacity < 0.03) {
-          ringMesh.visible = false;
-        }
-      }
-
-      updateParticles(time);
+      updateOrbitParticles(time);
       updateTrailParticles();
     }
 
@@ -570,7 +492,6 @@
 
       try {
         await startCamera();
-        await unlockAudio();
         startScreen.style.display = "none";
         initThree();
       } catch (err) {
