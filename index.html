@@ -5,11 +5,77 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>mARasense experiences</title>
   <link rel="stylesheet" href="./shared/css/style.css" />
+  <style>
+    .badge-premium {
+      display: inline-block;
+      padding: 20px 30px;
+      border-radius: 24px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.14);
+      box-shadow:
+        0 0 18px rgba(0,229,255,0.12),
+        0 0 28px rgba(138,43,226,0.10),
+        0 0 36px rgba(255,122,0,0.08);
+      backdrop-filter: blur(8px);
+    }
+
+    .badge-title {
+      margin: 0;
+      font-size: clamp(34px, 5vw, 64px);
+      font-weight: 900;
+      line-height: 1.05;
+      letter-spacing: 0.5px;
+      color: #ffffff;
+      text-shadow:
+        0 0 10px rgba(255,255,255,0.08),
+        0 0 18px rgba(0,229,255,0.08);
+    }
+
+    .badge-title .pulse-ar {
+      display: inline-block;
+      background: linear-gradient(90deg, #00e5ff, #8a2be2, #ff7a00);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: arPulse 1.8s ease-in-out infinite;
+      text-shadow: none;
+    }
+
+    @keyframes arPulse {
+      0% {
+        transform: scale(1);
+        filter: drop-shadow(0 0 0px rgba(0,229,255,0.0));
+        opacity: 0.95;
+      }
+      50% {
+        transform: scale(1.08);
+        filter: drop-shadow(0 0 10px rgba(0,229,255,0.45));
+        opacity: 1;
+      }
+      100% {
+        transform: scale(1);
+        filter: drop-shadow(0 0 0px rgba(255,122,0,0.0));
+        opacity: 0.95;
+      }
+    }
+
+    .hero-text {
+      max-width: 760px;
+      margin: 18px auto 0;
+      font-size: clamp(16px, 2vw, 22px);
+      line-height: 1.5;
+      color: #d8d8d8;
+      text-align: center;
+    }
+  </style>
 </head>
 <body>
   <main class="page">
     <header class="hero">
-      <div class="badge">mARasense experiences</div>
+      <div class="badge-premium">
+        <h1 class="badge-title">
+          m<span class="pulse-ar">AR</span>asense experiences
+        </h1>
+      </div>
 
       <p class="hero-text">
         Demo WebAR accessibili da link o QR code, senza app da scaricare.
@@ -37,7 +103,7 @@
 
       <article class="card card-highlight">
         <h2>Logo 3D</h2>
-        <p>Un logo o contenuto 3D che appare nello spazio con effetto wow, senza target.</p>
+        <p>Un logo 3D che appare nello spazio con glow, floating ed effetto wow, senza target.</p>
         <a href="./apps/logo-3d/index.html">Apri demo</a>
       </article>
     </section>
