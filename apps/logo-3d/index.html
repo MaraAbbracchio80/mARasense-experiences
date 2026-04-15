@@ -103,6 +103,8 @@
   <video id="camera" autoplay playsinline muted></video>
   <canvas id="threeCanvas"></canvas>
 
+  <audio id="moveAudio" preload="auto" src="./assets/audio/sound-effects.mp3"></audio>
+
   <script src="https://unpkg.com/three@0.128.0/build/three.min.js"></script>
   <script src="https://unpkg.com/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
 
@@ -112,6 +114,7 @@
     const hint = document.getElementById("hint");
     const video = document.getElementById("camera");
     const canvas = document.getElementById("threeCanvas");
+    const moveAudio = document.getElementById("moveAudio");
 
     let scene, camera3D, renderer;
     let logoRoot = null;
@@ -119,14 +122,17 @@
     let glowMesh = null;
     let ringMesh = null;
     let particles = [];
+    let trailParticles = [];
 
     let started = false;
     let logoReady = false;
     let logoVisible = false;
     let isDragging = false;
+    let audioUnlocked = false;
 
     let targetPos = new THREE.Vector3(0, 0, 0);
     let currentPos = new THREE.Vector3(0, 0, 0);
+    let lastTrailPos = new THREE.Vector3(999, 999, 999);
 
     const clock = new THREE.Clock();
 
@@ -145,6 +151,31 @@
           video.play().then(resolve).catch(resolve);
         };
       });
+    }
+
+    async function unlockAudio() {
+      try {
+        moveAudio.volume = 0.01;
+        await moveAudio.play();
+        moveAudio.pause();
+        moveAudio.currentTime = 0;
+        moveAudio.volume = 1;
+        audioUnlocked = true;
+      } catch (e) {
+        console.warn("Audio unlock non riuscito:", e);
+      }
+    }
+
+    async function playMoveSound() {
+      if (!audioUnlocked) return;
+      try {
+        moveAudio.pause();
+        moveAudio.currentTime = 0;
+        moveAudio.volume = 0.8;
+        await moveAudio.play();
+      } catch (e) {
+        console.warn("Play move sound fallito:", e);
+      }
     }
 
     function initThree() {
@@ -180,6 +211,7 @@
       createGlow();
       createRing();
       createParticles();
+      createTrailParticles();
       loadLogo();
 
       window.addEventListener("pointerdown", onPointerDown);
@@ -266,6 +298,64 @@
       }
     }
 
+    function createTrailParticles() {
+      const geometry = new THREE.SphereGeometry(0.012, 8, 8);
+
+      for (let i = 0; i < 28; i++) {
+        const material = new THREE.MeshBasicMaterial({
+          color: 0xb8f4ff,
+          transparent: true,
+          opacity: 0
+        });
+
+        const p = new THREE.Mesh(geometry, material);
+        p.visible = false;
+        p.userData = {
+          life: 0,
+          decay: 0.035 + Math.random() * 0.02
+        };
+        scene.add(p);
+        trailParticles.push(p);
+      }
+    }
+
+    function emitTrailParticle(x, y) {
+      const p = trailParticles.find(tp => tp.userData.life <= 0);
+      if (!p) return;
+
+      p.visible = true;
+      p.position.set(
+        x + (Math.random() - 0.5) * 0.05,
+        y + (Math.random() - 0.5) * 0.05,
+        0.04 + Math.random() * 0.08
+      );
+      p.scale.setScalar(0.7 + Math.random() * 0.8);
+      p.material.opacity = 0.9;
+      p.userData.life = 1;
+      p.userData.driftX = (Math.random() - 0.5) * 0.008;
+      p.userData.driftY = (Math.random() - 0.5) * 0.008;
+      p.userData.driftZ = Math.random() * 0.004;
+    }
+
+    function updateTrailParticles() {
+      trailParticles.forEach((p) => {
+        if (p.userData.life > 0) {
+          p.userData.life -= p.userData.decay;
+          p.position.x += p.userData.driftX;
+          p.position.y += p.userData.driftY;
+          p.position.z += p.userData.driftZ;
+          p.material.opacity = Math.max(p.userData.life * 0.9, 0);
+          const s = Math.max(p.userData.life, 0.1);
+          p.scale.setScalar(s);
+
+          if (p.userData.life <= 0) {
+            p.visible = false;
+            p.material.opacity = 0;
+          }
+        }
+      });
+    }
+
     function loadLogo() {
       const loader = new THREE.GLTFLoader();
 
@@ -277,10 +367,10 @@
 
           centerAndScaleModel(logoModel, 1.2);
 
-          // FIX ASSE: prova base per modello "sdraiato"
+          // Fix asse: non più sottosopra
           logoModel.rotation.x = -Math.PI / 2;
           logoModel.rotation.y = 0;
-          logoModel.rotation.z = 0;
+          logoModel.rotation.z = Math.PI;
 
           logoRoot.add(logoModel);
           logoRoot.visible = false;
@@ -328,6 +418,7 @@
 
       targetPos.set(x, y, 0);
       currentPos.copy(targetPos);
+      lastTrailPos.copy(targetPos);
 
       logoRoot.position.copy(currentPos);
       logoRoot.visible = true;
@@ -366,6 +457,7 @@
       } else {
         targetPos.set(pos.x, pos.y, 0);
         pulseRing();
+        playMoveSound();
       }
     }
 
@@ -374,6 +466,11 @@
 
       const pos = pointerToScene(event);
       targetPos.set(pos.x, pos.y, 0);
+
+      const dist = currentPos.distanceTo(targetPos);
+      if (dist > 0.04) {
+        pulseRing();
+      }
     }
 
     function onPointerUp() {
@@ -403,9 +500,17 @@
     }
 
     function updateScene(time) {
-      if (!logoRoot || !logoRoot.visible) return;
+      if (!logoRoot || !logoRoot.visible) {
+        updateTrailParticles();
+        return;
+      }
 
       currentPos.lerp(targetPos, 0.12);
+
+      if (currentPos.distanceTo(lastTrailPos) > 0.025) {
+        emitTrailParticle(currentPos.x, currentPos.y);
+        lastTrailPos.copy(currentPos);
+      }
 
       logoRoot.position.copy(currentPos);
       glowMesh.position.set(currentPos.x, currentPos.y, -0.08);
@@ -416,20 +521,17 @@
         logoRoot.scale.setScalar(s);
       }
 
-      // floating
       logoRoot.position.y += Math.sin(time * 1.8) * 0.0025;
 
-      // rotazione continua su se stesso
+      // rotazione continua
       logoRoot.rotation.y += 0.015;
       logoRoot.rotation.x = Math.sin(time * 0.8) * 0.06;
       logoRoot.rotation.z = Math.sin(time * 1.1) * 0.02;
 
-      // glow
       glowMesh.material.uniforms.uOpacity.value = 0.95;
       const glowScale = 1 + Math.sin(time * 2.1) * 0.05;
       glowMesh.scale.set(glowScale, glowScale, glowScale);
 
-      // ring
       if (ringMesh.visible) {
         ringMesh.rotation.z += 0.016;
         ringMesh.material.opacity *= 0.965;
@@ -441,6 +543,7 @@
       }
 
       updateParticles(time);
+      updateTrailParticles();
     }
 
     function animate() {
@@ -467,6 +570,7 @@
 
       try {
         await startCamera();
+        await unlockAudio();
         startScreen.style.display = "none";
         initThree();
       } catch (err) {
