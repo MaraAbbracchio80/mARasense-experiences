@@ -13,7 +13,7 @@
       overflow: hidden;
       background: #000;
       font-family: Arial, sans-serif;
-      touch-action: manipulation;
+      touch-action: none;
     }
 
     #camera {
@@ -94,11 +94,11 @@
 
   <div id="startScreen">
     <h1>Logo 3D</h1>
-    <p>Premi Avvia esperienza, poi tocca lo schermo per far apparire il logo 3D nello spazio.</p>
+    <p>Premi Avvia esperienza, poi tocca o trascina sullo schermo per far apparire e spostare il logo 3D.</p>
     <button id="startBtn">Avvia esperienza</button>
   </div>
 
-  <div id="hint">Tocca in un altro punto per spostare il logo</div>
+  <div id="hint">Tocca per far apparire il logo, trascina per spostarlo</div>
 
   <video id="camera" autoplay playsinline muted></video>
   <canvas id="threeCanvas"></canvas>
@@ -122,6 +122,8 @@
 
     let started = false;
     let logoReady = false;
+    let logoVisible = false;
+    let isDragging = false;
 
     let targetPos = new THREE.Vector3(0, 0, 0);
     let currentPos = new THREE.Vector3(0, 0, 0);
@@ -181,6 +183,9 @@
       loadLogo();
 
       window.addEventListener("pointerdown", onPointerDown);
+      window.addEventListener("pointermove", onPointerMove);
+      window.addEventListener("pointerup", onPointerUp);
+      window.addEventListener("pointercancel", onPointerUp);
       window.addEventListener("resize", onResize);
 
       animate();
@@ -240,14 +245,15 @@
     function createParticles() {
       const particleCount = 18;
       const geometry = new THREE.SphereGeometry(0.015, 8, 8);
-      const material = new THREE.MeshBasicMaterial({
-        color: 0x88eeff,
-        transparent: true,
-        opacity: 0.8
-      });
 
       for (let i = 0; i < particleCount; i++) {
-        const p = new THREE.Mesh(geometry, material.clone());
+        const material = new THREE.MeshBasicMaterial({
+          color: 0x88eeff,
+          transparent: true,
+          opacity: 0.8
+        });
+
+        const p = new THREE.Mesh(geometry, material);
         p.visible = false;
         p.userData = {
           angle: Math.random() * Math.PI * 2,
@@ -271,8 +277,8 @@
 
           centerAndScaleModel(logoModel, 1.2);
 
-          // Orientamento base
-          logoModel.rotation.x = 0;
+          // FIX ASSE: prova base per modello "sdraiato"
+          logoModel.rotation.x = -Math.PI / 2;
           logoModel.rotation.y = 0;
           logoModel.rotation.z = 0;
 
@@ -307,6 +313,16 @@
       }
     }
 
+    function pointerToScene(event) {
+      const nx = (event.clientX / window.innerWidth) * 2 - 1;
+      const ny = -(event.clientY / window.innerHeight) * 2 + 1;
+
+      return {
+        x: nx * 0.95,
+        y: ny * 1.35
+      };
+    }
+
     function showLogoAt(x, y) {
       if (!logoReady) return;
 
@@ -315,6 +331,7 @@
 
       logoRoot.position.copy(currentPos);
       logoRoot.visible = true;
+      logoVisible = true;
       logoRoot.scale.set(0.001, 0.001, 0.001);
 
       glowMesh.position.set(x, y, -0.08);
@@ -332,24 +349,35 @@
       });
     }
 
+    function pulseRing() {
+      ringMesh.visible = true;
+      ringMesh.material.opacity = 0.95;
+      ringMesh.scale.set(0.45, 0.45, 0.45);
+    }
+
     function onPointerDown(event) {
       if (!logoReady || startScreen.style.display !== "none") return;
 
-      const nx = (event.clientX / window.innerWidth) * 2 - 1;
-      const ny = -(event.clientY / window.innerHeight) * 2 + 1;
+      isDragging = true;
+      const pos = pointerToScene(event);
 
-      const x = nx * 0.95;
-      const y = ny * 1.35;
-
-      if (!logoRoot.visible) {
-        showLogoAt(x, y);
+      if (!logoVisible) {
+        showLogoAt(pos.x, pos.y);
       } else {
-        targetPos.set(x, y, 0);
-
-        ringMesh.visible = true;
-        ringMesh.material.opacity = 0.95;
-        ringMesh.scale.set(0.45, 0.45, 0.45);
+        targetPos.set(pos.x, pos.y, 0);
+        pulseRing();
       }
+    }
+
+    function onPointerMove(event) {
+      if (!logoReady || !logoVisible || !isDragging) return;
+
+      const pos = pointerToScene(event);
+      targetPos.set(pos.x, pos.y, 0);
+    }
+
+    function onPointerUp() {
+      isDragging = false;
     }
 
     function updateParticles(time) {
@@ -377,7 +405,7 @@
     function updateScene(time) {
       if (!logoRoot || !logoRoot.visible) return;
 
-      currentPos.lerp(targetPos, 0.08);
+      currentPos.lerp(targetPos, 0.12);
 
       logoRoot.position.copy(currentPos);
       glowMesh.position.set(currentPos.x, currentPos.y, -0.08);
@@ -391,10 +419,10 @@
       // floating
       logoRoot.position.y += Math.sin(time * 1.8) * 0.0025;
 
-      // rotazione elegante 3D
-      logoRoot.rotation.y = Math.sin(time * 0.9) * 0.30;
-      logoRoot.rotation.x = Math.sin(time * 0.7) * 0.10;
-      logoRoot.rotation.z = Math.sin(time * 1.2) * 0.025;
+      // rotazione continua su se stesso
+      logoRoot.rotation.y += 0.015;
+      logoRoot.rotation.x = Math.sin(time * 0.8) * 0.06;
+      logoRoot.rotation.z = Math.sin(time * 1.1) * 0.02;
 
       // glow
       glowMesh.material.uniforms.uOpacity.value = 0.95;
