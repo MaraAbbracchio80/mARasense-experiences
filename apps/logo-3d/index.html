@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Logo 3D</title>
+
+  <style>
+    html, body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #000;
+      font-family: Arial, sans-serif;
+      touch-action: manipulation;
+    }
+
+    #camera {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 1;
+      background: #000;
+    }
+
+    #threeCanvas {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 2;
+    }
+
+    #startScreen {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle, #0b1020, #000);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 10;
+      color: white;
+      text-align: center;
+      padding: 24px;
+    }
+
+    #startScreen h1 {
+      margin: 0 0 12px 0;
+      font-size: 30px;
+    }
+
+    #startScreen p {
+      margin: 0;
+      max-width: 340px;
+      line-height: 1.5;
+      color: #d7d7d7;
+    }
+
+    #startBtn {
+      margin-top: 20px;
+      padding: 14px 24px;
+      font-size: 16px;
+      background: linear-gradient(90deg, #00c2ff, #8a2be2);
+      border: none;
+      border-radius: 12px;
+      color: white;
+      cursor: pointer;
+      box-shadow: 0 0 24px rgba(0,194,255,0.22);
+    }
+
+    #hint {
+      position: fixed;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 11;
+      color: white;
+      background: rgba(0,0,0,0.55);
+      padding: 10px 14px;
+      border-radius: 10px;
+      display: none;
+      font-size: 14px;
+      text-align: center;
+      backdrop-filter: blur(4px);
+      white-space: nowrap;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="startScreen">
+    <h1>Logo 3D</h1>
+    <p>Premi Avvia esperienza, poi tocca lo schermo per far apparire il logo nello spazio.</p>
+    <button id="startBtn">Avvia esperienza</button>
+  </div>
+
+  <div id="hint">Tocca in un altro punto per spostare il logo</div>
+
+  <video id="camera" autoplay playsinline muted></video>
+  <canvas id="threeCanvas"></canvas>
+
+  <script src="https://unpkg.com/three@0.128.0/build/three.min.js"></script>
+  <script src="https://unpkg.com/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+
+  <script>
+    const startBtn = document.getElementById("startBtn");
+    const startScreen = document.getElementById("startScreen");
+    const hint = document.getElementById("hint");
+    const video = document.getElementById("camera");
+    const canvas = document.getElementById("threeCanvas");
+
+    let scene, camera3D, renderer;
+    let logoRoot = null;
+    let logoModel = null;
+    let glowMesh = null;
+    let ringMesh = null;
+
+    let started = false;
+    let logoReady = false;
+
+    let targetPos = new THREE.Vector3(0, 0, 0);
+    let currentPos = new THREE.Vector3(0, 0, 0);
+
+    const clock = new THREE.Clock();
+
+    async function startCamera() {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: {
+          facingMode: { ideal: "environment" }
+        },
+        audio: false
+      });
+
+      video.srcObject = stream;
+
+      await new Promise((resolve) => {
+        video.onloadedmetadata = () => {
+          video.play().then(resolve).catch(resolve);
+        };
+      });
+    }
+
+    function initThree() {
+      scene = new THREE.Scene();
+
+      camera3D = new THREE.PerspectiveCamera(
+        70,
+        window.innerWidth / window.innerHeight,
+        0.01,
+        100
+      );
+      camera3D.position.set(0, 0, 2.6);
+
+      renderer = new THREE.WebGLRenderer({
+        canvas: canvas,
+        alpha: true,
+        antialias: true
+      });
+      renderer.setPixelRatio(window.devicePixelRatio || 1);
+      renderer.setSize(window.innerWidth, window.innerHeight);
+
+      const hemi = new THREE.HemisphereLight(0xffffff, 0x334455, 1.3);
+      scene.add(hemi);
+
+      const dir1 = new THREE.DirectionalLight(0xffffff, 1.0);
+      dir1.position.set(2, 3, 4);
+      scene.add(dir1);
+
+      const dir2 = new THREE.DirectionalLight(0x66ccff, 0.4);
+      dir2.position.set(-2, 1, 3);
+      scene.add(dir2);
+
+      createGlow();
+      createRing();
+      loadLogo();
+
+      window.addEventListener("pointerdown", onPointerDown);
+      window.addEventListener("resize", onResize);
+
+      animate();
+    }
+
+    function createGlow() {
+      const geometry = new THREE.PlaneGeometry(1.8, 1.8);
+      const material = new THREE.ShaderMaterial({
+        transparent: true,
+        depthWrite: false,
+        blending: THREE.AdditiveBlending,
+        uniforms: {
+          uOpacity: { value: 0 }
+        },
+        vertexShader: `
+          varying vec2 vUv;
+          void main() {
+            vUv = uv;
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+          }
+        `,
+        fragmentShader: `
+          varying vec2 vUv;
+          uniform float uOpacity;
+          void main() {
+            vec2 p = vUv - vec2(0.5);
+            float d = length(p);
+            float glow = smoothstep(0.55, 0.0, d);
+            vec3 color = mix(vec3(0.0, 0.75, 1.0), vec3(0.75, 0.95, 1.0), glow);
+            gl_FragColor = vec4(color, glow * 0.38 * uOpacity);
+          }
+        `
+      });
+
+      glowMesh = new THREE.Mesh(geometry, material);
+      glowMesh.visible = false;
+      glowMesh.position.set(0, 0, -0.05);
+      scene.add(glowMesh);
+    }
+
+    function createRing() {
+      const geometry = new THREE.RingGeometry(0.32, 0.38, 64);
+      const material = new THREE.MeshBasicMaterial({
+        color: 0x66dfff,
+        transparent: true,
+        opacity: 0,
+        side: THREE.DoubleSide,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false
+      });
+
+      ringMesh = new THREE.Mesh(geometry, material);
+      ringMesh.visible = false;
+      scene.add(ringMesh);
+    }
+
+    function loadLogo() {
+      const loader = new THREE.GLTFLoader();
+
+      loader.load(
+        "./assets/models/logo.glb",
+        (gltf) => {
+          logoRoot = new THREE.Group();
+          logoModel = gltf.scene;
+
+          centerAndScaleModel(logoModel, 1.1);
+
+          // orientamento base, da correggere se serve
+          logoModel.rotation.x = 0;
+          logoModel.rotation.y = 0;
+          logoModel.rotation.z = 0;
+
+          logoRoot.add(logoModel);
+          logoRoot.visible = false;
+          scene.add(logoRoot);
+
+          logoReady = true;
+          hint.style.display = "block";
+        },
+        undefined,
+        (error) => {
+          console.error("Errore caricamento logo.glb:", error);
+        }
+      );
+    }
+
+    function centerAndScaleModel(object, targetSize = 1) {
+      const box = new THREE.Box3().setFromObject(object);
+      const size = new THREE.Vector3();
+      const center = new THREE.Vector3();
+
+      box.getSize(size);
+      box.getCenter(center);
+
+      object.position.sub(center);
+
+      const maxDim = Math.max(size.x, size.y, size.z);
+      if (maxDim > 0) {
+        const scale = targetSize / maxDim;
+        object.scale.setScalar(scale);
+      }
+    }
+
+    function showLogoAt(x, y) {
+      if (!logoReady) return;
+
+      targetPos.set(x, y, 0);
+      currentPos.copy(targetPos);
+
+      logoRoot.position.copy(currentPos);
+      logoRoot.visible = true;
+      logoRoot.scale.set(0.001, 0.001, 0.001);
+
+      glowMesh.position.set(x, y, -0.05);
+      glowMesh.visible = true;
+      glowMesh.material.uniforms.uOpacity.value = 0;
+
+      ringMesh.position.set(x, y, 0.02);
+      ringMesh.visible = true;
+      ringMesh.material.opacity = 0.9;
+      ringMesh.scale.set(0.4, 0.4, 0.4);
+    }
+
+    function onPointerDown(event) {
+      if (!logoReady || startScreen.style.display !== "none") return;
+
+      const nx = (event.clientX / window.innerWidth) * 2 - 1;
+      const ny = -(event.clientY / window.innerHeight) * 2 + 1;
+
+      const x = nx * 0.9;
+      const y = ny * 1.3;
+
+      if (!logoRoot.visible) {
+        showLogoAt(x, y);
+      } else {
+        targetPos.set(x, y, 0);
+      }
+    }
+
+    function updateScene(time) {
+      if (!logoRoot || !logoRoot.visible) return;
+
+      currentPos.lerp(targetPos, 0.08);
+      logoRoot.position.copy(currentPos);
+      glowMesh.position.set(currentPos.x, currentPos.y, -0.05);
+      ringMesh.position.set(currentPos.x, currentPos.y, 0.02);
+
+      // intro di comparsa
+      if (logoRoot.scale.x < 1) {
+        const s = THREE.MathUtils.lerp(logoRoot.scale.x, 1, 0.08);
+        logoRoot.scale.setScalar(s);
+      }
+
+      // floating
+      logoRoot.position.y += Math.sin(time * 1.8) * 0.0025;
+
+      // rotazione elegante
+      logoRoot.rotation.y = Math.sin(time * 0.9) * 0.28;
+      logoRoot.rotation.x = Math.sin(time * 0.7) * 0.08;
+      logoRoot.rotation.z = Math.sin(time * 1.2) * 0.03;
+
+      // glow animato
+      glowMesh.material.uniforms.uOpacity.value = 0.9;
+      const glowScale = 1 + Math.sin(time * 2.0) * 0.05;
+      glowMesh.scale.set(glowScale, glowScale, glowScale);
+
+      // ring di ingresso
+      ringMesh.rotation.z += 0.015;
+      ringMesh.material.opacity *= 0.97;
+      ringMesh.scale.multiplyScalar(1.01);
+
+      if (ringMesh.material.opacity < 0.03) {
+        ringMesh.visible = false;
+      }
+    }
+
+    function animate() {
+      requestAnimationFrame(animate);
+
+      const time = clock.getElapsedTime();
+      updateScene(time);
+
+      if (renderer && scene && camera3D) {
+        renderer.render(scene, camera3D);
+      }
+    }
+
+    function onResize() {
+      if (!camera3D || !renderer) return;
+      camera3D.aspect = window.innerWidth / window.innerHeight;
+      camera3D.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    }
+
+    startBtn.onclick = async function() {
+      if (started) return;
+      started = true;
+
+      try {
+        await startCamera();
+        startScreen.style.display = "none";
+        initThree();
+      } catch (err) {
+        console.error(err);
+        started = false;
+      }
+    };
+  </script>
+</body>
+</html>
