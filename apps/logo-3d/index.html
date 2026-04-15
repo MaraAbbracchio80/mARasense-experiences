@@ -102,6 +102,7 @@
 
   <video id="camera" autoplay playsinline muted></video>
   <canvas id="threeCanvas"></canvas>
+  <audio id="moveAudio" preload="auto" src="./assets/audio/sound-effects.mp3"></audio>
 
   <script src="https://unpkg.com/three@0.128.0/build/three.min.js"></script>
   <script src="https://unpkg.com/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
@@ -112,6 +113,7 @@
     const hint = document.getElementById("hint");
     const video = document.getElementById("camera");
     const canvas = document.getElementById("threeCanvas");
+    const moveAudio = document.getElementById("moveAudio");
 
     let scene, camera3D, renderer;
     let logoRoot = null;
@@ -124,10 +126,12 @@
     let logoReady = false;
     let logoVisible = false;
     let isDragging = false;
+    let audioUnlocked = false;
 
     let targetPos = new THREE.Vector3(0, 0, 0);
     let currentPos = new THREE.Vector3(0, 0, 0);
     let lastTrailPos = new THREE.Vector3(999, 999, 999);
+    let lastAudioTime = 0;
 
     const clock = new THREE.Clock();
 
@@ -144,6 +148,36 @@
           video.play().then(resolve).catch(resolve);
         };
       });
+    }
+
+    async function unlockAudio() {
+      try {
+        moveAudio.volume = 0.01;
+        await moveAudio.play();
+        moveAudio.pause();
+        moveAudio.currentTime = 0;
+        moveAudio.volume = 0.75;
+        audioUnlocked = true;
+      } catch (e) {
+        console.warn("Audio unlock non riuscito:", e);
+      }
+    }
+
+    async function playMoveSound() {
+      if (!audioUnlocked) return;
+
+      const now = performance.now();
+      if (now - lastAudioTime < 280) return;
+      lastAudioTime = now;
+
+      try {
+        moveAudio.pause();
+        moveAudio.currentTime = 0;
+        moveAudio.volume = 0.75;
+        await moveAudio.play();
+      } catch (e) {
+        console.warn("Play move sound fallito:", e);
+      }
     }
 
     function initThree() {
@@ -226,23 +260,24 @@
     }
 
     function createOrbitParticles() {
-      const particleCount = 18;
+      const particleCount = 32;
       const geometry = new THREE.SphereGeometry(0.015, 8, 8);
 
       for (let i = 0; i < particleCount; i++) {
         const material = new THREE.MeshBasicMaterial({
-          color: 0x88eeff,
+          color: i % 3 === 0 ? 0xb8f4ff : 0x66dfff,
           transparent: true,
-          opacity: 0.8
+          opacity: 0.9
         });
 
         const p = new THREE.Mesh(geometry, material);
         p.visible = false;
         p.userData = {
           angle: Math.random() * Math.PI * 2,
-          radius: 0.55 + Math.random() * 0.25,
-          speed: 0.4 + Math.random() * 0.8,
-          offsetY: (Math.random() - 0.5) * 0.3
+          radius: 0.48 + Math.random() * 0.38,
+          speed: 0.35 + Math.random() * 1.1,
+          offsetY: (Math.random() - 0.5) * 0.45,
+          zWave: 0.02 + Math.random() * 0.12
         };
         scene.add(p);
         orbitParticles.push(p);
@@ -252,9 +287,9 @@
     function createTrailParticles() {
       const geometry = new THREE.SphereGeometry(0.012, 8, 8);
 
-      for (let i = 0; i < 28; i++) {
+      for (let i = 0; i < 54; i++) {
         const material = new THREE.MeshBasicMaterial({
-          color: 0xb8f4ff,
+          color: i % 2 === 0 ? 0xb8f4ff : 0x66dfff,
           transparent: true,
           opacity: 0
         });
@@ -263,7 +298,7 @@
         p.visible = false;
         p.userData = {
           life: 0,
-          decay: 0.035 + Math.random() * 0.02
+          decay: 0.022 + Math.random() * 0.018
         };
         scene.add(p);
         trailParticles.push(p);
@@ -276,16 +311,18 @@
 
       p.visible = true;
       p.position.set(
-        x + (Math.random() - 0.5) * 0.05,
-        y + (Math.random() - 0.5) * 0.05,
-        0.04 + Math.random() * 0.08
+        x + (Math.random() - 0.5) * 0.07,
+        y + (Math.random() - 0.5) * 0.07,
+        0.03 + Math.random() * 0.12
       );
-      p.scale.setScalar(0.7 + Math.random() * 0.8);
-      p.material.opacity = 0.9;
+
+      const s = 0.65 + Math.random() * 1.1;
+      p.scale.setScalar(s);
+      p.material.opacity = 0.95;
       p.userData.life = 1;
-      p.userData.driftX = (Math.random() - 0.5) * 0.008;
-      p.userData.driftY = (Math.random() - 0.5) * 0.008;
-      p.userData.driftZ = Math.random() * 0.004;
+      p.userData.driftX = (Math.random() - 0.5) * 0.012;
+      p.userData.driftY = (Math.random() - 0.5) * 0.012;
+      p.userData.driftZ = Math.random() * 0.008;
     }
 
     function updateTrailParticles() {
@@ -295,8 +332,9 @@
           p.position.x += p.userData.driftX;
           p.position.y += p.userData.driftY;
           p.position.z += p.userData.driftZ;
-          p.material.opacity = Math.max(p.userData.life * 0.9, 0);
-          const s = Math.max(p.userData.life, 0.1);
+          p.material.opacity = Math.max(p.userData.life * 0.95, 0);
+
+          const s = Math.max(p.userData.life * 1.2, 0.08);
           p.scale.setScalar(s);
 
           if (p.userData.life <= 0) {
@@ -318,10 +356,10 @@
 
           centerAndScaleModel(logoModel, 1.2);
 
-          // Fix asse: versione più probabile per un modello capovolto
+          // Fix asse: logo non più capovolto verticalmente
           logoModel.rotation.x = -Math.PI / 2;
           logoModel.rotation.y = 0;
-          logoModel.rotation.z = 0;
+          logoModel.rotation.z = Math.PI;
 
           logoRoot.add(logoModel);
           logoRoot.visible = false;
@@ -384,6 +422,8 @@
         p.visible = true;
         p.material.opacity = 0.9;
       });
+
+      playMoveSound();
     }
 
     function onPointerDown(event) {
@@ -396,6 +436,7 @@
         showLogoAt(pos.x, pos.y);
       } else {
         targetPos.set(pos.x, pos.y, 0);
+        playMoveSound();
       }
     }
 
@@ -404,6 +445,11 @@
 
       const pos = pointerToScene(event);
       targetPos.set(pos.x, pos.y, 0);
+
+      const dist = currentPos.distanceTo(targetPos);
+      if (dist > 0.035) {
+        playMoveSound();
+      }
     }
 
     function onPointerUp() {
@@ -419,15 +465,15 @@
 
         p.position.set(
           currentPos.x + Math.cos(a) * d.radius,
-          currentPos.y + Math.sin(a) * d.radius * 0.55 + d.offsetY,
-          0.05 + Math.sin(a * 1.3) * 0.08
+          currentPos.y + Math.sin(a) * d.radius * 0.58 + d.offsetY,
+          0.04 + Math.sin(a * 1.2) * d.zWave
         );
 
-        const pulse = 0.6 + Math.sin(time * 2 + i) * 0.2;
+        const pulse = 0.55 + Math.sin(time * 2.2 + i) * 0.24;
         p.scale.setScalar(pulse);
 
-        if (p.visible && p.material.opacity > 0.2) {
-          p.material.opacity *= 0.995;
+        if (p.visible && p.material.opacity > 0.22) {
+          p.material.opacity *= 0.997;
         }
       });
     }
@@ -440,7 +486,8 @@
 
       currentPos.lerp(targetPos, 0.12);
 
-      if (currentPos.distanceTo(lastTrailPos) > 0.025) {
+      if (currentPos.distanceTo(lastTrailPos) > 0.018) {
+        emitTrailParticle(currentPos.x, currentPos.y);
         emitTrailParticle(currentPos.x, currentPos.y);
         lastTrailPos.copy(currentPos);
       }
@@ -455,7 +502,7 @@
 
       logoRoot.position.y += Math.sin(time * 1.8) * 0.0025;
 
-      // Rotazione continua del gruppo
+      // rotazione continua
       logoRoot.rotation.y += 0.015;
       logoRoot.rotation.x = Math.sin(time * 0.8) * 0.06;
       logoRoot.rotation.z = Math.sin(time * 1.1) * 0.02;
@@ -492,6 +539,7 @@
 
       try {
         await startCamera();
+        await unlockAudio();
         startScreen.style.display = "none";
         initThree();
       } catch (err) {
