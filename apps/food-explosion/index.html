@@ -97,7 +97,7 @@
       z-index: 10;
     }
 
-    video {
+    video:not(#foodVideo) {
       position: fixed !important;
       inset: 0;
       width: 100vw !important;
@@ -115,6 +115,16 @@
       object-fit: cover !important;
       z-index: 2 !important;
       background: transparent !important;
+    }
+
+    #foodVideo {
+      position: absolute !important;
+      width: 1px !important;
+      height: 1px !important;
+      left: -9999px !important;
+      top: -9999px !important;
+      opacity: 0 !important;
+      pointer-events: none !important;
     }
   </style>
 </head>
@@ -142,6 +152,7 @@
         id="foodVideo"
         src="./assets/videos/il-gusto-prende-vita.mp4"
         preload="auto"
+        muted
         playsinline
         webkit-playsinline
         crossorigin="anonymous"
