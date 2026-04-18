@@ -7,29 +7,25 @@
   <link rel="stylesheet" href="./shared/css/style.css" />
   <style>
     :root {
-      --bg-top: #1677ff;
-      --bg-mid: #245dff;
-      --bg-bottom: #3b35d6;
-
-      --panel: rgba(255,255,255,0.12);
-      --panel-strong: rgba(255,255,255,0.16);
-      --line: rgba(255,255,255,0.22);
-
+      --bg: #050505;
+      --bg-soft: #101010;
+      --panel: rgba(255,255,255,0.06);
+      --panel-2: rgba(255,255,255,0.08);
+      --line: rgba(255,255,255,0.12);
       --text: #ffffff;
-      --muted: rgba(255,255,255,0.84);
-      --soft: rgba(255,255,255,0.68);
+      --muted: rgba(255,255,255,0.80);
+      --soft: rgba(255,255,255,0.60);
 
-      --cyan: #18d7ff;
-      --violet: #a96cff;
-      --pink: #ff8ad8;
-      --gold: #ffd466;
-      --green: #54e6b0;
-      --orange: #ff9e57;
+      --cyan: #19d8ff;
+      --violet: #a56eff;
+      --pink: #ff8bd7;
+      --gold: #ffc76b;
+      --green: #46e0b0;
 
       --radius-xl: 24px;
       --radius-lg: 18px;
       --radius-md: 14px;
-      --shadow: 0 16px 34px rgba(8, 26, 88, 0.22);
+      --shadow: 0 16px 36px rgba(0,0,0,0.24);
     }
 
     * {
@@ -43,10 +39,10 @@
       font-family: Arial, sans-serif;
       color: var(--text);
       background:
-        radial-gradient(circle at 18% 16%, rgba(24,215,255,0.18), transparent 22%),
-        radial-gradient(circle at 82% 12%, rgba(255,138,216,0.14), transparent 18%),
-        radial-gradient(circle at 50% 78%, rgba(169,108,255,0.18), transparent 24%),
-        linear-gradient(180deg, var(--bg-top) 0%, var(--bg-mid) 46%, var(--bg-bottom) 100%);
+        radial-gradient(circle at 20% 15%, rgba(25,216,255,0.10), transparent 18%),
+        radial-gradient(circle at 80% 10%, rgba(165,110,255,0.10), transparent 18%),
+        radial-gradient(circle at 50% 80%, rgba(255,139,215,0.08), transparent 20%),
+        linear-gradient(180deg, #111 0%, #070707 55%, #000 100%);
     }
 
     body::before {
@@ -54,18 +50,18 @@
       position: fixed;
       inset: 0;
       pointer-events: none;
-      opacity: 0.14;
+      opacity: 0.08;
       background-image:
-        linear-gradient(rgba(255,255,255,0.08) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,0.08) 1px, transparent 1px);
-      background-size: 28px 28px;
+        linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.06) 1px, transparent 1px);
+      background-size: 30px 30px;
       mask-image: radial-gradient(circle at center, black 40%, transparent 88%);
     }
 
     .page {
       position: relative;
       z-index: 1;
-      width: min(1120px, calc(100% - 26px));
+      width: min(1120px, calc(100% - 28px));
       margin: 0 auto;
       padding: 34px 0 56px;
     }
@@ -79,12 +75,12 @@
       display: inline-block;
       padding: 18px 28px;
       border-radius: 24px;
-      background: rgba(255,255,255,0.10);
-      border: 1px solid rgba(255,255,255,0.18);
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.12);
       box-shadow:
-        0 0 24px rgba(24,215,255,0.12),
-        0 0 32px rgba(169,108,255,0.08),
-        0 16px 34px rgba(8, 26, 88, 0.16);
+        0 0 22px rgba(25,216,255,0.08),
+        0 0 28px rgba(165,110,255,0.06),
+        0 16px 34px rgba(0,0,0,0.20);
       backdrop-filter: blur(10px);
     }
 
@@ -109,19 +105,19 @@
       0% {
         transform: scale(1);
         opacity: 0.96;
-        filter: drop-shadow(0 0 0 rgba(24,215,255,0));
+        filter: drop-shadow(0 0 0 rgba(25,216,255,0));
       }
       50% {
         transform: scale(1.16);
         opacity: 1;
         filter:
-          drop-shadow(0 0 10px rgba(24,215,255,0.46))
-          drop-shadow(0 0 18px rgba(169,108,255,0.34));
+          drop-shadow(0 0 10px rgba(25,216,255,0.44))
+          drop-shadow(0 0 18px rgba(165,110,255,0.30));
       }
       100% {
         transform: scale(1);
         opacity: 0.96;
-        filter: drop-shadow(0 0 0 rgba(255,138,216,0));
+        filter: drop-shadow(0 0 0 rgba(255,139,215,0));
       }
     }
 
@@ -138,8 +134,8 @@
       margin-top: 20px;
       padding: 18px;
       border-radius: var(--radius-xl);
-      background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.16);
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.10);
       box-shadow: var(--shadow);
       backdrop-filter: blur(10px);
     }
@@ -162,7 +158,7 @@
     .section-line {
       flex: 1;
       height: 1px;
-      background: linear-gradient(90deg, rgba(255,255,255,0.28), rgba(255,255,255,0.04));
+      background: linear-gradient(90deg, rgba(255,255,255,0.22), rgba(255,255,255,0.03));
     }
 
     .cards {
@@ -174,23 +170,23 @@
     .card {
       border-radius: var(--radius-lg);
       padding: 18px;
-      background: rgba(255,255,255,0.09);
-      border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.10);
       transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
     }
 
     .card:hover {
       transform: translateY(-4px);
-      border-color: rgba(255,255,255,0.24);
-      box-shadow: 0 14px 28px rgba(8, 26, 88, 0.18);
+      border-color: rgba(255,255,255,0.18);
+      box-shadow: 0 14px 28px rgba(0,0,0,0.18);
     }
 
     .card-highlight {
-      background: linear-gradient(180deg, rgba(255,212,102,0.12), rgba(255,255,255,0.10));
-      border: 1px solid rgba(255,212,102,0.34);
+      background: linear-gradient(180deg, rgba(255,199,107,0.10), rgba(255,255,255,0.07));
+      border: 1px solid rgba(255,199,107,0.24);
       box-shadow:
-        0 0 24px rgba(255,212,102,0.10),
-        0 14px 28px rgba(8, 26, 88, 0.18);
+        0 0 18px rgba(255,199,107,0.06),
+        0 14px 28px rgba(0,0,0,0.18);
     }
 
     .card-tag {
@@ -202,8 +198,8 @@
       font-weight: 800;
       letter-spacing: 0.8px;
       text-transform: uppercase;
-      background: rgba(255,255,255,0.12);
-      color: rgba(255,255,255,0.88);
+      background: rgba(255,255,255,0.08);
+      color: rgba(255,255,255,0.86);
     }
 
     .card h3 {
@@ -240,11 +236,11 @@
       opacity: 0.97;
     }
 
-    .btn-art { background: linear-gradient(90deg, #23d5ff, #5d8cff); }
-    .btn-food { background: linear-gradient(90deg, #19d8ff, #48e0a4); }
-    .btn-brand { background: linear-gradient(90deg, #21d4fd, #b16cff); }
-    .btn-wedding { background: linear-gradient(90deg, #ffb347, #ff8ad8); }
-    .btn-sport { background: linear-gradient(90deg, #1fd7ff, #7ec3ff); }
+    .btn-art { background: linear-gradient(90deg, #20d8ff, #6486ff); }
+    .btn-food { background: linear-gradient(90deg, #12d6ff, #42d8a2); }
+    .btn-brand { background: linear-gradient(90deg, #20d8ff, #a56eff); }
+    .btn-wedding { background: linear-gradient(90deg, #ffb74f, #ff8bd7); }
+    .btn-sport { background: linear-gradient(90deg, #1fd7ff, #78b8ff); }
 
     .gallery {
       display: flex;
@@ -258,9 +254,9 @@
       height: 74px;
       border-radius: 14px;
       overflow: hidden;
-      border: 1px solid rgba(255,255,255,0.18);
-      background: rgba(255,255,255,0.10);
-      box-shadow: 0 8px 18px rgba(8, 26, 88, 0.10);
+      border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(255,255,255,0.06);
+      box-shadow: 0 8px 18px rgba(0,0,0,0.10);
       flex: 0 0 auto;
     }
 
@@ -334,7 +330,7 @@
 
       <div class="gallery">
         <div class="thumb">
-          <img src="./shared/img/living-painting.png" alt="Living Painting" />
+          <img src="./apps/shared/img/living-painting.png" alt="Living Painting" />
         </div>
       </div>
     </section>
@@ -356,7 +352,7 @@
 
       <div class="gallery">
         <div class="thumb">
-          <img src="./shared/img/food-explosion.png" alt="Food Explosion" />
+          <img src="./apps/shared/img/food-explosion.png" alt="Food Explosion" />
         </div>
       </div>
     </section>
@@ -392,7 +388,7 @@
 
       <div class="gallery">
         <div class="thumb">
-          <img src="./shared/img/talking-avatar.png" alt="Talking Avatar" />
+          <img src="./apps/shared/img/talking-avatar.png" alt="Talking Avatar" />
         </div>
       </div>
     </section>
@@ -428,13 +424,13 @@
 
       <div class="gallery">
         <div class="thumb">
-          <img src="./shared/img/wedding-events.png" alt="Wedding & Events" />
+          <img src="./apps/shared/img/wedding-events.png" alt="Wedding & Events" />
         </div>
         <div class="thumb">
-          <img src="./shared/img/augmented-wishes.jpg" alt="Augmented Wishes" />
+          <img src="./apps/shared/img/augmented-wishes.jpg" alt="Augmented Wishes" />
         </div>
         <div class="thumb">
-          <img src="./shared/img/rivista-sposi.png" alt="Rivista degli Sposi" />
+          <img src="./apps/shared/img/rivista-sposi.png" alt="Rivista degli Sposi" />
         </div>
       </div>
     </section>
@@ -456,13 +452,13 @@
 
       <div class="gallery">
         <div class="thumb">
-          <img src="./shared/img/fc-napoli-1.png" alt="FC Napoli 1" />
+          <img src="./apps/shared/img/fcnapoli-1.jpg" alt="FC Napoli 1" />
         </div>
         <div class="thumb">
-          <img src="./shared/img/fc-napoli-2.png" alt="FC Napoli 2" />
+          <img src="./apps/shared/img/fcnapoli-2.png" alt="FC Napoli 2" />
         </div>
         <div class="thumb">
-          <img src="./shared/img/fc-napoli-3.jpg" alt="FC Napoli 3" />
+          <img src="./apps/shared/img/fcnapoli-3.png" alt="FC Napoli 3" />
         </div>
       </div>
     </section>
