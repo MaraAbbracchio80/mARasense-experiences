@@ -6,65 +6,269 @@
   <title>mARasense experiences</title>
   <link rel="stylesheet" href="./shared/css/style.css" />
   <style>
+    :root {
+      --bg-1: #050505;
+      --bg-2: #0d0d14;
+      --glass: rgba(255,255,255,0.06);
+      --glass-strong: rgba(255,255,255,0.09);
+      --border: rgba(255,255,255,0.14);
+      --text: #ffffff;
+      --muted: #d6d6d6;
+      --cyan: #00e5ff;
+      --violet: #8a2be2;
+      --orange: #ff7a00;
+      --shadow: 0 0 30px rgba(0,0,0,0.35);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      min-height: 100%;
+      font-family: Arial, sans-serif;
+      background:
+        radial-gradient(circle at top center, rgba(138,43,226,0.18) 0%, transparent 32%),
+        radial-gradient(circle at 20% 30%, rgba(0,229,255,0.12) 0%, transparent 25%),
+        radial-gradient(circle at 80% 20%, rgba(255,122,0,0.10) 0%, transparent 22%),
+        linear-gradient(180deg, var(--bg-2) 0%, var(--bg-1) 100%);
+      color: var(--text);
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+      background-size: 32px 32px;
+      mask-image: radial-gradient(circle at center, black 35%, transparent 85%);
+      opacity: 0.35;
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+      width: min(1200px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 56px 0 72px;
+    }
+
+    .hero {
+      text-align: center;
+      margin-bottom: 48px;
+      padding-top: 10px;
+    }
+
     .badge-premium {
       display: inline-block;
-      padding: 20px 30px;
-      border-radius: 24px;
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.14);
+      padding: 24px 38px;
+      border-radius: 28px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.04));
+      border: 1px solid var(--border);
       box-shadow:
-        0 0 18px rgba(0,229,255,0.12),
-        0 0 28px rgba(138,43,226,0.10),
-        0 0 36px rgba(255,122,0,0.08);
-      backdrop-filter: blur(8px);
+        0 0 18px rgba(0,229,255,0.14),
+        0 0 30px rgba(138,43,226,0.12),
+        0 0 42px rgba(255,122,0,0.10),
+        inset 0 1px 0 rgba(255,255,255,0.08);
+      backdrop-filter: blur(12px);
     }
 
     .badge-title {
       margin: 0;
-      font-size: clamp(34px, 5vw, 64px);
+      font-size: clamp(44px, 6.3vw, 86px);
       font-weight: 900;
-      line-height: 1.05;
-      letter-spacing: 0.5px;
+      line-height: 1.02;
+      letter-spacing: 0.4px;
       color: #ffffff;
       text-shadow:
-        0 0 10px rgba(255,255,255,0.08),
-        0 0 18px rgba(0,229,255,0.08);
+        0 0 12px rgba(255,255,255,0.10),
+        0 0 22px rgba(0,229,255,0.08);
     }
 
     .badge-title .pulse-ar {
       display: inline-block;
-      background: linear-gradient(90deg, #00e5ff, #8a2be2, #ff7a00);
+      background: linear-gradient(90deg, var(--cyan), var(--violet), var(--orange));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      animation: arPulse 1.8s ease-in-out infinite;
-      text-shadow: none;
+      animation: arPulse 1.15s ease-in-out infinite;
+      transform-origin: center;
     }
 
     @keyframes arPulse {
       0% {
         transform: scale(1);
-        filter: drop-shadow(0 0 0px rgba(0,229,255,0.0));
+        filter:
+          drop-shadow(0 0 0px rgba(0,229,255,0))
+          drop-shadow(0 0 0px rgba(138,43,226,0));
         opacity: 0.95;
       }
       50% {
-        transform: scale(1.08);
-        filter: drop-shadow(0 0 10px rgba(0,229,255,0.45));
+        transform: scale(1.18);
+        filter:
+          drop-shadow(0 0 10px rgba(0,229,255,0.75))
+          drop-shadow(0 0 18px rgba(138,43,226,0.55))
+          drop-shadow(0 0 24px rgba(255,122,0,0.45));
         opacity: 1;
       }
       100% {
         transform: scale(1);
-        filter: drop-shadow(0 0 0px rgba(255,122,0,0.0));
+        filter:
+          drop-shadow(0 0 0px rgba(255,122,0,0))
+          drop-shadow(0 0 0px rgba(0,229,255,0));
         opacity: 0.95;
       }
     }
 
     .hero-text {
-      max-width: 760px;
-      margin: 18px auto 0;
+      max-width: 820px;
+      margin: 20px auto 0;
       font-size: clamp(16px, 2vw, 22px);
-      line-height: 1.5;
-      color: #d8d8d8;
+      line-height: 1.6;
+      color: var(--muted);
       text-align: center;
+    }
+
+    .hero-subtext {
+      max-width: 700px;
+      margin: 12px auto 0;
+      font-size: 14px;
+      line-height: 1.6;
+      color: rgba(255,255,255,0.72);
+      text-align: center;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 22px;
+      align-items: stretch;
+    }
+
+    .card {
+      position: relative;
+      overflow: hidden;
+      border-radius: 24px;
+      padding: 26px 22px 22px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.07), rgba(255,255,255,0.04));
+      border: 1px solid rgba(255,255,255,0.10);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+      transition: transform 0.28s ease, box-shadow 0.28s ease, border-color 0.28s ease;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at top right, rgba(255,255,255,0.08), transparent 38%);
+      pointer-events: none;
+    }
+
+    .card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(255,255,255,0.18);
+      box-shadow:
+        0 16px 34px rgba(0,0,0,0.34),
+        0 0 20px rgba(0,229,255,0.10);
+    }
+
+    .card h2 {
+      margin: 0 0 12px;
+      font-size: 24px;
+      line-height: 1.15;
+      color: #fff;
+    }
+
+    .card p {
+      margin: 0 0 22px;
+      color: rgba(255,255,255,0.78);
+      line-height: 1.55;
+      font-size: 15px;
+      min-height: 72px;
+    }
+
+    .card a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 132px;
+      padding: 12px 18px;
+      border-radius: 14px;
+      text-decoration: none;
+      color: #fff;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+      background: linear-gradient(90deg, rgba(0,229,255,0.90), rgba(138,43,226,0.92));
+      box-shadow: 0 0 18px rgba(138,43,226,0.22);
+      transition: transform 0.22s ease, box-shadow 0.22s ease, opacity 0.22s ease;
+    }
+
+    .card a:hover {
+      transform: translateY(-2px);
+      box-shadow:
+        0 0 16px rgba(0,229,255,0.30),
+        0 0 24px rgba(138,43,226,0.30);
+      opacity: 0.96;
+    }
+
+    .card-highlight {
+      border: 1px solid rgba(255,122,0,0.28);
+      background:
+        linear-gradient(180deg, rgba(255,122,0,0.10), rgba(255,255,255,0.05)),
+        linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.04));
+      box-shadow:
+        0 0 18px rgba(255,122,0,0.16),
+        0 0 30px rgba(138,43,226,0.10),
+        0 16px 34px rgba(0,0,0,0.34);
+    }
+
+    .card-highlight::after {
+      content: "WOW EXPERIENCE";
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.9px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      color: #fff;
+      background: linear-gradient(90deg, var(--orange), var(--violet));
+      box-shadow: 0 0 16px rgba(255,122,0,0.22);
+    }
+
+    .card-highlight h2 {
+      color: #fff;
+      text-shadow: 0 0 14px rgba(255,122,0,0.12);
+    }
+
+    @media (max-width: 768px) {
+      .page {
+        width: min(100% - 20px, 1200px);
+        padding: 34px 0 48px;
+      }
+
+      .hero {
+        margin-bottom: 34px;
+      }
+
+      .badge-premium {
+        padding: 20px 20px;
+        border-radius: 22px;
+      }
+
+      .card {
+        padding: 22px 18px 18px;
+      }
+
+      .card p {
+        min-height: auto;
+      }
     }
   </style>
 </head>
@@ -80,31 +284,41 @@
       <p class="hero-text">
         Demo WebAR accessibili da link o QR code, senza app da scaricare.
       </p>
+
+      <p class="hero-subtext">
+        Esperienze immersive pensate per arte, food, branding, eventi e presentazioni ad alto impatto.
+      </p>
     </header>
 
     <section class="grid">
       <article class="card">
         <h2>Living Painting</h2>
-        <p>Quadri, poster e opere stampate che prendono vita in AR.</p>
+        <p>Quadri, poster e opere stampate che prendono vita in AR con un impatto visivo immediato.</p>
         <a href="./apps/living-painting/index.html">Apri demo</a>
       </article>
 
       <article class="card">
         <h2>Food Explosion</h2>
-        <p>Piatto o card tracciata che mostra ingredienti e contenuti immersivi.</p>
+        <p>Piatto o card tracciata che mostra ingredienti, storytelling e contenuti immersivi.</p>
         <a href="./apps/food-explosion/index.html">Apri demo</a>
       </article>
 
       <article class="card">
         <h2>Magic Object</h2>
-        <p>Effetti visivi, logo animato, particelle e contenuti che emergono nello spazio.</p>
+        <p>Effetti visivi, particelle, animazioni e contenuti che emergono nello spazio con effetto sorpresa.</p>
         <a href="./apps/magic-object/index.html">Apri demo</a>
       </article>
 
-      <article class="card card-highlight">
+      <article class="card">
         <h2>Logo 3D</h2>
-        <p>Un logo 3D che appare nello spazio con glow, floating ed effetto wow, senza target.</p>
+        <p>Un logo 3D che appare nello spazio con glow, floating ed effetto wow, senza bisogno di target.</p>
         <a href="./apps/logo-3d/index.html">Apri demo</a>
+      </article>
+
+      <article class="card card-highlight">
+        <h2>Wedding & Events</h2>
+        <p>Esperienze WebAR per matrimoni ed eventi, con contenuti emozionali, reveal scenografici e coinvolgimento immediato.</p>
+        <a href="./apps/wedding-events/index.html">Apri demo</a>
       </article>
     </section>
   </main>
