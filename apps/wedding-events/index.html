@@ -2,10 +2,7 @@
 <html lang="it">
 <head>
   <meta charset="UTF-8" />
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
-  />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Wedding & Events - mARasense</title>
 
   <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
@@ -24,7 +21,10 @@
     #startScreen {
       position: fixed;
       inset: 0;
-      background: radial-gradient(circle at center, #161616 0%, #000 75%);
+      background:
+        radial-gradient(circle at center, rgba(138,43,226,0.20) 0%, rgba(0,0,0,0) 30%),
+        radial-gradient(circle at top, rgba(255,122,0,0.12) 0%, rgba(0,0,0,0) 28%),
+        linear-gradient(180deg, #111 0%, #000 100%);
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -37,27 +37,34 @@
 
     #startScreen h1 {
       margin: 0 0 12px 0;
-      font-size: 28px;
-      letter-spacing: 0.5px;
+      font-size: 30px;
+      letter-spacing: 0.6px;
     }
 
     #startScreen p {
-      margin: 0 0 20px 0;
+      margin: 0 0 22px 0;
       font-size: 15px;
       max-width: 360px;
-      line-height: 1.5;
+      line-height: 1.6;
       color: #ddd;
     }
 
     #startButton {
-      background: #8A2BE2;
+      background: linear-gradient(90deg, #8A2BE2, #ff7a00);
       color: #fff;
       border: none;
-      border-radius: 12px;
-      padding: 14px 22px;
+      border-radius: 14px;
+      padding: 14px 24px;
       font-size: 16px;
       cursor: pointer;
-      box-shadow: 0 0 24px rgba(138, 43, 226, 0.35);
+      box-shadow:
+        0 0 24px rgba(138, 43, 226, 0.30),
+        0 0 32px rgba(255, 122, 0, 0.18);
+      transition: transform 0.2s ease, opacity 0.2s ease;
+    }
+
+    #startButton:active {
+      transform: scale(0.98);
     }
 
     #debugBox {
@@ -91,6 +98,21 @@
       white-space: nowrap;
       backdrop-filter: blur(4px);
       display: none;
+    }
+
+    #cinemaFlash {
+      position: fixed;
+      inset: 0;
+      z-index: 9997;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at center, rgba(255,255,255,0.28) 0%, rgba(255,255,255,0.10) 22%, rgba(255,255,255,0) 58%);
+      opacity: 0;
+      transition: opacity 0.45s ease;
+    }
+
+    #cinemaFlash.show {
+      opacity: 1;
     }
 
     a-scene {
@@ -127,13 +149,14 @@
     <h1>Wedding & Events</h1>
     <p>
       Premi Avvia esperienza e inquadra il target. Quando viene riconosciuto,
-      il video partirà sopra l’immagine.
+      il contenuto partirà con un ingresso cinematografico.
     </p>
     <button id="startButton">Avvia esperienza</button>
   </div>
 
   <div id="debugBox">Stato: attesa avvio</div>
   <div id="scanText">Inquadra bene il target</div>
+  <div id="cinemaFlash"></div>
 
   <a-scene
     id="arScene"
@@ -154,6 +177,13 @@
         webkit-playsinline
         crossorigin="anonymous"
       ></video>
+
+      <audio
+        id="bgAudio"
+        src="./assets/audio/tunetank-love-romantic-guitar-music-347184.mp3"
+        preload="auto"
+        crossorigin="anonymous"
+      ></audio>
     </a-assets>
 
     <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
@@ -166,8 +196,9 @@
           position="0 0 0"
           width="1"
           height="1.4"
-          material="shader: flat; transparent: true; opacity: 1"
+          material="shader: flat; transparent: true; opacity: 0"
           visible="false"
+          scale="0.92 0.92 0.92"
         ></a-plane>
       </a-entity>
     </a-entity>
@@ -178,15 +209,22 @@
     const startButton = document.getElementById("startButton");
     const debugBox = document.getElementById("debugBox");
     const scanText = document.getElementById("scanText");
+    const cinemaFlash = document.getElementById("cinemaFlash");
+
     const sceneEl = document.getElementById("arScene");
     const target0 = document.getElementById("target0");
     const smoothWrapper = document.getElementById("smoothWrapper");
     const videoPlane = document.getElementById("videoPlane");
+
     const video = document.getElementById("eventVideo");
+    const audio = document.getElementById("bgAudio");
 
     let targetVisible = false;
     let smoothingInitialized = false;
     let videoFinished = false;
+    let fadeAudioInterval = null;
+    let cinematicFrame = null;
+    let cinematicActive = false;
 
     const smoothed = {
       position: new THREE.Vector3(),
@@ -218,13 +256,110 @@
       videoPlane.object3D.visible = false;
     }
 
+    function stopAudioFade() {
+      if (fadeAudioInterval) {
+        clearInterval(fadeAudioInterval);
+        fadeAudioInterval = null;
+      }
+    }
+
+    function stopCinematicAnimation() {
+      if (cinematicFrame) {
+        cancelAnimationFrame(cinematicFrame);
+        cinematicFrame = null;
+      }
+      cinematicActive = false;
+    }
+
+    function resetMedia() {
+      stopAudioFade();
+      stopCinematicAnimation();
+
+      video.pause();
+      video.currentTime = 0;
+
+      audio.pause();
+      audio.currentTime = 0;
+      audio.volume = 0;
+
+      videoPlane.setAttribute("material", "shader: flat; transparent: true; opacity: 0");
+      videoPlane.object3D.scale.set(0.92, 0.92, 0.92);
+
+      cinemaFlash.classList.remove("show");
+    }
+
+    function fadeInAudio(targetVolume = 0.6, duration = 2200) {
+      stopAudioFade();
+
+      const steps = 22;
+      const intervalTime = duration / steps;
+      const stepAmount = targetVolume / steps;
+
+      audio.volume = 0;
+
+      fadeAudioInterval = setInterval(() => {
+        const nextVolume = Math.min(audio.volume + stepAmount, targetVolume);
+        audio.volume = nextVolume;
+
+        if (nextVolume >= targetVolume) {
+          stopAudioFade();
+        }
+      }, intervalTime);
+    }
+
+    function animateVideoEntrance() {
+      stopCinematicAnimation();
+      cinematicActive = true;
+
+      const start = performance.now();
+      const duration = 900;
+
+      cinemaFlash.classList.add("show");
+      setTimeout(() => {
+        cinemaFlash.classList.remove("show");
+      }, 320);
+
+      function easeOutCubic(t) {
+        return 1 - Math.pow(1 - t, 3);
+      }
+
+      function frame(now) {
+        if (!cinematicActive) return;
+
+        const elapsed = now - start;
+        const t = Math.min(elapsed / duration, 1);
+        const eased = easeOutCubic(t);
+
+        const opacity = eased;
+        const scale = 0.92 + (1 - 0.92) * eased;
+
+        videoPlane.setAttribute("material", "shader: flat; transparent: true; opacity: " + opacity);
+        videoPlane.object3D.scale.set(scale, scale, scale);
+
+        if (t < 1) {
+          cinematicFrame = requestAnimationFrame(frame);
+        } else {
+          cinematicFrame = null;
+          cinematicActive = false;
+          videoPlane.setAttribute("material", "shader: flat; transparent: true; opacity: 1");
+          videoPlane.object3D.scale.set(1, 1, 1);
+        }
+      }
+
+      cinematicFrame = requestAnimationFrame(frame);
+    }
+
     async function playFromStart() {
       try {
-        video.pause();
-        video.currentTime = 0;
+        resetMedia();
+
         await video.play();
+        await audio.play();
+
+        fadeInAudio(0.6, 2200);
+        animateVideoEntrance();
       } catch (e) {
-        console.warn("Errore play video:", e);
+        console.warn("Errore play media:", e);
       }
     }
 
@@ -246,6 +381,15 @@
     startButton.addEventListener("click", async () => {
       startButton.disabled = true;
       startButton.textContent = "Avvio...";
+
+      try {
+        audio.volume = 0;
+        await audio.play();
+        audio.pause();
+        audio.currentTime = 0;
+      } catch (e) {
+        console.warn("Pre-attivazione audio non riuscita:", e);
+      }
 
       const startAR = async () => {
         const mindarSystem = sceneEl.systems["mindar-image-system"];
@@ -303,16 +447,25 @@
     target0.addEventListener("targetLost", () => {
       targetVisible = false;
       smoothingInitialized = false;
-      video.pause();
-      video.currentTime = 0;
+
+      resetMedia();
       hideVideoPlane();
+
       showHint("Target perso. Riinquadra l’immagine.");
       setDebug("target perso");
     });
 
     video.addEventListener("ended", () => {
+      stopAudioFade();
+      stopCinematicAnimation();
+
       video.pause();
       video.currentTime = 0;
+
+      audio.pause();
+      audio.currentTime = 0;
+      audio.volume = 0;
+
       videoFinished = true;
       hideVideoPlane();
 
