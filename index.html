@@ -7,22 +7,29 @@
   <link rel="stylesheet" href="./shared/css/style.css" />
   <style>
     :root {
-      --bg-top: #1b1140;
-      --bg-bottom: #2f2aa8;
-      --panel: rgba(255,255,255,0.08);
-      --panel-strong: rgba(255,255,255,0.12);
-      --line: rgba(255,255,255,0.14);
+      --bg-top: #1677ff;
+      --bg-mid: #245dff;
+      --bg-bottom: #3b35d6;
+
+      --panel: rgba(255,255,255,0.12);
+      --panel-strong: rgba(255,255,255,0.16);
+      --line: rgba(255,255,255,0.22);
+
       --text: #ffffff;
-      --muted: rgba(255,255,255,0.78);
-      --soft: rgba(255,255,255,0.62);
-      --cyan: #00e5ff;
-      --violet: #bb7bff;
-      --orange: #ff9b42;
-      --gold: #ffd78c;
+      --muted: rgba(255,255,255,0.84);
+      --soft: rgba(255,255,255,0.68);
+
+      --cyan: #18d7ff;
+      --violet: #a96cff;
+      --pink: #ff8ad8;
+      --gold: #ffd466;
+      --green: #54e6b0;
+      --orange: #ff9e57;
+
       --radius-xl: 24px;
       --radius-lg: 18px;
       --radius-md: 14px;
-      --shadow: 0 14px 34px rgba(0,0,0,0.22);
+      --shadow: 0 16px 34px rgba(8, 26, 88, 0.22);
     }
 
     * {
@@ -36,10 +43,10 @@
       font-family: Arial, sans-serif;
       color: var(--text);
       background:
-        radial-gradient(circle at 20% 20%, rgba(0,229,255,0.12), transparent 20%),
-        radial-gradient(circle at 80% 10%, rgba(255,155,66,0.10), transparent 18%),
-        radial-gradient(circle at 50% 80%, rgba(187,123,255,0.16), transparent 24%),
-        linear-gradient(180deg, var(--bg-top) 0%, #241f73 48%, var(--bg-bottom) 100%);
+        radial-gradient(circle at 18% 16%, rgba(24,215,255,0.18), transparent 22%),
+        radial-gradient(circle at 82% 12%, rgba(255,138,216,0.14), transparent 18%),
+        radial-gradient(circle at 50% 78%, rgba(169,108,255,0.18), transparent 24%),
+        linear-gradient(180deg, var(--bg-top) 0%, var(--bg-mid) 46%, var(--bg-bottom) 100%);
     }
 
     body::before {
@@ -47,92 +54,92 @@
       position: fixed;
       inset: 0;
       pointer-events: none;
-      opacity: 0.16;
+      opacity: 0.14;
       background-image:
-        linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
+        linear-gradient(rgba(255,255,255,0.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.08) 1px, transparent 1px);
       background-size: 28px 28px;
-      mask-image: radial-gradient(circle at center, black 38%, transparent 88%);
+      mask-image: radial-gradient(circle at center, black 40%, transparent 88%);
     }
 
     .page {
       position: relative;
       z-index: 1;
-      width: min(1120px, calc(100% - 28px));
+      width: min(1120px, calc(100% - 26px));
       margin: 0 auto;
-      padding: 42px 0 64px;
+      padding: 34px 0 56px;
     }
 
     .hero {
       text-align: center;
-      margin-bottom: 34px;
+      margin-bottom: 28px;
     }
 
     .badge-premium {
       display: inline-block;
-      padding: 20px 28px;
+      padding: 18px 28px;
       border-radius: 24px;
-      background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.16);
+      background: rgba(255,255,255,0.10);
+      border: 1px solid rgba(255,255,255,0.18);
       box-shadow:
-        0 0 20px rgba(0,229,255,0.10),
-        0 0 24px rgba(187,123,255,0.08),
-        0 16px 34px rgba(0,0,0,0.16);
+        0 0 24px rgba(24,215,255,0.12),
+        0 0 32px rgba(169,108,255,0.08),
+        0 16px 34px rgba(8, 26, 88, 0.16);
       backdrop-filter: blur(10px);
     }
 
     .badge-title {
       margin: 0;
-      font-size: clamp(38px, 5.5vw, 76px);
+      font-size: clamp(38px, 5.8vw, 76px);
       font-weight: 900;
       line-height: 1.02;
       color: #fff;
-      letter-spacing: 0.4px;
+      letter-spacing: 0.3px;
     }
 
     .badge-title .pulse-ar {
       display: inline-block;
-      background: linear-gradient(90deg, var(--cyan), var(--violet), var(--orange));
+      background: linear-gradient(90deg, var(--cyan), var(--violet), var(--pink));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      animation: arPulse 1.15s ease-in-out infinite;
+      animation: arPulse 1.1s ease-in-out infinite;
     }
 
     @keyframes arPulse {
       0% {
         transform: scale(1);
         opacity: 0.96;
-        filter: drop-shadow(0 0 0 rgba(0,229,255,0));
+        filter: drop-shadow(0 0 0 rgba(24,215,255,0));
       }
       50% {
         transform: scale(1.16);
         opacity: 1;
         filter:
-          drop-shadow(0 0 10px rgba(0,229,255,0.46))
-          drop-shadow(0 0 18px rgba(187,123,255,0.32));
+          drop-shadow(0 0 10px rgba(24,215,255,0.46))
+          drop-shadow(0 0 18px rgba(169,108,255,0.34));
       }
       100% {
         transform: scale(1);
         opacity: 0.96;
-        filter: drop-shadow(0 0 0 rgba(255,155,66,0));
+        filter: drop-shadow(0 0 0 rgba(255,138,216,0));
       }
     }
 
     .hero-text {
       max-width: 760px;
-      margin: 16px auto 0;
+      margin: 14px auto 0;
       font-size: clamp(16px, 2vw, 21px);
-      line-height: 1.55;
+      line-height: 1.5;
       color: var(--muted);
       text-align: center;
     }
 
     .section {
-      margin-top: 24px;
-      padding: 20px;
+      margin-top: 20px;
+      padding: 18px;
       border-radius: var(--radius-xl);
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.16);
       box-shadow: var(--shadow);
       backdrop-filter: blur(10px);
     }
@@ -141,14 +148,13 @@
       display: flex;
       align-items: center;
       gap: 12px;
-      margin-bottom: 18px;
+      margin-bottom: 16px;
     }
 
     .section-title {
       margin: 0;
       font-size: 22px;
       font-weight: 800;
-      letter-spacing: 0.3px;
       color: #fff;
       white-space: nowrap;
     }
@@ -156,7 +162,7 @@
     .section-line {
       flex: 1;
       height: 1px;
-      background: linear-gradient(90deg, rgba(255,255,255,0.24), rgba(255,255,255,0.03));
+      background: linear-gradient(90deg, rgba(255,255,255,0.28), rgba(255,255,255,0.04));
     }
 
     .cards {
@@ -168,24 +174,23 @@
     .card {
       border-radius: var(--radius-lg);
       padding: 18px;
-      background: rgba(255,255,255,0.07);
-      border: 1px solid rgba(255,255,255,0.12);
-      transition: transform 0.24s ease, box-shadow 0.24s ease, border-color 0.24s ease;
+      background: rgba(255,255,255,0.09);
+      border: 1px solid rgba(255,255,255,0.14);
+      transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
     }
 
     .card:hover {
       transform: translateY(-4px);
-      border-color: rgba(255,255,255,0.22);
-      box-shadow: 0 12px 28px rgba(0,0,0,0.18);
+      border-color: rgba(255,255,255,0.24);
+      box-shadow: 0 14px 28px rgba(8, 26, 88, 0.18);
     }
 
     .card-highlight {
-      background:
-        linear-gradient(180deg, rgba(255,215,140,0.10), rgba(255,255,255,0.08));
-      border: 1px solid rgba(255,215,140,0.28);
+      background: linear-gradient(180deg, rgba(255,212,102,0.12), rgba(255,255,255,0.10));
+      border: 1px solid rgba(255,212,102,0.34);
       box-shadow:
-        0 0 22px rgba(255,215,140,0.08),
-        0 12px 28px rgba(0,0,0,0.18);
+        0 0 24px rgba(255,212,102,0.10),
+        0 14px 28px rgba(8, 26, 88, 0.18);
     }
 
     .card-tag {
@@ -197,13 +202,13 @@
       font-weight: 800;
       letter-spacing: 0.8px;
       text-transform: uppercase;
-      background: rgba(255,255,255,0.10);
-      color: rgba(255,255,255,0.82);
+      background: rgba(255,255,255,0.12);
+      color: rgba(255,255,255,0.88);
     }
 
     .card h3 {
       margin: 0 0 10px;
-      font-size: 22px;
+      font-size: 21px;
       line-height: 1.14;
       color: #fff;
     }
@@ -216,41 +221,46 @@
       min-height: 66px;
     }
 
-    .card a {
+    .btn {
       display: inline-flex;
       align-items: center;
       justify-content: center;
       padding: 11px 16px;
       min-width: 128px;
       border-radius: 12px;
-      background: linear-gradient(90deg, var(--cyan), var(--violet));
       color: #fff;
       text-decoration: none;
       font-weight: 700;
-      box-shadow: 0 8px 18px rgba(0,0,0,0.16);
+      box-shadow: 0 8px 18px rgba(0,0,0,0.14);
       transition: transform 0.2s ease, opacity 0.2s ease;
     }
 
-    .card a:hover {
+    .btn:hover {
       transform: translateY(-2px);
-      opacity: 0.96;
+      opacity: 0.97;
     }
+
+    .btn-art { background: linear-gradient(90deg, #23d5ff, #5d8cff); }
+    .btn-food { background: linear-gradient(90deg, #19d8ff, #48e0a4); }
+    .btn-brand { background: linear-gradient(90deg, #21d4fd, #b16cff); }
+    .btn-wedding { background: linear-gradient(90deg, #ffb347, #ff8ad8); }
+    .btn-sport { background: linear-gradient(90deg, #1fd7ff, #7ec3ff); }
 
     .gallery {
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
-      margin-top: 16px;
+      margin-top: 14px;
     }
 
     .thumb {
-      width: 86px;
-      height: 86px;
+      width: 74px;
+      height: 74px;
       border-radius: 14px;
       overflow: hidden;
-      border: 1px solid rgba(255,255,255,0.16);
-      background: rgba(255,255,255,0.08);
-      box-shadow: 0 8px 18px rgba(0,0,0,0.10);
+      border: 1px solid rgba(255,255,255,0.18);
+      background: rgba(255,255,255,0.10);
+      box-shadow: 0 8px 18px rgba(8, 26, 88, 0.10);
       flex: 0 0 auto;
     }
 
@@ -261,31 +271,8 @@
       display: block;
     }
 
-    .thumb.placeholder {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 8px;
-      color: rgba(255,255,255,0.82);
-      font-size: 11px;
-      line-height: 1.35;
-      background:
-        linear-gradient(135deg, rgba(255,255,255,0.10), rgba(255,255,255,0.04));
-    }
-
-    .thumb.wide-note {
-      width: auto;
-      min-width: 120px;
-      padding: 10px 12px;
-      height: 86px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
     .footer-note {
-      margin-top: 28px;
+      margin-top: 24px;
       text-align: center;
       font-size: 13px;
       color: var(--soft);
@@ -310,13 +297,8 @@
       }
 
       .thumb {
-        width: 72px;
-        height: 72px;
-      }
-
-      .thumb.wide-note {
-        height: 72px;
-        min-width: 104px;
+        width: 68px;
+        height: 68px;
       }
     }
   </style>
@@ -346,7 +328,7 @@
           <span class="card-tag">Image target AR</span>
           <h3>Living Painting</h3>
           <p>Quadri e opere che prendono vita con video e contenuti immersivi sovrapposti all’immagine reale.</p>
-          <a href="./apps/living-painting/index.html">Apri demo</a>
+          <a class="btn btn-art" href="./apps/living-painting/index.html">Apri demo</a>
         </article>
       </div>
 
@@ -368,7 +350,7 @@
           <span class="card-tag">Interactive food</span>
           <h3>Food Explosion</h3>
           <p>Piatto, menu o visual food che attivano storytelling, ingredienti e contenuti coinvolgenti per il mondo ristorante.</p>
-          <a href="./apps/food-explosion/index.html">Apri demo</a>
+          <a class="btn btn-food" href="./apps/food-explosion/index.html">Apri demo</a>
         </article>
       </div>
 
@@ -390,33 +372,27 @@
           <span class="card-tag">Avatar reveal</span>
           <h3>Talking Avatar</h3>
           <p>Inquadrando il visual, compare un avatar parlante con sfondo trasparente. Ideale per accoglienza, promo e storytelling.</p>
-          <a href="./apps/cappellino/index.html">Apri demo</a>
+          <a class="btn btn-brand" href="./apps/cappellino/index.html">Apri demo</a>
         </article>
 
         <article class="card">
           <span class="card-tag">Spatial effect</span>
           <h3>Magic Object</h3>
           <p>Effetti visivi e comparsa di contenuti nello spazio per una demo wow, più emozionale che descrittiva.</p>
-          <a href="./apps/magic-object/index.html">Apri demo</a>
+          <a class="btn btn-brand" href="./apps/magic-object/index.html">Apri demo</a>
         </article>
 
         <article class="card">
           <span class="card-tag">3D logo</span>
           <h3>Logo 3D</h3>
           <p>Un logo che emerge nello spazio con glow e presenza scenica, perfetto per eventi e brand activation.</p>
-          <a href="./apps/logo-3d/index.html">Apri demo</a>
+          <a class="btn btn-brand" href="./apps/logo-3d/index.html">Apri demo</a>
         </article>
       </div>
 
       <div class="gallery">
         <div class="thumb">
           <img src="./shared/img/talking-avatar.png" alt="Talking Avatar" />
-        </div>
-        <div class="thumb placeholder">
-          Magic<br />Object
-        </div>
-        <div class="thumb placeholder">
-          Logo<br />3D
         </div>
       </div>
     </section>
@@ -432,21 +408,21 @@
           <span class="card-tag">Emotional AR</span>
           <h3>Wedding & Events</h3>
           <p>Partecipazioni, materiali evento e visual wedding che si animano con video, musica e contenuti romantici.</p>
-          <a href="./apps/wedding-events/index.html">Apri demo</a>
+          <a class="btn btn-wedding" href="./apps/wedding-events/index.html">Apri demo</a>
         </article>
 
         <article class="card">
           <span class="card-tag">Greeting card AR</span>
           <h3>Augmented Wishes</h3>
           <p>Un biglietto di auguri che prende vita con un video animato parlato: elegante, emozionale e memorabile.</p>
-          <a href="./apps/fabbricantidiemozioni/index.html">Apri demo</a>
+          <a class="btn btn-wedding" href="./apps/fabbricantidiemozioni/index.html">Apri demo</a>
         </article>
 
         <article class="card">
           <span class="card-tag">Editorial experience</span>
           <h3>Rivista degli Sposi</h3>
           <p>Una rivista interattiva con più experience: invito, guestbook, curiosità, ringraziamento e gioco degli sposi.</p>
-          <a href="./apps/experiences/index.html">Apri demo</a>
+          <a class="btn btn-wedding" href="./apps/experiences/index.html">Apri demo</a>
         </article>
       </div>
 
@@ -458,10 +434,7 @@
           <img src="./shared/img/augmented-wishes.jpg" alt="Augmented Wishes" />
         </div>
         <div class="thumb">
-          <img src="./shared/img/rivista-sposi.jpg" alt="Rivista degli Sposi" />
-        </div>
-        <div class="thumb placeholder wide-note">
-          PDF cover<br />o screenshot
+          <img src="./shared/img/rivista-sposi.png" alt="Rivista degli Sposi" />
         </div>
       </div>
     </section>
@@ -477,7 +450,7 @@
           <span class="card-tag">Merch + video</span>
           <h3>FC Napoli</h3>
           <p>Inquadrando le maglie si attivano contenuti video collegati ai diversi item. Ideale per fan engagement e merchandising.</p>
-          <a href="./apps/fcNapoli/index.html">Apri demo</a>
+          <a class="btn btn-sport" href="./apps/fcNapoli/index.html">Apri demo</a>
         </article>
       </div>
 
