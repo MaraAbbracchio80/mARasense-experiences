@@ -7,26 +7,22 @@
   <link rel="stylesheet" href="./shared/css/style.css" />
   <style>
     :root {
-      --bg-main: #f6f1ea;
-      --bg-soft: #fbf8f4;
-      --bg-card: rgba(255,255,255,0.72);
-      --bg-card-strong: rgba(255,255,255,0.88);
-      --text: #241f1a;
-      --muted: #6a625b;
-      --line: rgba(60, 42, 28, 0.12);
-
-      --cyan: #00cfe8;
-      --violet: #8a2be2;
-      --orange: #ff8b2b;
-      --gold: #c79a4b;
-      --rose: #d88e9f;
-      --green: #7ea58d;
-
-      --shadow-soft: 0 12px 30px rgba(61, 39, 18, 0.08);
-      --shadow-hover: 0 20px 38px rgba(61, 39, 18, 0.14);
-      --radius-xl: 28px;
-      --radius-lg: 22px;
-      --radius-md: 16px;
+      --bg-top: #1b1140;
+      --bg-bottom: #2f2aa8;
+      --panel: rgba(255,255,255,0.08);
+      --panel-strong: rgba(255,255,255,0.12);
+      --line: rgba(255,255,255,0.14);
+      --text: #ffffff;
+      --muted: rgba(255,255,255,0.78);
+      --soft: rgba(255,255,255,0.62);
+      --cyan: #00e5ff;
+      --violet: #bb7bff;
+      --orange: #ff9b42;
+      --gold: #ffd78c;
+      --radius-xl: 24px;
+      --radius-lg: 18px;
+      --radius-md: 14px;
+      --shadow: 0 14px 34px rgba(0,0,0,0.22);
     }
 
     * {
@@ -40,10 +36,10 @@
       font-family: Arial, sans-serif;
       color: var(--text);
       background:
-        radial-gradient(circle at top left, rgba(0,207,232,0.10), transparent 26%),
-        radial-gradient(circle at top right, rgba(138,43,226,0.10), transparent 28%),
-        radial-gradient(circle at 20% 80%, rgba(255,139,43,0.10), transparent 24%),
-        linear-gradient(180deg, #f8f4ef 0%, #f5efe6 45%, #f2ebe1 100%);
+        radial-gradient(circle at 20% 20%, rgba(0,229,255,0.12), transparent 20%),
+        radial-gradient(circle at 80% 10%, rgba(255,155,66,0.10), transparent 18%),
+        radial-gradient(circle at 50% 80%, rgba(187,123,255,0.16), transparent 24%),
+        linear-gradient(180deg, var(--bg-top) 0%, #241f73 48%, var(--bg-bottom) 100%);
     }
 
     body::before {
@@ -51,68 +47,47 @@
       position: fixed;
       inset: 0;
       pointer-events: none;
-      opacity: 0.22;
+      opacity: 0.16;
       background-image:
-        linear-gradient(rgba(120, 95, 70, 0.06) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(120, 95, 70, 0.06) 1px, transparent 1px);
-      background-size: 30px 30px;
-      mask-image: radial-gradient(circle at center, black 42%, transparent 90%);
+        linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
+      background-size: 28px 28px;
+      mask-image: radial-gradient(circle at center, black 38%, transparent 88%);
     }
 
     .page {
       position: relative;
       z-index: 1;
-      width: min(1320px, calc(100% - 36px));
+      width: min(1120px, calc(100% - 28px));
       margin: 0 auto;
-      padding: 42px 0 80px;
+      padding: 42px 0 64px;
     }
 
     .hero {
-      position: relative;
       text-align: center;
-      margin-bottom: 42px;
-      padding: 10px 0 18px;
-    }
-
-    .hero::after {
-      content: "";
-      position: absolute;
-      left: 50%;
-      top: 0;
-      transform: translateX(-50%);
-      width: min(980px, 92%);
-      height: 100%;
-      border-radius: 36px;
-      background:
-        linear-gradient(180deg, rgba(255,255,255,0.55), rgba(255,255,255,0.12));
-      box-shadow:
-        inset 0 1px 0 rgba(255,255,255,0.65),
-        0 18px 40px rgba(61, 39, 18, 0.06);
-      z-index: -1;
-      filter: blur(0.2px);
+      margin-bottom: 34px;
     }
 
     .badge-premium {
       display: inline-block;
-      padding: 22px 34px;
-      border-radius: 28px;
-      background: rgba(255,255,255,0.58);
-      border: 1px solid rgba(255,255,255,0.75);
+      padding: 20px 28px;
+      border-radius: 24px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.16);
       box-shadow:
-        0 0 22px rgba(0,207,232,0.08),
-        0 0 28px rgba(138,43,226,0.06),
-        0 18px 36px rgba(61, 39, 18, 0.08);
+        0 0 20px rgba(0,229,255,0.10),
+        0 0 24px rgba(187,123,255,0.08),
+        0 16px 34px rgba(0,0,0,0.16);
       backdrop-filter: blur(10px);
     }
 
     .badge-title {
       margin: 0;
-      font-size: clamp(44px, 6vw, 84px);
+      font-size: clamp(38px, 5.5vw, 76px);
       font-weight: 900;
       line-height: 1.02;
-      letter-spacing: 0.2px;
-      color: #1f1a15;
-      text-shadow: 0 1px 0 rgba(255,255,255,0.6);
+      color: #fff;
+      letter-spacing: 0.4px;
     }
 
     .badge-title .pulse-ar {
@@ -120,332 +95,228 @@
       background: linear-gradient(90deg, var(--cyan), var(--violet), var(--orange));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      animation: arPulse 1.18s ease-in-out infinite;
-      transform-origin: center;
+      animation: arPulse 1.15s ease-in-out infinite;
     }
 
     @keyframes arPulse {
       0% {
         transform: scale(1);
-        filter:
-          drop-shadow(0 0 0 rgba(0,207,232,0))
-          drop-shadow(0 0 0 rgba(138,43,226,0));
-        opacity: 0.95;
+        opacity: 0.96;
+        filter: drop-shadow(0 0 0 rgba(0,229,255,0));
       }
       50% {
         transform: scale(1.16);
-        filter:
-          drop-shadow(0 0 10px rgba(0,207,232,0.45))
-          drop-shadow(0 0 16px rgba(138,43,226,0.35))
-          drop-shadow(0 0 20px rgba(255,139,43,0.24));
         opacity: 1;
+        filter:
+          drop-shadow(0 0 10px rgba(0,229,255,0.46))
+          drop-shadow(0 0 18px rgba(187,123,255,0.32));
       }
       100% {
         transform: scale(1);
-        filter:
-          drop-shadow(0 0 0 rgba(0,207,232,0))
-          drop-shadow(0 0 0 rgba(255,139,43,0));
-        opacity: 0.95;
+        opacity: 0.96;
+        filter: drop-shadow(0 0 0 rgba(255,155,66,0));
       }
     }
 
     .hero-text {
-      max-width: 860px;
-      margin: 18px auto 0;
-      font-size: clamp(17px, 2vw, 23px);
-      line-height: 1.55;
-      color: #4a433d;
-      text-align: center;
-    }
-
-    .hero-subtext {
       max-width: 760px;
-      margin: 10px auto 0;
-      font-size: 14px;
-      line-height: 1.6;
-      color: #726a63;
+      margin: 16px auto 0;
+      font-size: clamp(16px, 2vw, 21px);
+      line-height: 1.55;
+      color: var(--muted);
       text-align: center;
     }
 
-    .section-block {
-      margin-top: 34px;
-      padding: 22px 0 6px;
+    .section {
+      margin-top: 24px;
+      padding: 20px;
+      border-radius: var(--radius-xl);
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.12);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
     }
 
     .section-header {
       display: flex;
       align-items: center;
-      gap: 14px;
-      margin-bottom: 20px;
+      gap: 12px;
+      margin-bottom: 18px;
     }
 
-    .section-header::after {
-      content: "";
-      flex: 1;
-      height: 1px;
-      background: linear-gradient(90deg, rgba(63,42,28,0.18), rgba(63,42,28,0.04));
-    }
-
-    .section-kicker {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 9px 14px;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.65);
-      border: 1px solid rgba(255,255,255,0.8);
-      box-shadow: 0 8px 22px rgba(61,39,18,0.05);
-      font-size: 12px;
+    .section-title {
+      margin: 0;
+      font-size: 22px;
       font-weight: 800;
-      letter-spacing: 0.9px;
-      text-transform: uppercase;
-      color: #5b5149;
+      letter-spacing: 0.3px;
+      color: #fff;
       white-space: nowrap;
     }
 
-    .grid {
+    .section-line {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, rgba(255,255,255,0.24), rgba(255,255,255,0.03));
+    }
+
+    .cards {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(255px, 1fr));
-      gap: 22px;
-      align-items: stretch;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
     }
 
     .card {
-      position: relative;
-      overflow: hidden;
-      border-radius: var(--radius-xl);
-      background: var(--bg-card);
-      border: 1px solid rgba(255,255,255,0.7);
-      box-shadow: var(--shadow-soft);
-      backdrop-filter: blur(10px);
-      transition: transform 0.28s ease, box-shadow 0.28s ease, border-color 0.28s ease;
+      border-radius: var(--radius-lg);
+      padding: 18px;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.12);
+      transition: transform 0.24s ease, box-shadow 0.24s ease, border-color 0.24s ease;
     }
 
     .card:hover {
-      transform: translateY(-7px);
-      box-shadow: var(--shadow-hover);
-      border-color: rgba(255,255,255,0.96);
+      transform: translateY(-4px);
+      border-color: rgba(255,255,255,0.22);
+      box-shadow: 0 12px 28px rgba(0,0,0,0.18);
     }
 
-    .card-media {
-      position: relative;
-      width: 100%;
-      aspect-ratio: 16 / 11;
-      overflow: hidden;
-      background: linear-gradient(135deg, #ece2d6, #f7f1ea);
-    }
-
-    .card-media img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-      transition: transform 0.45s ease;
-    }
-
-    .card:hover .card-media img {
-      transform: scale(1.04);
-    }
-
-    .card-body {
-      padding: 20px 18px 18px;
+    .card-highlight {
+      background:
+        linear-gradient(180deg, rgba(255,215,140,0.10), rgba(255,255,255,0.08));
+      border: 1px solid rgba(255,215,140,0.28);
+      box-shadow:
+        0 0 22px rgba(255,215,140,0.08),
+        0 12px 28px rgba(0,0,0,0.18);
     }
 
     .card-tag {
       display: inline-block;
       margin-bottom: 10px;
-      padding: 7px 10px;
+      padding: 6px 10px;
       border-radius: 999px;
       font-size: 11px;
       font-weight: 800;
       letter-spacing: 0.8px;
       text-transform: uppercase;
-      background: rgba(36,31,26,0.06);
-      color: #665c54;
+      background: rgba(255,255,255,0.10);
+      color: rgba(255,255,255,0.82);
     }
 
-    .card h2 {
+    .card h3 {
       margin: 0 0 10px;
-      font-size: 24px;
-      line-height: 1.12;
-      color: #211c17;
+      font-size: 22px;
+      line-height: 1.14;
+      color: #fff;
     }
 
     .card p {
-      margin: 0 0 18px;
+      margin: 0 0 16px;
+      font-size: 14px;
+      line-height: 1.55;
       color: var(--muted);
-      font-size: 15px;
-      line-height: 1.58;
-      min-height: 92px;
+      min-height: 66px;
     }
 
     .card a {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-width: 138px;
-      padding: 12px 18px;
-      border-radius: 14px;
-      text-decoration: none;
+      padding: 11px 16px;
+      min-width: 128px;
+      border-radius: 12px;
+      background: linear-gradient(90deg, var(--cyan), var(--violet));
       color: #fff;
+      text-decoration: none;
       font-weight: 700;
-      letter-spacing: 0.2px;
-      background: linear-gradient(90deg, #13c9dd, #8a2be2);
-      box-shadow:
-        0 10px 20px rgba(138,43,226,0.16),
-        0 6px 16px rgba(19,201,221,0.10);
-      transition: transform 0.22s ease, opacity 0.22s ease, box-shadow 0.22s ease;
+      box-shadow: 0 8px 18px rgba(0,0,0,0.16);
+      transition: transform 0.2s ease, opacity 0.2s ease;
     }
 
     .card a:hover {
       transform: translateY(-2px);
       opacity: 0.96;
-      box-shadow:
-        0 12px 24px rgba(138,43,226,0.22),
-        0 8px 18px rgba(19,201,221,0.14);
     }
 
-    .card-highlight {
-      background:
-        linear-gradient(180deg, rgba(255,255,255,0.92), rgba(255,250,246,0.84));
-      border: 1px solid rgba(255,205,145,0.55);
-      box-shadow:
-        0 0 0 1px rgba(255,255,255,0.55) inset,
-        0 18px 36px rgba(105,73,33,0.10),
-        0 0 24px rgba(199,154,75,0.12);
+    .gallery {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 16px;
     }
 
-    .card-highlight .card-tag {
-      background: linear-gradient(90deg, rgba(199,154,75,0.18), rgba(216,142,159,0.14));
-      color: #7a5b2d;
+    .thumb {
+      width: 86px;
+      height: 86px;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.16);
+      background: rgba(255,255,255,0.08);
+      box-shadow: 0 8px 18px rgba(0,0,0,0.10);
+      flex: 0 0 auto;
     }
 
-    .card-highlight::after {
-      content: "WOW EXPERIENCE";
-      position: absolute;
-      top: 14px;
-      right: 14px;
-      z-index: 3;
-      font-size: 11px;
-      font-weight: 900;
-      letter-spacing: 0.9px;
-      padding: 8px 10px;
-      border-radius: 999px;
-      color: #fff;
-      background: linear-gradient(90deg, #d8a456, #d88e9f);
-      box-shadow: 0 8px 20px rgba(162, 96, 54, 0.18);
+    .thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
     }
 
-    .card-premium::after {
-      content: "PREMIUM";
-      position: absolute;
-      top: 14px;
-      right: 14px;
-      z-index: 3;
-      font-size: 11px;
-      font-weight: 900;
-      letter-spacing: 0.9px;
-      padding: 8px 10px;
-      border-radius: 999px;
-      color: #fff;
-      background: linear-gradient(90deg, #7ea58d, #13c9dd);
-      box-shadow: 0 8px 18px rgba(54, 132, 116, 0.16);
-    }
-
-    .cover-gradient-logo {
+    .thumb.placeholder {
       display: flex;
       align-items: center;
       justify-content: center;
-      height: 100%;
+      text-align: center;
+      padding: 8px;
+      color: rgba(255,255,255,0.82);
+      font-size: 11px;
+      line-height: 1.35;
       background:
-        radial-gradient(circle at 50% 35%, rgba(255,255,255,0.55), transparent 20%),
-        radial-gradient(circle at center, rgba(19,201,221,0.18), transparent 38%),
-        linear-gradient(135deg, #f4ece3 0%, #efe4d8 42%, #f9f3ec 100%);
+        linear-gradient(135deg, rgba(255,255,255,0.10), rgba(255,255,255,0.04));
     }
 
-    .logo-orb {
-      width: 120px;
-      height: 120px;
-      border-radius: 50%;
-      display: grid;
-      place-items: center;
-      background:
-        linear-gradient(135deg, rgba(0,207,232,0.90), rgba(138,43,226,0.92));
-      color: #fff;
-      font-size: 34px;
-      font-weight: 900;
-      box-shadow:
-        0 0 28px rgba(19,201,221,0.18),
-        0 16px 30px rgba(87, 61, 131, 0.18);
-    }
-
-    .cover-gradient-magic {
+    .thumb.wide-note {
+      width: auto;
+      min-width: 120px;
+      padding: 10px 12px;
+      height: 86px;
       display: flex;
       align-items: center;
       justify-content: center;
-      height: 100%;
-      background:
-        radial-gradient(circle at 50% 30%, rgba(255,255,255,0.62), transparent 16%),
-        radial-gradient(circle at 40% 42%, rgba(255,139,43,0.26), transparent 18%),
-        radial-gradient(circle at 62% 45%, rgba(138,43,226,0.22), transparent 16%),
-        radial-gradient(circle at 50% 62%, rgba(0,207,232,0.22), transparent 18%),
-        linear-gradient(135deg, #1d1c24 0%, #2d2433 100%);
-      color: #fff;
-      position: relative;
     }
 
-    .magic-stars {
-      font-size: 56px;
-      letter-spacing: 12px;
-      text-shadow:
-        0 0 18px rgba(255,139,43,0.36),
-        0 0 28px rgba(138,43,226,0.28);
-    }
-
-    .card-note {
-      margin-top: 10px;
-      font-size: 12px;
-      line-height: 1.5;
-      color: #857c74;
-    }
-
-    @media (max-width: 900px) {
-      .card p {
-        min-height: auto;
-      }
+    .footer-note {
+      margin-top: 28px;
+      text-align: center;
+      font-size: 13px;
+      color: var(--soft);
     }
 
     @media (max-width: 768px) {
       .page {
-        width: min(100% - 18px, 1320px);
-        padding: 26px 0 48px;
+        width: min(100% - 16px, 1120px);
+        padding: 24px 0 42px;
       }
 
-      .hero {
-        margin-bottom: 28px;
+      .section {
+        padding: 16px;
       }
 
-      .hero::after {
-        width: 100%;
-        border-radius: 24px;
+      .cards {
+        grid-template-columns: 1fr;
       }
 
-      .badge-premium {
-        padding: 18px 18px;
-        border-radius: 22px;
+      .card p {
+        min-height: auto;
       }
 
-      .section-header {
-        gap: 10px;
+      .thumb {
+        width: 72px;
+        height: 72px;
       }
 
-      .section-kicker {
-        font-size: 11px;
-        padding: 8px 10px;
-      }
-
-      .grid {
-        gap: 16px;
+      .thumb.wide-note {
+        height: 72px;
+        min-width: 104px;
       }
     }
   </style>
@@ -462,162 +333,170 @@
       <p class="hero-text">
         Demo WebAR e interactive experiences accessibili da link o QR code, senza app da scaricare.
       </p>
-
-      <p class="hero-subtext">
-        Arte, food, wedding, brand activation, merchandising e contenuti immersivi pensati per stupire al primo sguardo.
-      </p>
     </header>
 
-    <section class="section-block">
+    <section class="section">
       <div class="section-header">
-        <div class="section-kicker">Art & Culture</div>
+        <h2 class="section-title">Art & Culture</h2>
+        <div class="section-line"></div>
       </div>
 
-      <div class="grid">
-        <article class="card card-premium">
-          <div class="card-media">
-            <img src="./shared/img/living-painting.png" alt="Living Painting" />
-          </div>
-          <div class="card-body">
-            <span class="card-tag">Image target AR</span>
-            <h2>Living Painting</h2>
-            <p>Quadri, poster e opere stampate che prendono vita con video e contenuti immersivi sovrapposti all’immagine reale.</p>
-            <a href="./apps/living-painting/index.html">Apri demo</a>
-          </div>
+      <div class="cards">
+        <article class="card">
+          <span class="card-tag">Image target AR</span>
+          <h3>Living Painting</h3>
+          <p>Quadri e opere che prendono vita con video e contenuti immersivi sovrapposti all’immagine reale.</p>
+          <a href="./apps/living-painting/index.html">Apri demo</a>
         </article>
+      </div>
+
+      <div class="gallery">
+        <div class="thumb">
+          <img src="./shared/img/living-painting.png" alt="Living Painting" />
+        </div>
       </div>
     </section>
 
-    <section class="section-block">
+    <section class="section">
       <div class="section-header">
-        <div class="section-kicker">Food & Hospitality</div>
+        <h2 class="section-title">Food & Hospitality</h2>
+        <div class="section-line"></div>
       </div>
 
-      <div class="grid">
+      <div class="cards">
         <article class="card">
-          <div class="card-media">
-            <img src="./shared/img/food-explosion.png" alt="Food Explosion" />
-          </div>
-          <div class="card-body">
-            <span class="card-tag">Interactive experience</span>
-            <h2>Food Explosion</h2>
-            <p>Piatto, menu o visual food che attivano ingredienti, storytelling e contenuti coinvolgenti per ristoranti e hospitality.</p>
-            <a href="./apps/food-explosion/index.html">Apri demo</a>
-          </div>
+          <span class="card-tag">Interactive food</span>
+          <h3>Food Explosion</h3>
+          <p>Piatto, menu o visual food che attivano storytelling, ingredienti e contenuti coinvolgenti per il mondo ristorante.</p>
+          <a href="./apps/food-explosion/index.html">Apri demo</a>
         </article>
+      </div>
+
+      <div class="gallery">
+        <div class="thumb">
+          <img src="./shared/img/food-explosion.png" alt="Food Explosion" />
+        </div>
       </div>
     </section>
 
-    <section class="section-block">
+    <section class="section">
       <div class="section-header">
-        <div class="section-kicker">Brand, Logo & Interactive Objects</div>
+        <h2 class="section-title">Brand, Logo & Interactive Objects</h2>
+        <div class="section-line"></div>
       </div>
 
-      <div class="grid">
+      <div class="cards">
         <article class="card">
-          <div class="card-media">
-            <img src="./shared/img/talking-avatar.png" alt="Talking Avatar" />
-          </div>
-          <div class="card-body">
-            <span class="card-tag">Avatar reveal</span>
-            <h2>Talking Avatar</h2>
-            <p>Inquadrando il visual, compare un avatar parlante con sfondo trasparente: perfetto per accoglienza, promozione e storytelling.</p>
-            <a href="./apps/cappellino/index.html">Apri demo</a>
-          </div>
+          <span class="card-tag">Avatar reveal</span>
+          <h3>Talking Avatar</h3>
+          <p>Inquadrando il visual, compare un avatar parlante con sfondo trasparente. Ideale per accoglienza, promo e storytelling.</p>
+          <a href="./apps/cappellino/index.html">Apri demo</a>
         </article>
 
         <article class="card">
-          <div class="card-media cover-gradient-magic">
-            <div class="magic-stars">✦ ✦ ✦</div>
-          </div>
-          <div class="card-body">
-            <span class="card-tag">Spatial wow effect</span>
-            <h2>Magic Object</h2>
-            <p>Effetti visivi, particelle e comparsa di contenuti nello spazio per una demo ad alto impatto, più emozionale che descrittiva.</p>
-            <a href="./apps/magic-object/index.html">Apri demo</a>
-          </div>
+          <span class="card-tag">Spatial effect</span>
+          <h3>Magic Object</h3>
+          <p>Effetti visivi e comparsa di contenuti nello spazio per una demo wow, più emozionale che descrittiva.</p>
+          <a href="./apps/magic-object/index.html">Apri demo</a>
         </article>
 
         <article class="card">
-          <div class="card-media cover-gradient-logo">
-            <div class="logo-orb">3D</div>
-          </div>
-          <div class="card-body">
-            <span class="card-tag">Brand activation</span>
-            <h2>Logo 3D</h2>
-            <p>Un logo 3D che emerge nello spazio con glow e presenza scenica, ideale per brand, eventi e reveal visivi memorabili.</p>
-            <a href="./apps/logo-3d/index.html">Apri demo</a>
-          </div>
+          <span class="card-tag">3D logo</span>
+          <h3>Logo 3D</h3>
+          <p>Un logo che emerge nello spazio con glow e presenza scenica, perfetto per eventi e brand activation.</p>
+          <a href="./apps/logo-3d/index.html">Apri demo</a>
         </article>
+      </div>
+
+      <div class="gallery">
+        <div class="thumb">
+          <img src="./shared/img/talking-avatar.png" alt="Talking Avatar" />
+        </div>
+        <div class="thumb placeholder">
+          Magic<br />Object
+        </div>
+        <div class="thumb placeholder">
+          Logo<br />3D
+        </div>
       </div>
     </section>
 
-    <section class="section-block">
+    <section class="section">
       <div class="section-header">
-        <div class="section-kicker">Wedding & Events</div>
+        <h2 class="section-title">Wedding & Events</h2>
+        <div class="section-line"></div>
       </div>
 
-      <div class="grid">
+      <div class="cards">
         <article class="card card-highlight">
-          <div class="card-media">
-            <img src="./shared/img/wedding-events.png" alt="Wedding & Events" />
-          </div>
-          <div class="card-body">
-            <span class="card-tag">Emotional AR experience</span>
-            <h2>Wedding & Events</h2>
-            <p>Partecipazioni, allestimenti e materiali evento che si animano con video, musica e contenuti romantici ad alto impatto visivo.</p>
-            <a href="./apps/wedding-events/index.html">Apri demo</a>
-          </div>
+          <span class="card-tag">Emotional AR</span>
+          <h3>Wedding & Events</h3>
+          <p>Partecipazioni, materiali evento e visual wedding che si animano con video, musica e contenuti romantici.</p>
+          <a href="./apps/wedding-events/index.html">Apri demo</a>
         </article>
 
         <article class="card">
-          <div class="card-media">
-            <img src="./shared/img/augmented-wishes.jpg" alt="Augmented Wishes" />
-          </div>
-          <div class="card-body">
-            <span class="card-tag">Greeting card AR</span>
-            <h2>Augmented Wishes</h2>
-            <p>Un biglietto di auguri che prende vita con un video animato parlato: emozionale, elegante e perfetto per occasioni speciali.</p>
-            <a href="./apps/fabbricantidiemozioni/index.html">Apri demo</a>
-          </div>
+          <span class="card-tag">Greeting card AR</span>
+          <h3>Augmented Wishes</h3>
+          <p>Un biglietto di auguri che prende vita con un video animato parlato: elegante, emozionale e memorabile.</p>
+          <a href="./apps/fabbricantidiemozioni/index.html">Apri demo</a>
         </article>
 
-        <article class="card card-premium">
-          <div class="card-media">
-            <img src="./shared/img/rivista-sposi.jpg" alt="Rivista degli Sposi" />
-          </div>
-          <div class="card-body">
-            <span class="card-tag">Editorial interactive</span>
-            <h2>Rivista degli Sposi</h2>
-            <p>Una wedding magazine interattiva: invito AR, guestbook, curiosità sugli sposi, ringraziamento finale e mini gioco inquadrando le pagine.</p>
-            <a href="./apps/experiences/index.html">Apri demo</a>
-            <div class="card-note">
-              Experience editoriale ispirata a una rivista/evento con più attivazioni distribuite su pagine diverse.
-            </div>
-          </div>
+        <article class="card">
+          <span class="card-tag">Editorial experience</span>
+          <h3>Rivista degli Sposi</h3>
+          <p>Una rivista interattiva con più experience: invito, guestbook, curiosità, ringraziamento e gioco degli sposi.</p>
+          <a href="./apps/experiences/index.html">Apri demo</a>
         </article>
+      </div>
+
+      <div class="gallery">
+        <div class="thumb">
+          <img src="./shared/img/wedding-events.png" alt="Wedding & Events" />
+        </div>
+        <div class="thumb">
+          <img src="./shared/img/augmented-wishes.jpg" alt="Augmented Wishes" />
+        </div>
+        <div class="thumb">
+          <img src="./shared/img/rivista-sposi.jpg" alt="Rivista degli Sposi" />
+        </div>
+        <div class="thumb placeholder wide-note">
+          PDF cover<br />o screenshot
+        </div>
       </div>
     </section>
 
-    <section class="section-block">
+    <section class="section">
       <div class="section-header">
-        <div class="section-kicker">Sports & Merch</div>
+        <h2 class="section-title">Sports & Merch</h2>
+        <div class="section-line"></div>
       </div>
 
-      <div class="grid">
+      <div class="cards">
         <article class="card">
-          <div class="card-media">
-            <img src="./shared/img/fc-napoli.jpg" alt="FC Napoli" />
-          </div>
-          <div class="card-body">
-            <span class="card-tag">Merch + video content</span>
-            <h2>FC Napoli</h2>
-            <p>Inquadrando le maglie si attivano contenuti video collegati ai diversi item: perfetto per merchandising, fan engagement e retail esperienziale.</p>
-            <a href="./apps/fcNapoli/index.html">Apri demo</a>
-          </div>
+          <span class="card-tag">Merch + video</span>
+          <h3>FC Napoli</h3>
+          <p>Inquadrando le maglie si attivano contenuti video collegati ai diversi item. Ideale per fan engagement e merchandising.</p>
+          <a href="./apps/fcNapoli/index.html">Apri demo</a>
         </article>
       </div>
+
+      <div class="gallery">
+        <div class="thumb">
+          <img src="./shared/img/fc-napoli-1.png" alt="FC Napoli 1" />
+        </div>
+        <div class="thumb">
+          <img src="./shared/img/fc-napoli-2.png" alt="FC Napoli 2" />
+        </div>
+        <div class="thumb">
+          <img src="./shared/img/fc-napoli-3.jpg" alt="FC Napoli 3" />
+        </div>
+      </div>
     </section>
+
+    <div class="footer-note">
+      Demo experiences by mARasense
+    </div>
   </main>
 </body>
 </html>
