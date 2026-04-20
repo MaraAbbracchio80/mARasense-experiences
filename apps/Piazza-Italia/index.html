@@ -1,9 +1,9 @@
 <!doctype html>
 <html lang="it">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>Piazza Italia – AR Experience</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Piazza Italia AR</title>
 
   <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
@@ -18,7 +18,20 @@
     }
 
     body {
-      background: linear-gradient(180deg, #111111, #000000);
+      background: linear-gradient(#111111, #000000);
+    }
+
+    a-scene {
+      position: fixed !important;
+      inset: 0 !important;
+      width: 100vw !important;
+      height: 100vh !important;
+      z-index: 1;
+    }
+
+    canvas.a-canvas {
+      width: 100vw !important;
+      height: 100vh !important;
     }
 
     .overlay {
@@ -29,247 +42,180 @@
       justify-content: center;
       z-index: 20;
       padding: 18px;
-      background:
-        radial-gradient(circle at 50% 25%, rgba(255,255,255,.10), rgba(255,255,255,0) 55%),
-        linear-gradient(180deg, #111111, #000000);
+      background: linear-gradient(180deg, #161616 0%, #000000 100%);
     }
 
     .card {
-      width: min(520px, 100%);
-      background: rgba(255,255,255,.08);
+      width: min(560px, 100%);
+      background: rgba(255,255,255,.10);
       border: 1px solid rgba(255,255,255,.14);
       border-radius: 22px;
-      padding: 20px;
+      padding: 18px;
       text-align: center;
-      box-shadow: 0 18px 50px rgba(0,0,0,.28);
+      box-shadow: 0 18px 55px rgba(0,0,0,.26);
       backdrop-filter: blur(10px);
-      color: #fff;
     }
 
     .title {
-      margin: 2px 0 8px;
       font-size: 22px;
-      font-weight: 800;
+      font-weight: 900;
       color: #ffffff;
     }
 
     .sub {
-      margin: 0 0 12px;
       font-size: 14px;
-      color: rgba(255,255,255,.78);
+      margin-top: 10px;
+      color: rgba(255,255,255,.82);
       line-height: 1.45;
     }
 
-    .row {
-      display: flex;
-      gap: 10px;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-
     .btn {
+      margin-top: 15px;
       border: none;
       border-radius: 999px;
       padding: 12px 18px;
-      font-weight: 800;
+      font-weight: 900;
       cursor: pointer;
-      background: rgba(255,255,255,.95);
-      color: #111;
+      background: linear-gradient(90deg, #19d8ff, #9d6bff);
+      color: white;
       box-shadow: 0 10px 24px rgba(0,0,0,.18);
     }
 
-    .btn.primary {
-      background: linear-gradient(90deg, #19d8ff, #9d6bff);
-      color: #fff;
-    }
-
-    .pill {
+    .video-layer {
       position: fixed;
-      top: 10px;
-      left: 10px;
-      right: 10px;
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-      z-index: 30;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 25;
+      display: none;
+      align-items: flex-start;
+      justify-content: center;
+      padding-top: 8vh;
       pointer-events: none;
     }
 
-    .badge {
+    .video-wrap {
+      width: min(80vw, 380px);
+      aspect-ratio: 9/16;
+      opacity: 0;
+      transform: scale(0.75);
+      transition: all 0.4s ease;
       pointer-events: auto;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 10px 12px;
-      border-radius: 999px;
-      background: rgba(255,255,255,.10);
-      border: 1px solid rgba(255,255,255,.18);
-      color: rgba(255,255,255,.88);
-      font-size: 13px;
-      backdrop-filter: blur(10px);
-      box-shadow: 0 12px 30px rgba(0,0,0,.18);
     }
 
-    .badge strong {
-      font-weight: 900;
+    .video-wrap.show {
+      opacity: 1;
+      transform: scale(1);
     }
 
-    .hidden {
-      display: none !important;
+    #playerVideo {
+      width: 100%;
+      height: 100%;
+      border-radius: 18px;
+      object-fit: contain;
+      background: black;
+      box-shadow: 0 18px 40px rgba(0,0,0,.35);
     }
   </style>
 </head>
 
 <body>
 
-  <div class="pill">
-    <div class="badge" id="status"><strong>AR</strong> Pronto ✨</div>
-    <div class="badge hidden" id="page">Target: —</div>
+<div class="overlay" id="ui">
+  <div class="card">
+    <div class="title">Piazza Italia AR</div>
+    <div class="sub">Inquadra il target sulla maglietta per vedere il video</div>
+    <button class="btn" id="startBtn">Avvia esperienza</button>
   </div>
+</div>
 
-  <div class="overlay" id="ui">
-    <div class="card">
-      <div class="title">Piazza Italia AR Experience</div>
-      <div class="sub">
-        Tocca “Avvia esperienza”, consenti la fotocamera, poi inquadra il target sulla maglietta.
-      </div>
-
-      <div class="row">
-        <button class="btn primary" id="startBtn">Avvia esperienza</button>
-        <button class="btn" id="helpBtn">Come funziona</button>
-      </div>
-
-      <div class="sub" style="margin-top:10px; font-size:12.5px;">
-        Consiglio: luce buona + target fermo per 1–2 secondi.
-      </div>
-    </div>
+<div class="video-layer" id="videoLayer">
+  <div class="video-wrap" id="videoWrap">
+    <video id="playerVideo" playsinline webkit-playsinline preload="auto" controls></video>
   </div>
+</div>
 
-  <a-scene
-    mindar-image="imageTargetSrc: targets.mind; autoStart: false; uiLoading: no; uiError: no;"
-    embedded
-    vr-mode-ui="enabled: false"
-    device-orientation-permission-ui="enabled: false"
-  >
-    <a-assets>
-      <video
-        id="v0"
-        crossorigin="anonymous"
-        src="assets/video/Piazza-Italia.mp4"
-        preload="auto"
-        playsinline
-        webkit-playsinline
-        muted
-      ></video>
-    </a-assets>
+<a-scene
+  mindar-image="imageTargetSrc: targets.mind; autoStart:false;"
+  embedded
+  vr-mode-ui="enabled:false"
+  device-orientation-permission-ui="enabled:false">
 
-    <a-camera position="0 0 0" look-controls="enabled:false"></a-camera>
+  <a-camera position="0 0 0" look-controls="enabled:false"></a-camera>
 
-    <a-entity mindar-image-target="targetIndex: 0">
-      <a-plane
-        width="1"
-        height="1"
-        material="shader: flat; src: #v0"
-      ></a-plane>
-    </a-entity>
-  </a-scene>
+  <a-entity id="t0" mindar-image-target="targetIndex:0"></a-entity>
+</a-scene>
 
-  <script>
-    const ui = document.getElementById("ui");
-    const startBtn = document.getElementById("startBtn");
-    const helpBtn = document.getElementById("helpBtn");
-    const status = document.getElementById("status");
-    const page = document.getElementById("page");
-    const scene = document.querySelector("a-scene");
-    const video = document.getElementById("v0");
+<script>
+const startBtn = document.getElementById("startBtn");
+const ui = document.getElementById("ui");
 
-    let active = false;
+const videoLayer = document.getElementById("videoLayer");
+const videoWrap = document.getElementById("videoWrap");
+const playerVideo = document.getElementById("playerVideo");
 
-    function setStatus(text) {
-      status.textContent = "AR " + text;
-    }
+const scene = document.querySelector("a-scene");
+const t0 = document.getElementById("t0");
 
-    function showPage(name) {
-      page.classList.remove("hidden");
-      page.textContent = "Target: " + name;
-    }
+const videoMap = {
+  0: "assets/video/Piazza-Italia.mp4"
+};
 
-    function hidePage() {
-      page.classList.add("hidden");
-      page.textContent = "Target: —";
-    }
+let playing = false;
 
-    function stopVideo() {
-      try {
-        video.pause();
-        video.currentTime = 0;
-      } catch (e) {}
-    }
+function showVideo() {
+  videoLayer.style.display = "flex";
+  requestAnimationFrame(() => videoWrap.classList.add("show"));
+}
 
-    async function unlockVideo() {
-      try {
-        video.muted = true;
-        await video.play();
-        video.pause();
-        video.currentTime = 0;
-      } catch (e) {}
-    }
+function hideVideo() {
+  videoWrap.classList.remove("show");
+  setTimeout(() => {
+    videoLayer.style.display = "none";
+  }, 200);
+}
 
-    const audioBtn = document.createElement("button");
-    audioBtn.className = "btn";
-    audioBtn.textContent = "Attiva audio";
-    audioBtn.style.position = "fixed";
-    audioBtn.style.bottom = "14px";
-    audioBtn.style.left = "50%";
-    audioBtn.style.transform = "translateX(-50%)";
-    audioBtn.style.zIndex = "40";
-    audioBtn.style.display = "none";
-    document.body.appendChild(audioBtn);
+async function playVideo(index) {
+  if (playing) return;
 
-    audioBtn.addEventListener("click", async () => {
-      if (!active) return;
-      video.muted = false;
-      try {
-        await video.play();
-      } catch (e) {}
-      audioBtn.style.display = "none";
-    });
+  playing = true;
 
-    helpBtn.addEventListener("click", () => {
-      alert("1) Tocca 'Avvia esperienza'\n2) Consenti la fotocamera\n3) Inquadra il target sulla maglietta");
-    });
+  playerVideo.src = videoMap[index];
+  playerVideo.load();
 
-    startBtn.addEventListener("click", async () => {
-      await unlockVideo();
-      await scene.systems["mindar-image-system"].start();
-      ui.style.display = "none";
-      setStatus("Inquadra il target ✨");
-    });
+  showVideo();
 
-    const target = document.querySelector('[mindar-image-target="targetIndex: 0"]');
+  try {
+    await playerVideo.play();
+  } catch (e) {
+    console.log("play error", e);
+  }
+}
 
-    target.addEventListener("targetFound", async () => {
-      active = true;
-      showPage("Piazza Italia");
-      stopVideo();
+function reset() {
+  playing = false;
+  playerVideo.pause();
+  playerVideo.currentTime = 0;
+  hideVideo();
+}
 
-      video.muted = true;
-      try {
-        await video.play();
-      } catch (e) {}
+startBtn.onclick = async () => {
+  await scene.systems["mindar-image-system"].start();
+  ui.style.display = "none";
+};
 
-      audioBtn.style.display = "inline-block";
-      setStatus("Target trovato ✅");
-    });
+t0.addEventListener("targetFound", () => playVideo(0));
 
-    target.addEventListener("targetLost", () => {
-      active = false;
-      hidePage();
-      audioBtn.style.display = "none";
-      stopVideo();
-      setStatus("Target perso");
-    });
-  </script>
+t0.addEventListener("targetLost", () => {
+  if (!playerVideo.paused) return;
+  reset();
+});
+
+playerVideo.addEventListener("ended", () => {
+  reset();
+});
+</script>
 
 </body>
 </html>
