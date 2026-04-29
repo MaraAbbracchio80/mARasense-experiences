@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Selfie con Di Lorenzo - mARasense</title>
+  <title>Selfie con il giocatore - mARasense</title>
 
   <style>
     * { box-sizing: border-box; }
@@ -19,7 +19,7 @@
       overflow: hidden;
     }
 
-    video, canvas {
+    #video, #canvas {
       position: fixed;
       inset: 0;
       width: 100%;
@@ -28,7 +28,21 @@
       background: #000;
     }
 
-    #canvas { display: none; }
+    #canvas {
+      display: none;
+    }
+
+    #player {
+      position: fixed;
+      right: -10%;
+      bottom: 0;
+      width: 78vw;
+      max-width: 560px;
+      min-width: 300px;
+      z-index: 3;
+      pointer-events: none;
+      filter: drop-shadow(0 0 22px rgba(29,216,255,0.45));
+    }
 
     .topbar {
       position: fixed;
@@ -42,7 +56,8 @@
       gap: 10px;
     }
 
-    .badge, .back {
+    .badge,
+    .back {
       padding: 10px 14px;
       border-radius: 14px;
       background: rgba(0,0,0,0.58);
@@ -54,30 +69,17 @@
       text-decoration: none;
     }
 
-    #player {
-      position: fixed;
-      right: 2%;
-      bottom: 9%;
-      width: 43vw;
-      max-width: 300px;
-      min-width: 170px;
-      z-index: 5;
-      filter: drop-shadow(0 0 18px rgba(29,216,255,0.55));
-      pointer-events: none;
-      display: none;
-    }
-
     .frame-title {
       position: fixed;
-      left: 14px;
-      right: 14px;
-      bottom: 100px;
-      z-index: 6;
+      left: 12px;
+      right: 12px;
+      bottom: 104px;
+      z-index: 8;
       text-align: center;
-      font-size: 24px;
+      font-size: 25px;
       font-weight: 900;
       text-shadow: 0 3px 14px #000;
-      display: none;
+      pointer-events: none;
     }
 
     .controls {
@@ -93,7 +95,8 @@
       padding: 0 14px;
     }
 
-    button, a.btn {
+    button,
+    a.btn {
       border: none;
       border-radius: 14px;
       padding: 13px 18px;
@@ -109,22 +112,6 @@
     .secondary {
       background: rgba(255,255,255,0.14);
       border: 1px solid rgba(255,255,255,0.24);
-    }
-
-    #hint {
-      position: fixed;
-      left: 18px;
-      right: 18px;
-      top: 76px;
-      z-index: 8;
-      padding: 12px 14px;
-      border-radius: 16px;
-      background: rgba(0,0,0,0.58);
-      border: 1px solid rgba(255,255,255,0.18);
-      text-align: center;
-      line-height: 1.35;
-      font-size: 15px;
-      backdrop-filter: blur(8px);
     }
 
     #result {
@@ -166,20 +153,14 @@
     <a class="back" href="../../index.html">← Demo</a>
   </div>
 
-  <div id="hint">
-    Inquadra la maglia di Di Lorenzo.<br>
-    Quando sei pronta, tocca “Scatta selfie”.
-  </div>
+  <img id="player" src="../shared/img/selfie-player.png" alt="Giocatore" />
 
-  <img id="player" src="../shared/img/selfie-player.png" alt="Di Lorenzo" />
-
-  <div class="frame-title" id="frameTitle">
+  <div class="frame-title">
     Io e Di Lorenzo
   </div>
 
   <div class="controls">
-    <button id="selfieBtn" onclick="startSelfieMode()">Scatta selfie</button>
-    <button id="shootBtn" onclick="takePhoto()" style="display:none;">Scatta</button>
+    <button onclick="takePhoto()">Scatta</button>
   </div>
 
   <div id="result">
@@ -194,24 +175,22 @@
     const video = document.getElementById("video");
     const canvas = document.getElementById("canvas");
     const player = document.getElementById("player");
-    const hint = document.getElementById("hint");
-    const frameTitle = document.getElementById("frameTitle");
-    const selfieBtn = document.getElementById("selfieBtn");
-    const shootBtn = document.getElementById("shootBtn");
     const result = document.getElementById("result");
     const photo = document.getElementById("photo");
     const downloadBtn = document.getElementById("downloadBtn");
 
     let currentStream = null;
 
-    async function startCamera(facingMode) {
+    async function startCamera() {
       try {
         if (currentStream) {
           currentStream.getTracks().forEach(track => track.stop());
         }
 
         currentStream = await navigator.mediaDevices.getUserMedia({
-          video: { facingMode: facingMode },
+          video: {
+            facingMode: "user"
+          },
           audio: false
         });
 
@@ -222,19 +201,10 @@
       }
     }
 
-    function startSelfieMode() {
-      startCamera("user");
-
-      hint.innerHTML = "Mettiti accanto a Di Lorenzo e premi Scatta.";
-      player.style.display = "block";
-      frameTitle.style.display = "block";
-
-      selfieBtn.style.display = "none";
-      shootBtn.style.display = "inline-flex";
-    }
-
-    function drawCover(ctx, img, x, y, w, h) {
-      const imgRatio = img.videoWidth / img.videoHeight;
+    function drawCover(ctx, media, x, y, w, h) {
+      const mediaW = media.videoWidth || media.naturalWidth || w;
+      const mediaH = media.videoHeight || media.naturalHeight || h;
+      const mediaRatio = mediaW / mediaH;
       const boxRatio = w / h;
 
       let drawW = w;
@@ -242,17 +212,17 @@
       let offsetX = 0;
       let offsetY = 0;
 
-      if (imgRatio > boxRatio) {
+      if (mediaRatio > boxRatio) {
         drawH = h;
-        drawW = h * imgRatio;
+        drawW = h * mediaRatio;
         offsetX = (w - drawW) / 2;
       } else {
         drawW = w;
-        drawH = w / imgRatio;
+        drawH = w / mediaRatio;
         offsetY = (h - drawH) / 2;
       }
 
-      ctx.drawImage(img, x + offsetX, y + offsetY, drawW, drawH);
+      ctx.drawImage(media, x + offsetX, y + offsetY, drawW, drawH);
     }
 
     function takePhoto() {
@@ -288,15 +258,15 @@
         ctx.strokeRect(18, 18, w - 36, h - 36);
 
         ctx.fillStyle = "rgba(0,0,0,0.58)";
-        ctx.fillRect(0, h - 130, w, 130);
+        ctx.fillRect(0, h - 132, w, 132);
 
         ctx.fillStyle = "#ffffff";
         ctx.textAlign = "center";
-        ctx.font = "bold " + Math.round(w * 0.065) + "px Arial";
-        ctx.fillText("Io e Di Lorenzo", w / 2, h - 72);
+        ctx.font = "bold " + Math.round(w * 0.064) + "px Arial";
+        ctx.fillText("Io e Di Lorenzo", w / 2, h - 74);
 
-        ctx.font = "bold " + Math.round(w * 0.035) + "px Arial";
-        ctx.fillText("mARasense experiences", w / 2, h - 34);
+        ctx.font = "bold " + Math.round(w * 0.034) + "px Arial";
+        ctx.fillText("mARasense experiences", w / 2, h - 35);
 
         const dataUrl = canvas.toDataURL("image/png");
         photo.src = dataUrl;
@@ -313,7 +283,7 @@
       result.style.display = "none";
     }
 
-    startCamera("environment");
+    startCamera();
   </script>
 </body>
 </html>
