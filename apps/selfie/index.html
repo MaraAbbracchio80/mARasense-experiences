@@ -1,27 +1,319 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="it">
 <head>
-    <meta charset="UTF-8">
-    <title>My App</title>
-    <style>
-        html, body {
-            margin: 0;
-            padding: 0;
-            height: 100%;
-            overflow: hidden;
-        }
-        iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Selfie con Di Lorenzo - mARasense</title>
+
+  <style>
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      background: #000;
+      font-family: Arial, sans-serif;
+      color: #fff;
+      overflow: hidden;
+    }
+
+    video, canvas {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      background: #000;
+    }
+
+    #canvas { display: none; }
+
+    .topbar {
+      position: fixed;
+      top: 14px;
+      left: 14px;
+      right: 14px;
+      z-index: 10;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .badge, .back {
+      padding: 10px 14px;
+      border-radius: 14px;
+      background: rgba(0,0,0,0.58);
+      border: 1px solid rgba(255,255,255,0.18);
+      backdrop-filter: blur(8px);
+      font-weight: 800;
+      font-size: 14px;
+      color: #fff;
+      text-decoration: none;
+    }
+
+    #player {
+      position: fixed;
+      right: 2%;
+      bottom: 9%;
+      width: 43vw;
+      max-width: 300px;
+      min-width: 170px;
+      z-index: 5;
+      filter: drop-shadow(0 0 18px rgba(29,216,255,0.55));
+      pointer-events: none;
+      display: none;
+    }
+
+    .frame-title {
+      position: fixed;
+      left: 14px;
+      right: 14px;
+      bottom: 100px;
+      z-index: 6;
+      text-align: center;
+      font-size: 24px;
+      font-weight: 900;
+      text-shadow: 0 3px 14px #000;
+      display: none;
+    }
+
+    .controls {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 22px;
+      z-index: 12;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      padding: 0 14px;
+    }
+
+    button, a.btn {
+      border: none;
+      border-radius: 14px;
+      padding: 13px 18px;
+      font-size: 15px;
+      font-weight: 900;
+      color: white;
+      text-decoration: none;
+      background: linear-gradient(90deg, #1fd7ff, #78b8ff);
+      box-shadow: 0 8px 22px rgba(0,0,0,0.38);
+      cursor: pointer;
+    }
+
+    .secondary {
+      background: rgba(255,255,255,0.14);
+      border: 1px solid rgba(255,255,255,0.24);
+    }
+
+    #hint {
+      position: fixed;
+      left: 18px;
+      right: 18px;
+      top: 76px;
+      z-index: 8;
+      padding: 12px 14px;
+      border-radius: 16px;
+      background: rgba(0,0,0,0.58);
+      border: 1px solid rgba(255,255,255,0.18);
+      text-align: center;
+      line-height: 1.35;
+      font-size: 15px;
+      backdrop-filter: blur(8px);
+    }
+
+    #result {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 30;
+      background: #000;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      padding: 20px;
+      gap: 14px;
+    }
+
+    #photo {
+      max-width: 94vw;
+      max-height: 74vh;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,0.22);
+      box-shadow: 0 0 24px rgba(29,216,255,0.20);
+    }
+
+    .result-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+  </style>
 </head>
+
 <body>
-<iframe
-  src=""
-  allowfullscreen
-  allow="camera; microphone; geolocation; accelerometer; magnetometer; gyroscope; autoplay; clipboard-read; clipboard-write; fullscreen"
-></iframe>
+  <video id="video" autoplay playsinline muted></video>
+  <canvas id="canvas"></canvas>
+
+  <div class="topbar">
+    <div class="badge">Selfie AR</div>
+    <a class="back" href="../../index.html">← Demo</a>
+  </div>
+
+  <div id="hint">
+    Inquadra la maglia di Di Lorenzo.<br>
+    Quando sei pronta, tocca “Scatta selfie”.
+  </div>
+
+  <img id="player" src="../shared/img/selfie-player.png" alt="Di Lorenzo" />
+
+  <div class="frame-title" id="frameTitle">
+    Io e Di Lorenzo
+  </div>
+
+  <div class="controls">
+    <button id="selfieBtn" onclick="startSelfieMode()">Scatta selfie</button>
+    <button id="shootBtn" onclick="takePhoto()" style="display:none;">Scatta</button>
+  </div>
+
+  <div id="result">
+    <img id="photo" alt="Selfie scattato" />
+    <div class="result-actions">
+      <a id="downloadBtn" class="btn" download="io-e-di-lorenzo.png">Salva foto</a>
+      <button class="secondary" onclick="closeResult()">Rifai</button>
+    </div>
+  </div>
+
+  <script>
+    const video = document.getElementById("video");
+    const canvas = document.getElementById("canvas");
+    const player = document.getElementById("player");
+    const hint = document.getElementById("hint");
+    const frameTitle = document.getElementById("frameTitle");
+    const selfieBtn = document.getElementById("selfieBtn");
+    const shootBtn = document.getElementById("shootBtn");
+    const result = document.getElementById("result");
+    const photo = document.getElementById("photo");
+    const downloadBtn = document.getElementById("downloadBtn");
+
+    let currentStream = null;
+
+    async function startCamera(facingMode) {
+      try {
+        if (currentStream) {
+          currentStream.getTracks().forEach(track => track.stop());
+        }
+
+        currentStream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: facingMode },
+          audio: false
+        });
+
+        video.srcObject = currentStream;
+      } catch (err) {
+        console.error(err);
+        alert("Camera non disponibile. Controlla i permessi del browser.");
+      }
+    }
+
+    function startSelfieMode() {
+      startCamera("user");
+
+      hint.innerHTML = "Mettiti accanto a Di Lorenzo e premi Scatta.";
+      player.style.display = "block";
+      frameTitle.style.display = "block";
+
+      selfieBtn.style.display = "none";
+      shootBtn.style.display = "inline-flex";
+    }
+
+    function drawCover(ctx, img, x, y, w, h) {
+      const imgRatio = img.videoWidth / img.videoHeight;
+      const boxRatio = w / h;
+
+      let drawW = w;
+      let drawH = h;
+      let offsetX = 0;
+      let offsetY = 0;
+
+      if (imgRatio > boxRatio) {
+        drawH = h;
+        drawW = h * imgRatio;
+        offsetX = (w - drawW) / 2;
+      } else {
+        drawW = w;
+        drawH = w / imgRatio;
+        offsetY = (h - drawH) / 2;
+      }
+
+      ctx.drawImage(img, x + offsetX, y + offsetY, drawW, drawH);
+    }
+
+    function takePhoto() {
+      const w = video.videoWidth || window.innerWidth;
+      const h = video.videoHeight || window.innerHeight;
+
+      canvas.width = w;
+      canvas.height = h;
+
+      const ctx = canvas.getContext("2d");
+
+      drawCover(ctx, video, 0, 0, w, h);
+
+      const img = new Image();
+      img.crossOrigin = "anonymous";
+      img.src = player.src;
+
+      img.onload = function () {
+        const rect = player.getBoundingClientRect();
+        const scaleX = w / window.innerWidth;
+        const scaleY = h / window.innerHeight;
+
+        ctx.drawImage(
+          img,
+          rect.left * scaleX,
+          rect.top * scaleY,
+          rect.width * scaleX,
+          rect.height * scaleY
+        );
+
+        ctx.strokeStyle = "#1fd7ff";
+        ctx.lineWidth = Math.max(8, w * 0.012);
+        ctx.strokeRect(18, 18, w - 36, h - 36);
+
+        ctx.fillStyle = "rgba(0,0,0,0.58)";
+        ctx.fillRect(0, h - 130, w, 130);
+
+        ctx.fillStyle = "#ffffff";
+        ctx.textAlign = "center";
+        ctx.font = "bold " + Math.round(w * 0.065) + "px Arial";
+        ctx.fillText("Io e Di Lorenzo", w / 2, h - 72);
+
+        ctx.font = "bold " + Math.round(w * 0.035) + "px Arial";
+        ctx.fillText("mARasense experiences", w / 2, h - 34);
+
+        const dataUrl = canvas.toDataURL("image/png");
+        photo.src = dataUrl;
+        downloadBtn.href = dataUrl;
+        result.style.display = "flex";
+      };
+
+      img.onerror = function () {
+        alert("Immagine giocatore non trovata. Controlla apps/shared/img/selfie-player.png");
+      };
+    }
+
+    function closeResult() {
+      result.style.display = "none";
+    }
+
+    startCamera("environment");
+  </script>
 </body>
 </html>
