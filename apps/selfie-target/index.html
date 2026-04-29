@@ -4,10 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>Selfie AR</title>
+  <title>Selfie Target</title>
 
   <script crossorigin="anonymous" src="./external/runtime/runtime.js"></script>
-  <script crossorigin="anonymous" src="./external/xr/xr.js" async="true" data-preload-chunks="face, slam"></script>
+  <script crossorigin="anonymous" src="./external/xr/xr.js" async="true"></script>
 
   <style>
     html, body {
@@ -17,37 +17,34 @@
       height: 100%;
       overflow: hidden;
       background: #000;
-      font-family: Arial, sans-serif;
+      font-family: Arial;
     }
 
     #hint {
       position: fixed;
-      top: 70px;
-      left: 18px;
-      right: 18px;
+      top: 60px;
+      left: 10px;
+      right: 10px;
       z-index: 9999;
-      padding: 12px 14px;
-      border-radius: 16px;
-      background: rgba(0,0,0,0.62);
-      border: 1px solid rgba(255,255,255,0.20);
+      padding: 12px;
+      border-radius: 12px;
+      background: rgba(0,0,0,0.6);
       color: white;
       text-align: center;
-      font-size: 15px;
-      font-weight: 700;
+      font-weight: bold;
     }
 
     #selfieBtn {
       position: fixed;
-      left: 50%;
       bottom: 30px;
+      left: 50%;
       transform: translateX(-50%);
       z-index: 9999;
       display: none;
+      padding: 14px 20px;
+      border-radius: 14px;
       border: none;
-      border-radius: 18px;
-      padding: 14px 22px;
-      font-size: 16px;
-      font-weight: 900;
+      font-weight: bold;
       color: white;
       background: linear-gradient(90deg, #1fd7ff, #78b8ff);
     }
@@ -55,10 +52,14 @@
 </head>
 
 <body>
-  <div id="hint">Inquadra una maglia per attivare il selfie.</div>
 
-  <button id="selfieBtn">Selfie con il giocatore</button>
+  <div id="hint">Inquadra una maglia</div>
+
+  <button id="selfieBtn">
+    Selfie con il giocatore
+  </button>
 
   <script src="bundle.js"></script>
+
 </body>
 </html>
