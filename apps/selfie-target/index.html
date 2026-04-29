@@ -37,12 +37,12 @@
       font-weight: 800;
     }
 
-    #selfieBtn {
+    #manualSelfieBtn {
       position: fixed;
       left: 50%;
       bottom: 30px;
       transform: translateX(-50%);
-      z-index: 9999;
+      z-index: 99999;
       border: none;
       border-radius: 18px;
       padding: 15px 22px;
@@ -52,10 +52,7 @@
       background: linear-gradient(90deg, #1fd7ff, #78b8ff);
       box-shadow: 0 10px 28px rgba(0,0,0,0.42);
       cursor: pointer;
-    }
-
-    #selfieBtn:active {
-      transform: translateX(-50%) scale(0.96);
+      display: block;
     }
   </style>
 </head>
@@ -65,7 +62,7 @@
     Inquadra la maglia, poi tocca Selfie.
   </div>
 
-  <button id="selfieBtn" onclick="location.href='../selfie/index.html?player=dilorenzo'">
+  <button id="manualSelfieBtn" onclick="location.href='../selfie/index.html?player=dilorenzo'">
     Selfie con il giocatore
   </button>
 
