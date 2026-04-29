@@ -32,17 +32,28 @@
       display: none;
     }
 
-    #player {
-      position: fixed;
-      right: -10%;
-      bottom: 0;
-      width: 78vw;
-      max-width: 560px;
-      min-width: 300px;
-      z-index: 3;
-      pointer-events: none;
-      filter: drop-shadow(0 0 22px rgba(29,216,255,0.45));
-    }
+#player {
+  position: fixed;
+
+  right: -22%;     /* esce un po' dallo schermo */
+  bottom: -3%;
+
+  width: 105vw;    /* più grande della viewport */
+  max-width: 720px;
+  min-width: 380px;
+
+  z-index: 1;      /* sotto UI ma sopra video */
+
+  opacity: 0.88;   /* leggermente trasparente */
+
+  transform: scale(1.05);
+
+  pointer-events: none;
+
+  filter:
+    blur(0.4px) /* leggero blur = profondità */
+    drop-shadow(0 0 20px rgba(29,216,255,0.25));
+}
 
     .topbar {
       position: fixed;
