@@ -7,7 +7,7 @@
   <title>Selfie AR</title>
 
   <script crossorigin="anonymous" src="./external/runtime/runtime.js"></script>
-  <script crossorigin="anonymous" src="./external/xr/xr.js" async="true"></script>
+  <script crossorigin="anonymous" src="./external/xr/xr.js" async="true" data-preload-chunks="face, slam"></script>
 
   <style>
     html, body {
@@ -34,11 +34,33 @@
       font-size: 15px;
       font-weight: 800;
     }
+
+    #selfieBtn {
+      position: fixed;
+      left: 50%;
+      bottom: 30px;
+      transform: translateX(-50%);
+      z-index: 9999;
+      display: none;
+      border: none;
+      border-radius: 18px;
+      padding: 15px 22px;
+      font-size: 16px;
+      font-weight: 900;
+      color: white;
+      background: linear-gradient(90deg, #1fd7ff, #78b8ff);
+      box-shadow: 0 10px 28px rgba(0,0,0,0.42);
+    }
   </style>
 </head>
 
 <body>
-  <div id="hint">Inquadra la maglia.</div>
+  <div id="hint">Inquadra una maglia per attivare il selfie.</div>
+
+  <button id="selfieBtn">
+    Selfie con il giocatore
+  </button>
+
   <script src="bundle.js"></script>
 </body>
 </html>
