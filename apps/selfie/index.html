@@ -31,18 +31,18 @@
     #canvas { display: none; }
 
     #player {
-      position: fixed;
-      right: -18%;
-      top: 18%;
-      width: 68vw;
-      max-width: 520px;
-      min-width: 260px;
-      z-index: 2;
-      opacity: 0.94;
-      pointer-events: none;
-      filter: drop-shadow(0 0 18px rgba(29,216,255,0.25));
-      transition: all 0.18s ease-out;
-    }
+  position: fixed;
+  right: -34%;
+  top: 4%;
+  width: 128vw;
+  max-width: 880px;
+  min-width: 520px;
+  z-index: 2;
+  opacity: 0.94;
+  pointer-events: none;
+  transform: none;
+  filter: drop-shadow(0 0 18px rgba(29,216,255,0.25));
+}
 
     .topbar {
       position: fixed;
@@ -281,13 +281,15 @@
     }
 
     function takePhoto() {
-      const w = video.videoWidth || window.innerWidth;
-      const h = video.videoHeight || window.innerHeight;
+      const aspect = img.naturalWidth / img.naturalHeight;
 
-      canvas.width = w;
-      canvas.height = h;
+const drawHeight = h * 0.86;
+const drawWidth = drawHeight * aspect;
 
-      const ctx = canvas.getContext("2d");
+const drawX = w * 0.52;
+const drawY = h * 0.03;
+
+ctx.drawImage(img, drawX, drawY, drawWidth, drawHeight);
 
       drawCover(ctx, video, 0, 0, w, h);
 
