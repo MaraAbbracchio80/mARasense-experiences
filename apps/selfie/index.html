@@ -32,18 +32,16 @@
 
     #player {
       position: fixed;
-      right: -28%;
-      bottom: -6%;
-      width: 118vw;
-      max-width: 760px;
-      min-width: 420px;
-      z-index: 1;
-      opacity: 0.88;
+      right: -18%;
+      top: 18%;
+      width: 68vw;
+      max-width: 520px;
+      min-width: 260px;
+      z-index: 2;
+      opacity: 0.94;
       pointer-events: none;
-      transform: scale(1.08);
-      filter:
-        blur(0.3px)
-        drop-shadow(0 0 20px rgba(29,216,255,0.25));
+      filter: drop-shadow(0 0 18px rgba(29,216,255,0.25));
+      transition: all 0.18s ease-out;
     }
 
     .topbar {
@@ -58,8 +56,7 @@
       gap: 10px;
     }
 
-    .badge,
-    .back {
+    .badge, .back {
       padding: 10px 14px;
       border-radius: 14px;
       background: rgba(0,0,0,0.58);
@@ -97,8 +94,7 @@
       padding: 0 14px;
     }
 
-    button,
-    a.btn {
+    button, a.btn {
       border: none;
       border-radius: 14px;
       padding: 13px 18px;
@@ -173,6 +169,9 @@
     </div>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_detection/face_detection.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
+
   <script>
     const video = document.getElementById("video");
     const canvas = document.getElementById("canvas");
@@ -181,24 +180,80 @@
     const photo = document.getElementById("photo");
     const downloadBtn = document.getElementById("downloadBtn");
 
-    let currentStream = null;
+    let currentFace = null;
 
     async function startCamera() {
       try {
-        if (currentStream) {
-          currentStream.getTracks().forEach(track => track.stop());
-        }
-
-        currentStream = await navigator.mediaDevices.getUserMedia({
+        const stream = await navigator.mediaDevices.getUserMedia({
           video: { facingMode: "user" },
           audio: false
         });
 
-        video.srcObject = currentStream;
+        video.srcObject = stream;
+
+        video.onloadedmetadata = () => {
+          video.play();
+          startFaceDetection();
+        };
       } catch (err) {
         console.error(err);
         alert("Camera non disponibile. Controlla i permessi del browser.");
       }
+    }
+
+    function startFaceDetection() {
+      const faceDetection = new FaceDetection({
+        locateFile: (file) => {
+          return "https://cdn.jsdelivr.net/npm/@mediapipe/face_detection/" + file;
+        }
+      });
+
+      faceDetection.setOptions({
+        model: "short",
+        minDetectionConfidence: 0.55
+      });
+
+      faceDetection.onResults((results) => {
+        if (!results.detections || results.detections.length === 0) return;
+
+        const detection = results.detections[0];
+        const box = detection.boundingBox;
+
+        currentFace = box;
+        positionPlayerFromFace(box);
+      });
+
+      const camera = new Camera(video, {
+        onFrame: async () => {
+          await faceDetection.send({ image: video });
+        },
+        width: 720,
+        height: 1280
+      });
+
+      camera.start();
+    }
+
+    function positionPlayerFromFace(faceBox) {
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+
+      const faceX = faceBox.xCenter * vw;
+      const faceY = faceBox.yCenter * vh;
+      const faceW = faceBox.width * vw;
+      const faceH = faceBox.height * vh;
+
+      const playerHeight = faceH * 4.2;
+      const playerWidth = playerHeight * 0.72;
+
+      let playerLeft = faceX + faceW * 0.38;
+      let playerTop = faceY - faceH * 1.35;
+
+      player.style.width = playerWidth + "px";
+      player.style.left = playerLeft + "px";
+      player.style.top = playerTop + "px";
+      player.style.right = "auto";
+      player.style.bottom = "auto";
     }
 
     function drawCover(ctx, media, x, y, w, h) {
@@ -241,17 +296,27 @@
       img.src = player.src;
 
       img.onload = function () {
-        const rect = player.getBoundingClientRect();
-        const scaleX = w / window.innerWidth;
-        const scaleY = h / window.innerHeight;
+        let drawX, drawY, drawW, drawH;
 
-        ctx.drawImage(
-          img,
-          rect.left * scaleX,
-          rect.top * scaleY,
-          rect.width * scaleX,
-          rect.height * scaleY
-        );
+        if (currentFace) {
+          const faceX = currentFace.xCenter * w;
+          const faceY = currentFace.yCenter * h;
+          const faceW = currentFace.width * w;
+          const faceH = currentFace.height * h;
+
+          drawH = faceH * 4.2;
+          drawW = drawH * (img.naturalWidth / img.naturalHeight);
+
+          drawX = faceX + faceW * 0.42;
+          drawY = faceY - faceH * 1.35;
+        } else {
+          drawH = h * 0.72;
+          drawW = drawH * (img.naturalWidth / img.naturalHeight);
+          drawX = w * 0.56;
+          drawY = h * 0.12;
+        }
+
+        ctx.drawImage(img, drawX, drawY, drawW, drawH);
 
         ctx.strokeStyle = "#1fd7ff";
         ctx.lineWidth = Math.max(8, w * 0.012);
