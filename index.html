@@ -319,6 +319,7 @@
     }
   </style>
 </head>
+
 <body>
   <main class="page">
     <header class="hero">
@@ -348,6 +349,16 @@
           <h3>Living Painting</h3>
           <p>Quadri e opere che prendono vita con video e contenuti immersivi sovrapposti all’immagine reale.</p>
           <button class="btn btn-art" onclick="go('lp')">Apri demo</button>
+        </article>
+
+        <article class="card">
+          <div class="card-media">
+            <img src="./apps/shared/img/museo.png" alt="Museo" />
+          </div>
+          <span class="card-tag">Talking painting</span>
+          <h3>Museo</h3>
+          <p>Un quadro che si anima e racconta la propria storia: esperienza museale interattiva e coinvolgente.</p>
+          <button class="btn btn-art" onclick="go('museo')">Apri demo</button>
         </article>
       </div>
     </section>
@@ -490,6 +501,7 @@
   <script>
     const r = {
       lp: "./apps/living-painting/index.html",
+      museo: "./apps/museo/index.html",
       fe: "./apps/food-explosion/index.html",
       ta: "./apps/cappellino/index.html",
       mo: "./apps/magic-object/index.html",
