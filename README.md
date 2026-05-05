@@ -1,4 +1,4 @@
-# mARasense-experieces
+# mARasense-experiences 
 
 Laboratorio WebAR open source pensato per esperienze accessibili da link o QR code, senza app da installare.
 
