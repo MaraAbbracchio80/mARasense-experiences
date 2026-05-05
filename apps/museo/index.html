@@ -11,8 +11,9 @@
   <style>
     html, body {
       margin: 0;
-      width: 100%;
-      height: 100%;
+      padding: 0;
+      width: 100vw;
+      height: 100vh;
       overflow: hidden;
       background: #000;
       font-family: Arial, sans-serif;
@@ -92,30 +93,36 @@
 
     a-scene {
       position: fixed !important;
-      inset: 0;
+      inset: 0 !important;
       width: 100vw !important;
       height: 100vh !important;
+      overflow: hidden !important;
       z-index: 10;
+      background: transparent !important;
+    }
+
+    video,
+    canvas,
+    .a-canvas {
+      position: fixed !important;
+      inset: 0 !important;
+      width: 100vw !important;
+      height: 100vh !important;
+      min-width: 100vw !important;
+      min-height: 100vh !important;
+      object-fit: cover !important;
+      background: transparent !important;
     }
 
     video {
-      position: fixed !important;
-      inset: 0;
-      width: 100vw !important;
-      height: 100vh !important;
-      object-fit: cover !important;
       z-index: 1 !important;
-      background: transparent !important;
+      transform: scale(1.01);
+      transform-origin: center center;
     }
 
-    canvas {
-      position: fixed !important;
-      inset: 0;
-      width: 100vw !important;
-      height: 100vh !important;
-      object-fit: cover !important;
+    canvas,
+    .a-canvas {
       z-index: 2 !important;
-      background: transparent !important;
     }
   </style>
 </head>
@@ -123,7 +130,7 @@
 <body>
   <div id="startScreen">
     <h1>Museo</h1>
-    <p>Premi Avvia esperienza e inquadra il quadro. Quando l’opera viene riconosciuta, il quadro prenderà vita.</p>
+    <p>Premi Avvia esperienza e inquadra il quadro. Quando l’opera viene riconosciuta, il quadro prenderà vita e parlerà.</p>
     <button id="startButton">Avvia esperienza</button>
   </div>
 
@@ -144,7 +151,6 @@
         id="paintingVideo"
         src="./assets/videos/museo.mp4"
         preload="auto"
-        muted
         playsinline
         webkit-playsinline
         crossorigin="anonymous"
@@ -182,6 +188,7 @@
     let targetVisible = false;
     let smoothingInitialized = false;
     let videoFinished = false;
+    let audioUnlocked = false;
 
     const smoothed = {
       position: new THREE.Vector3(),
@@ -213,13 +220,43 @@
       videoPlane.object3D.visible = false;
     }
 
+    async function unlockAudio() {
+      try {
+        video.muted = false;
+        video.volume = 1;
+        video.currentTime = 0;
+        await video.play();
+        video.pause();
+        video.currentTime = 0;
+        audioUnlocked = true;
+        setDebug("audio sbloccato");
+      } catch (e) {
+        console.warn("Audio non sbloccato subito:", e);
+        audioUnlocked = false;
+      }
+    }
+
     async function playFromStart() {
       try {
         video.pause();
         video.currentTime = 0;
+        video.muted = false;
+        video.volume = 1;
         await video.play();
       } catch (e) {
         console.warn("Errore play video:", e);
+        setDebug("tocca lo schermo per attivare audio");
+
+        document.body.addEventListener("click", async () => {
+          try {
+            video.muted = false;
+            video.volume = 1;
+            await video.play();
+            setDebug("audio attivato");
+          } catch (err) {
+            console.warn("Errore audio dopo click:", err);
+          }
+        }, { once: true });
       }
     }
 
@@ -241,6 +278,8 @@
     startButton.addEventListener("click", async () => {
       startButton.disabled = true;
       startButton.textContent = "Avvio...";
+
+      await unlockAudio();
 
       const startAR = async () => {
         const mindarSystem = sceneEl.systems["mindar-image-system"];
