@@ -14,28 +14,22 @@
       --panel: rgba(255,255,255,0.06);
       --panel-2: rgba(255,255,255,0.08);
       --line: rgba(255,255,255,0.10);
-
       --text: #ffffff;
       --muted: rgba(255,255,255,0.80);
       --soft: rgba(255,255,255,0.60);
-
       --cyan: #1dd8ff;
       --violet: #9d6bff;
       --pink: #ff7fcf;
       --gold: #ffc96e;
       --green: #46dfb1;
-
       --radius-xl: 24px;
       --radius-lg: 18px;
       --radius-md: 14px;
-
       --shadow-soft: 0 14px 30px rgba(0,0,0,0.20);
       --shadow-card: 0 16px 34px rgba(0,0,0,0.24);
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     html, body {
       margin: 0;
@@ -268,25 +262,11 @@
       opacity: 0.97;
     }
 
-    .btn-art {
-      background: linear-gradient(90deg, #20d8ff, #6486ff);
-    }
-
-    .btn-food {
-      background: linear-gradient(90deg, #12d6ff, #42d8a2);
-    }
-
-    .btn-brand {
-      background: linear-gradient(90deg, #20d8ff, #a56eff);
-    }
-
-    .btn-wedding {
-      background: linear-gradient(90deg, #ffb74f, #ff8bd7);
-    }
-
-    .btn-sport {
-      background: linear-gradient(90deg, #1fd7ff, #78b8ff);
-    }
+    .btn-art { background: linear-gradient(90deg, #20d8ff, #6486ff); }
+    .btn-food { background: linear-gradient(90deg, #12d6ff, #42d8a2); }
+    .btn-brand { background: linear-gradient(90deg, #20d8ff, #a56eff); }
+    .btn-wedding { background: linear-gradient(90deg, #ffb74f, #ff8bd7); }
+    .btn-sport { background: linear-gradient(90deg, #1fd7ff, #78b8ff); }
 
     .footer-note {
       margin-top: 24px;
@@ -301,21 +281,13 @@
         padding: 24px 0 42px;
       }
 
-      .section {
-        padding: 16px;
-      }
+      .section { padding: 16px; }
 
-      .cards {
-        grid-template-columns: 1fr;
-      }
+      .cards { grid-template-columns: 1fr; }
 
-      .card p {
-        min-height: auto;
-      }
+      .card p { min-height: auto; }
 
-      .card-media {
-        height: 88px;
-      }
+      .card-media { height: 88px; }
     }
   </style>
 </head>
@@ -378,6 +350,16 @@
           <h3>Food Explosion</h3>
           <p>Piatto, menu o visual food che attivano storytelling, ingredienti e contenuti coinvolgenti per il mondo ristorante.</p>
           <button class="btn btn-food" onclick="go('fe')">Apri demo</button>
+        </article>
+
+        <article class="card">
+          <div class="card-media">
+            <img src="./apps/shared/img/impasto_55.png" alt="Impasto 55" />
+          </div>
+          <span class="card-tag">Food storytelling</span>
+          <h3>Impasto 55</h3>
+          <p>Inquadra il tovagliolo e scopri una storia AR con video e audio dedicata al brand Impasto 55.</p>
+          <button class="btn btn-food" onclick="go('impasto55')">Apri demo</button>
         </article>
       </div>
     </section>
@@ -503,6 +485,7 @@
       lp: "./apps/living-painting/index.html",
       museo: "./apps/museo/index.html",
       fe: "./apps/food-explosion/index.html",
+      impasto55: "./apps/impasto55/index.html",
       ta: "./apps/cappellino/index.html",
       mo: "./apps/magic-object/index.html",
       l3d: "./apps/logo-3d/index.html",
