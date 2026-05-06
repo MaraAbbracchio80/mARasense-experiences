@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Capuano - mARasense</title>
+
+  <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      background: #000;
+      font-family: Arial, sans-serif;
+    }
+
+    #startScreen {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at center, #161616 0%, #000 75%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 10000;
+      color: #fff;
+      text-align: center;
+      padding: 24px;
+    }
+
+    #startScreen h1 {
+      margin: 0 0 12px 0;
+      font-size: 28px;
+    }
+
+    #startScreen p {
+      margin: 0 0 20px 0;
+      font-size: 15px;
+      max-width: 340px;
+      line-height: 1.5;
+      color: #ddd;
+    }
+
+    #startButton {
+      background: #8A2BE2;
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      padding: 14px 22px;
+      font-size: 16px;
+      cursor: pointer;
+      box-shadow: 0 0 24px rgba(138, 43, 226, 0.35);
+    }
+
+    #debugBox {
+      position: fixed;
+      top: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 9999;
+      background: rgba(0,0,0,0.68);
+      color: #fff;
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 14px;
+      text-align: center;
+      max-width: 92vw;
+      line-height: 1.4;
+      backdrop-filter: blur(4px);
+    }
+
+    #scanText {
+      position: fixed;
+      left: 50%;
+      bottom: 36px;
+      transform: translateX(-50%);
+      z-index: 9998;
+      color: #fff;
+      font-size: 14px;
+      background: rgba(0,0,0,0.60);
+      padding: 10px 14px;
+      border-radius: 10px;
+      white-space: nowrap;
+      backdrop-filter: blur(4px);
+      display: none;
+    }
+
+    a-scene {
+      position: fixed !important;
+      inset: 0 !important;
+      width: 100vw !important;
+      height: 100vh !important;
+      overflow: hidden !important;
+      z-index: 10;
+      background: transparent !important;
+    }
+
+    video,
+    canvas,
+    .a-canvas {
+      position: fixed !important;
+      inset: 0 !important;
+      width: 100vw !important;
+      height: 100vh !important;
+      min-width: 100vw !important;
+      min-height: 100vh !important;
+      object-fit: cover !important;
+      background: transparent !important;
+    }
+
+    video {
+      z-index: 1 !important;
+      transform: scale(1.04);
+      transform-origin: center center;
+    }
+
+    canvas,
+    .a-canvas {
+      z-index: 2 !important;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="startScreen">
+    <h1>Capuano</h1>
+    <p>Premi Avvia esperienza e inquadra la scatola pizza. Quando il target viene riconosciuto, partirà il video con audio.</p>
+    <button id="startButton">Avvia esperienza</button>
+  </div>
+
+  <div id="debugBox">Stato: attesa avvio</div>
+  <div id="scanText">Inquadra bene la scatola pizza</div>
+
+  <a-scene
+    id="arScene"
+    vr-mode-ui="enabled: false"
+    device-orientation-permission-ui="enabled: false"
+    loading-screen="enabled: false"
+    renderer="colorManagement: true; physicallyCorrectLights: true; alpha: true"
+    color-space="sRGB"
+    mindar-image="imageTargetSrc: ./targets.mind; uiLoading: no; uiScanning: no; uiError: no; autoStart: false;"
+  >
+    <a-assets>
+      <video
+        id="experienceVideo"
+        src="./assets/videos/capuano.mp4"
+        preload="auto"
+        playsinline
+        webkit-playsinline
+        crossorigin="anonymous"
+      ></video>
+    </a-assets>
+
+    <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+
+    <a-entity id="target0" mindar-image-target="targetIndex: 0">
+      <a-entity id="smoothWrapper">
+        <a-plane
+          id="videoPlane"
+          src="#experienceVideo"
+          position="0 0 0"
+          width="1.00"
+          height="1.00"
+          material="shader: flat; transparent: true; opacity: 1"
+          visible="false"
+        ></a-plane>
+      </a-entity>
+    </a-entity>
+  </a-scene>
+
+  <script>
+    const startScreen = document.getElementById("startScreen");
+    const startButton = document.getElementById("startButton");
+    const debugBox = document.getElementById("debugBox");
+    const scanText = document.getElementById("scanText");
+    const sceneEl = document.getElementById("arScene");
+    const target0 = document.getElementById("target0");
+    const smoothWrapper = document.getElementById("smoothWrapper");
+    const videoPlane = document.getElementById("videoPlane");
+    const video = document.getElementById("experienceVideo");
+
+    let targetVisible = false;
+    let smoothingInitialized = false;
+    let videoFinished = false;
+
+    const smoothed = {
+      position: new THREE.Vector3(),
+      quaternion: new THREE.Quaternion(),
+      scale: new THREE.Vector3(1, 1, 1)
+    };
+
+    function setDebug(text) {
+      debugBox.textContent = "Stato: " + text;
+      console.log(text);
+    }
+
+    function showHint(text = "Inquadra bene la scatola pizza") {
+      scanText.textContent = text;
+      scanText.style.display = "block";
+    }
+
+    function hideHint() {
+      scanText.style.display = "none";
+    }
+
+    function showVideoPlane() {
+      videoPlane.setAttribute("visible", true);
+      videoPlane.object3D.visible = true;
+    }
+
+    function hideVideoPlane() {
+      videoPlane.setAttribute("visible", false);
+      videoPlane.object3D.visible = false;
+    }
+
+    async function unlockAudio() {
+      try {
+        video.muted = false;
+        video.volume = 1;
+        video.currentTime = 0;
+        await video.play();
+        video.pause();
+        video.currentTime = 0;
+        setDebug("audio sbloccato");
+      } catch (e) {
+        console.warn("Audio non sbloccato subito:", e);
+      }
+    }
+
+    async function playFromStart() {
+      try {
+        video.pause();
+        video.currentTime = 0;
+        video.muted = false;
+        video.volume = 1;
+        await video.play();
+      } catch (e) {
+        console.warn("Errore play video:", e);
+        setDebug("tocca lo schermo per attivare audio");
+
+        document.body.addEventListener("click", async () => {
+          try {
+            video.muted = false;
+            video.volume = 1;
+            await video.play();
+            setDebug("audio attivato");
+          } catch (err) {
+            console.warn("Errore audio dopo click:", err);
+          }
+        }, { once: true });
+      }
+    }
+
+    function initializeSmoothing() {
+      const targetObj = target0.object3D;
+      const wrapperObj = smoothWrapper.object3D;
+
+      smoothed.position.copy(targetObj.position);
+      smoothed.quaternion.copy(targetObj.quaternion);
+      smoothed.scale.copy(targetObj.scale);
+
+      wrapperObj.position.copy(smoothed.position);
+      wrapperObj.quaternion.copy(smoothed.quaternion);
+      wrapperObj.scale.copy(smoothed.scale);
+
+      smoothingInitialized = true;
+    }
+
+    startButton.addEventListener("click", async () => {
+      startButton.disabled = true;
+      startButton.textContent = "Avvio...";
+
+      await unlockAudio();
+
+      const startAR = async () => {
+        const mindarSystem = sceneEl.systems["mindar-image-system"];
+
+        if (!mindarSystem) {
+          setDebug("mindar-image-system non trovato");
+          startButton.disabled = false;
+          startButton.textContent = "Riprova";
+          return;
+        }
+
+        try {
+          await mindarSystem.start();
+          startScreen.style.display = "none";
+          showHint();
+          hideVideoPlane();
+          setDebug("AR avviata. Ricerca scatola pizza...");
+        } catch (err) {
+          console.error(err);
+          setDebug("errore avvio AR");
+          startButton.disabled = false;
+          startButton.textContent = "Riprova";
+        }
+      };
+
+      if (sceneEl.hasLoaded) {
+        startAR();
+      } else {
+        sceneEl.addEventListener("loaded", startAR, { once: true });
+      }
+    });
+
+    sceneEl.addEventListener("arReady", () => {
+      setDebug("MindAR pronto");
+    });
+
+    sceneEl.addEventListener("arError", () => {
+      setDebug("errore MindAR");
+    });
+
+    target0.addEventListener("targetFound", async () => {
+      targetVisible = true;
+      hideHint();
+      initializeSmoothing();
+
+      if (videoFinished) {
+        videoFinished = false;
+      }
+
+      showVideoPlane();
+      setDebug("scatola trovata");
+      await playFromStart();
+    });
+
+    target0.addEventListener("targetLost", () => {
+      targetVisible = false;
+      smoothingInitialized = false;
+      video.pause();
+      video.currentTime = 0;
+      hideVideoPlane();
+      showHint("Target perso. Riinquadra la scatola pizza.");
+      setDebug("target perso");
+    });
+
+    video.addEventListener("ended", () => {
+      video.pause();
+      video.currentTime = 0;
+      videoFinished = true;
+      hideVideoPlane();
+
+      if (targetVisible) {
+        showHint("Video finito. Esci e rientra sulla scatola per farlo ripartire.");
+        setDebug("video terminato");
+      }
+    });
+
+    sceneEl.addEventListener("renderstart", () => {
+      const renderer = sceneEl.renderer;
+
+      renderer.setAnimationLoop(() => {
+        renderer.render(sceneEl.object3D, sceneEl.camera);
+
+        if (!targetVisible || !smoothingInitialized) return;
+
+        const targetObj = target0.object3D;
+        const wrapperObj = smoothWrapper.object3D;
+
+        const positionLerp = 0.12;
+        const rotationLerp = 0.10;
+        const scaleLerp = 0.12;
+
+        smoothed.position.lerp(targetObj.position, positionLerp);
+        smoothed.quaternion.slerp(targetObj.quaternion, rotationLerp);
+        smoothed.scale.lerp(targetObj.scale, scaleLerp);
+
+        wrapperObj.position.copy(smoothed.position);
+        wrapperObj.quaternion.copy(smoothed.quaternion);
+        wrapperObj.scale.copy(smoothed.scale);
+      });
+    });
+
+    setInterval(() => {
+      if (!targetVisible && startScreen.style.display === "none") {
+        showHint();
+      }
+    }, 800);
+  </script>
+</body>
+</html>
