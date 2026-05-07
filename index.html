@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>mARasense experiences</title>
-
   <link rel="manifest" href="./manifest.webmanifest" />
   <meta name="theme-color" content="#000000" />
 
@@ -15,28 +14,22 @@
       --panel: rgba(255,255,255,0.06);
       --panel-2: rgba(255,255,255,0.08);
       --line: rgba(255,255,255,0.10);
-
       --text: #ffffff;
       --muted: rgba(255,255,255,0.80);
       --soft: rgba(255,255,255,0.60);
-
       --cyan: #1dd8ff;
       --violet: #9d6bff;
       --pink: #ff7fcf;
       --gold: #ffc96e;
       --green: #46dfb1;
-
       --radius-xl: 24px;
       --radius-lg: 18px;
       --radius-md: 14px;
-
       --shadow-soft: 0 14px 30px rgba(0,0,0,0.20);
       --shadow-card: 0 16px 34px rgba(0,0,0,0.24);
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     html, body {
       margin: 0;
@@ -44,7 +37,6 @@
       min-height: 100%;
       font-family: Arial, sans-serif;
       color: var(--text);
-
       background:
         radial-gradient(circle at 20% 15%, rgba(29,216,255,0.08), transparent 18%),
         radial-gradient(circle at 80% 10%, rgba(157,107,255,0.08), transparent 18%),
@@ -58,13 +50,10 @@
       inset: 0;
       pointer-events: none;
       opacity: 0.06;
-
       background-image:
         linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
         linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
-
       background-size: 30px 30px;
-
       mask-image: radial-gradient(circle at center, black 40%, transparent 88%);
     }
 
@@ -85,16 +74,12 @@
       display: inline-block;
       padding: 20px 30px;
       border-radius: 24px;
-
       background: rgba(255,255,255,0.05);
-
       border: 1px solid rgba(255,255,255,0.12);
-
       box-shadow:
         0 0 22px rgba(29,216,255,0.08),
         0 0 28px rgba(157,107,255,0.05),
         0 16px 34px rgba(0,0,0,0.20);
-
       backdrop-filter: blur(10px);
     }
 
@@ -109,19 +94,10 @@
 
     .badge-title .pulse-ar {
       display: inline-block;
-
-      background: linear-gradient(
-        90deg,
-        var(--cyan),
-        var(--violet),
-        var(--pink)
-      );
-
+      background: linear-gradient(90deg, var(--cyan), var(--violet), var(--pink));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-
       animation: arPulse 1.15s ease-in-out infinite;
-
       transform-origin: center;
     }
 
@@ -129,20 +105,19 @@
       0% {
         transform: scale(1);
         opacity: 0.95;
+        filter: drop-shadow(0 0 0 rgba(29,216,255,0));
       }
-
       50% {
         transform: scale(1.16);
         opacity: 1;
-
         filter:
           drop-shadow(0 0 12px rgba(29,216,255,0.45))
           drop-shadow(0 0 20px rgba(157,107,255,0.32));
       }
-
       100% {
         transform: scale(1);
         opacity: 0.95;
+        filter: drop-shadow(0 0 0 rgba(255,127,207,0));
       }
     }
 
@@ -158,15 +133,10 @@
     .section {
       margin-top: 22px;
       padding: 18px;
-
       border-radius: var(--radius-xl);
-
       background: rgba(255,255,255,0.04);
-
       border: 1px solid rgba(255,255,255,0.08);
-
       box-shadow: var(--shadow-soft);
-
       backdrop-filter: blur(10px);
     }
 
@@ -188,12 +158,7 @@
     .section-line {
       flex: 1;
       height: 1px;
-
-      background: linear-gradient(
-        90deg,
-        rgba(255,255,255,0.20),
-        rgba(255,255,255,0.03)
-      );
+      background: linear-gradient(90deg, rgba(255,255,255,0.20), rgba(255,255,255,0.03));
     }
 
     .cards {
@@ -207,44 +172,37 @@
       width: 100%;
       border-radius: var(--radius-lg);
       padding: 14px;
-
       background:
-        linear-gradient(
-          180deg,
-          rgba(255,255,255,0.08),
-          rgba(255,255,255,0.05)
-        );
-
+        linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.05));
       border: 1px solid rgba(255,255,255,0.12);
-
       box-shadow: var(--shadow-card);
-
-      transition:
-        transform 0.22s ease,
-        box-shadow 0.22s ease,
-        border-color 0.22s ease;
+      transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
     }
 
     .card:hover {
       transform: translateY(-4px);
-
       border-color: rgba(255,255,255,0.18);
-
       box-shadow:
         0 18px 30px rgba(0,0,0,0.24),
         0 0 16px rgba(29,216,255,0.05);
+    }
+
+    .card-highlight {
+      background:
+        linear-gradient(180deg, rgba(255,201,110,0.10), rgba(255,255,255,0.06));
+      border: 1px solid rgba(255,201,110,0.24);
+      box-shadow:
+        0 0 18px rgba(255,201,110,0.05),
+        0 16px 34px rgba(0,0,0,0.24);
     }
 
     .card-media {
       width: 100%;
       height: 96px;
       margin-bottom: 12px;
-
       border-radius: 14px;
       overflow: hidden;
-
       background: rgba(255,255,255,0.04);
-
       border: 1px solid rgba(255,255,255,0.08);
     }
 
@@ -259,16 +217,12 @@
       display: inline-block;
       margin-bottom: 10px;
       padding: 6px 10px;
-
       border-radius: 999px;
-
       font-size: 11px;
       font-weight: 800;
       letter-spacing: 0.8px;
       text-transform: uppercase;
-
       background: rgba(255,255,255,0.08);
-
       color: rgba(255,255,255,0.88);
     }
 
@@ -291,24 +245,16 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-
       padding: 11px 16px;
       min-width: 128px;
-
       border-radius: 12px;
       border: none;
-
       color: #fff;
       text-decoration: none;
       font-weight: 700;
-
       cursor: pointer;
-
       box-shadow: 0 8px 18px rgba(0,0,0,0.14);
-
-      transition:
-        transform 0.2s ease,
-        opacity 0.2s ease;
+      transition: transform 0.2s ease, opacity 0.2s ease;
     }
 
     .btn:hover {
@@ -316,25 +262,11 @@
       opacity: 0.97;
     }
 
-    .btn-art {
-      background: linear-gradient(90deg, #20d8ff, #6486ff);
-    }
-
-    .btn-food {
-      background: linear-gradient(90deg, #12d6ff, #42d8a2);
-    }
-
-    .btn-brand {
-      background: linear-gradient(90deg, #20d8ff, #a56eff);
-    }
-
-    .btn-wedding {
-      background: linear-gradient(90deg, #ffb74f, #ff8bd7);
-    }
-
-    .btn-sport {
-      background: linear-gradient(90deg, #1fd7ff, #78b8ff);
-    }
+    .btn-art { background: linear-gradient(90deg, #20d8ff, #6486ff); }
+    .btn-food { background: linear-gradient(90deg, #12d6ff, #42d8a2); }
+    .btn-brand { background: linear-gradient(90deg, #20d8ff, #a56eff); }
+    .btn-wedding { background: linear-gradient(90deg, #ffb74f, #ff8bd7); }
+    .btn-sport { background: linear-gradient(90deg, #1fd7ff, #78b8ff); }
 
     .footer-note {
       margin-top: 24px;
@@ -349,29 +281,16 @@
         padding: 24px 0 42px;
       }
 
-      .section {
-        padding: 16px;
-      }
-
-      .cards {
-        grid-template-columns: 1fr;
-      }
-
-      .card p {
-        min-height: auto;
-      }
-
-      .card-media {
-        height: 88px;
-      }
+      .section { padding: 16px; }
+      .cards { grid-template-columns: 1fr; }
+      .card p { min-height: auto; }
+      .card-media { height: 88px; }
     }
   </style>
 </head>
 
 <body>
-
   <main class="page">
-
     <header class="hero">
       <div class="badge-premium">
         <h1 class="badge-title">
@@ -384,195 +303,211 @@
       </p>
     </header>
 
-    <!-- ART -->
-
     <section class="section">
-
       <div class="section-header">
         <h2 class="section-title">Art & Culture</h2>
         <div class="section-line"></div>
       </div>
 
       <div class="cards">
-
         <article class="card">
           <div class="card-media">
             <img src="./apps/shared/img/living-painting.png" alt="Living Painting" />
           </div>
-
           <span class="card-tag">Image target AR</span>
-
           <h3>Living Painting</h3>
-
-          <p>
-            Quadri e opere che prendono vita con video e contenuti immersivi sovrapposti all’immagine reale.
-          </p>
-
-          <button class="btn btn-art" onclick="go('lp')">
-            Apri demo
-          </button>
+          <p>Quadri e opere che prendono vita con video e contenuti immersivi sovrapposti all’immagine reale.</p>
+          <button class="btn btn-art" onclick="go('lp')">Apri demo</button>
         </article>
 
         <article class="card">
           <div class="card-media">
             <img src="./apps/shared/img/museo.png" alt="Museo" />
           </div>
-
           <span class="card-tag">Talking painting</span>
-
           <h3>Museo</h3>
-
-          <p>
-            Un quadro che si anima e racconta la propria storia:
-            esperienza museale interattiva e coinvolgente.
-          </p>
-
-          <button class="btn btn-art" onclick="go('museo')">
-            Apri demo
-          </button>
+          <p>Un quadro che si anima e racconta la propria storia: esperienza museale interattiva e coinvolgente.</p>
+          <button class="btn btn-art" onclick="go('museo')">Apri demo</button>
         </article>
-
       </div>
     </section>
 
-    <!-- FOOD -->
-
     <section class="section">
-
       <div class="section-header">
         <h2 class="section-title">Food & Hospitality</h2>
         <div class="section-line"></div>
       </div>
 
       <div class="cards">
-
         <article class="card">
           <div class="card-media">
             <img src="./apps/shared/img/food-explosion.png" alt="Food Explosion" />
           </div>
-
           <span class="card-tag">Interactive food</span>
-
           <h3>Food Explosion</h3>
-
-          <p>
-            Piatto, menu o visual food che attivano storytelling,
-            ingredienti e contenuti coinvolgenti per il mondo ristorante.
-          </p>
-
-          <button class="btn btn-food" onclick="go('fe')">
-            Apri demo
-          </button>
+          <p>Piatto, menu o visual food che attivano storytelling, ingredienti e contenuti coinvolgenti per il mondo ristorante.</p>
+          <button class="btn btn-food" onclick="go('fe')">Apri demo</button>
         </article>
 
         <article class="card">
           <div class="card-media">
             <img src="./apps/shared/img/impasto_55.png" alt="Impasto 55" />
           </div>
-
           <span class="card-tag">Food storytelling</span>
-
           <h3>Impasto 55</h3>
-
-          <p>
-            Inquadra il tovagliolo e scopri una storia AR con video e audio dedicata al brand Impasto 55.
-          </p>
-
-          <button class="btn btn-food" onclick="go('impasto55')">
-            Apri demo
-          </button>
+          <p>Inquadra il tovagliolo e scopri una storia AR con video e audio dedicata al brand Impasto 55.</p>
+          <button class="btn btn-food" onclick="go('impasto55')">Apri demo</button>
         </article>
 
         <article class="card">
           <div class="card-media">
             <img src="./apps/shared/img/capuano.png" alt="Capuano" />
           </div>
-
           <span class="card-tag">Pizza box AR</span>
-
           <h3>Capuano</h3>
-
-          <p>
-            Inquadra la scatola pizza e attiva un’esperienza immersiva
-            con video, audio e storytelling dedicato al brand Vincenzo Capuano.
-          </p>
-
-          <button class="btn btn-food" onclick="go('capuano')">
-            Apri demo
-          </button>
+          <p>Inquadra la scatola pizza e attiva un’esperienza immersiva con video, audio e storytelling.</p>
+          <button class="btn btn-food" onclick="go('capuano')">Apri demo</button>
         </article>
-
       </div>
     </section>
 
-    <!-- BRAND -->
-
     <section class="section">
-
       <div class="section-header">
         <h2 class="section-title">Brand & Objects</h2>
         <div class="section-line"></div>
       </div>
 
       <div class="cards">
-
         <article class="card">
           <div class="card-media">
             <img src="./apps/shared/img/talking-avatar.png" alt="Talking Avatar" />
           </div>
-
           <span class="card-tag">Avatar reveal</span>
-
           <h3>Talking Avatar</h3>
-
-          <p>
-            Avatar parlante in AR con sfondo trasparente,
-            ideale per accoglienza, promo e storytelling.
-          </p>
-
-          <button class="btn btn-brand" onclick="go('ta')">
-            Apri demo
-          </button>
+          <p>Avatar parlante in AR con sfondo trasparente, ideale per accoglienza, promo e storytelling.</p>
+          <button class="btn btn-brand" onclick="go('ta')">Apri demo</button>
         </article>
 
+        <article class="card">
+          <span class="card-tag">Spatial effect</span>
+          <h3>Magic Object</h3>
+          <p>Effetti visivi e comparsa di contenuti nello spazio per una demo wow, più emozionale che descrittiva.</p>
+          <button class="btn btn-brand" onclick="go('mo')">Apri demo</button>
+        </article>
+
+        <article class="card">
+          <span class="card-tag">3D logo</span>
+          <h3>Logo 3D</h3>
+          <p>Un logo che emerge nello spazio con glow e presenza scenica, perfetto per eventi e brand activation.</p>
+          <button class="btn btn-brand" onclick="go('l3d')">Apri demo</button>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-header">
+        <h2 class="section-title">Wedding & Events</h2>
+        <div class="section-line"></div>
+      </div>
+
+      <div class="cards">
+        <article class="card card-highlight">
+          <div class="card-media">
+            <img src="./apps/shared/img/wedding-events.png" alt="Wedding & Events" />
+          </div>
+          <span class="card-tag">Emotional AR</span>
+          <h3>Wedding & Events</h3>
+          <p>Partecipazioni, materiali evento e visual wedding che si animano con video, musica e contenuti romantici.</p>
+          <button class="btn btn-wedding" onclick="go('we')">Apri demo</button>
+        </article>
+
+        <article class="card">
+          <div class="card-media">
+            <img src="./apps/shared/img/augmented-wishes.jpg" alt="Augmented Wishes" />
+          </div>
+          <span class="card-tag">Greeting card AR</span>
+          <h3>Augmented Wishes</h3>
+          <p>Un biglietto di auguri che prende vita con un video animato parlato: elegante, emozionale e memorabile.</p>
+          <button class="btn btn-wedding" onclick="go('aw')">Apri demo</button>
+        </article>
+
+        <article class="card">
+          <div class="card-media">
+            <img src="./apps/shared/img/rivista-sposi.png" alt="Rivista degli Sposi" />
+          </div>
+          <span class="card-tag">Editorial experience</span>
+          <h3>Rivista degli Sposi</h3>
+          <p>Una rivista interattiva con più experience: invito, guestbook, curiosità, ringraziamento e gioco degli sposi.</p>
+          <button class="btn btn-wedding" onclick="go('rs')">Apri demo</button>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-header">
+        <h2 class="section-title">Sports & Merch</h2>
+        <div class="section-line"></div>
+      </div>
+
+      <div class="cards">
+        <article class="card">
+          <div class="card-media">
+            <img src="./apps/shared/img/fcnapoli-1.jpg" alt="FC Napoli" />
+          </div>
+          <span class="card-tag">Merch + video</span>
+          <h3>FC Napoli</h3>
+          <p>Inquadrando le maglie si attivano contenuti video collegati ai diversi item. Ideale per fan engagement e merchandising.</p>
+          <button class="btn btn-sport" onclick="go('fcn')">Apri demo</button>
+        </article>
+
+        <article class="card">
+          <div class="card-media">
+            <img src="./apps/shared/img/piazza-italia.png" alt="Piazza Italia" />
+          </div>
+          <span class="card-tag">Merch + video</span>
+          <h3>Piazza Italia</h3>
+          <p>Tag su maglietta che attiva contenuti video e storytelling in realtà aumentata.</p>
+          <button class="btn btn-sport" onclick="go('pi')">Apri demo</button>
+        </article>
+
+        <article class="card">
+          <div class="card-media">
+            <img src="./apps/shared/img/selfie-player.png" alt="Selfie con il giocatore" />
+          </div>
+          <span class="card-tag">AR selfie</span>
+          <h3>Selfie con il giocatore</h3>
+          <p>Inquadra la maglia e scatta una foto insieme al giocatore in realtà aumentata. Esperienza immersiva e condivisibile.</p>
+          <button class="btn btn-sport" onclick="go('selfie')">Apri demo</button>
+        </article>
       </div>
     </section>
 
     <div class="footer-note">
       Demo experiences by mARasense
     </div>
-
   </main>
 
   <script>
     const r = {
       lp: "./apps/living-painting/index.html",
       museo: "./apps/museo/index.html",
-
       fe: "./apps/food-explosion/index.html",
       impasto55: "./apps/impasto55/index.html",
       capuano: "./apps/capuano/index.html",
-
       ta: "./apps/cappellino/index.html",
-
       mo: "./apps/magic-object/index.html",
       l3d: "./apps/logo-3d/index.html",
-
       we: "./apps/wedding-events/index.html",
       aw: "./apps/fabbricantidiemozioni/index.html",
       rs: "./apps/experiences/luca_luciaindex.html",
-
       fcn: "./apps/fcNapoli/index.html",
       pi: "./apps/Piazza-Italia/index.html",
       selfie: "./apps/selfie-target/index.html"
     };
 
     function go(k) {
-      if (r[k]) {
-        location.href = r[k];
-      }
+      if (r[k]) location.href = r[k];
     }
   </script>
-
 </body>
 </html>
