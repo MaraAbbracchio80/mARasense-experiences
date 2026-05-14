@@ -14,8 +14,8 @@
       width: 100%;
       height: 100%;
       overflow: hidden;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
-      background: #000;
+      background: transparent;
+      font-family: Arial, sans-serif;
     }
 
     a-scene {
@@ -30,6 +30,18 @@
     canvas.a-canvas {
       width: 100vw !important;
       height: 100vh !important;
+      background: transparent !important;
+    }
+
+    body > video:not(#playerVideo) {
+      position: fixed !important;
+      inset: 0 !important;
+      width: 100vw !important;
+      height: 100vh !important;
+      object-fit: cover !important;
+      background: transparent !important;
+      transform: scale(1.02);
+      transform-origin: center center;
     }
 
     .overlay {
@@ -38,9 +50,9 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      z-index: 20;
+      z-index: 30;
       padding: 18px;
-      background: radial-gradient(circle at center, #102015 0%, #000 75%);
+      background: radial-gradient(circle at center, rgba(16,32,21,.96) 0%, rgba(0,0,0,.96) 75%);
     }
 
     .card {
@@ -77,15 +89,55 @@
       box-shadow: 0 8px 22px rgba(0,0,0,.20);
     }
 
+    .scan-layer {
+      position: fixed;
+      inset: 0;
+      z-index: 18;
+      pointer-events: none;
+      display: none;
+      background: transparent;
+    }
+
+    .scan-box {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: min(72vw, 340px);
+      height: min(58vh, 460px);
+      transform: translate(-50%, -50%);
+      border: 2px solid rgba(214,180,90,.85);
+      border-radius: 24px;
+      box-shadow:
+        0 0 22px rgba(214,180,90,.18),
+        inset 0 0 18px rgba(31,122,58,.16);
+      overflow: hidden;
+    }
+
+    .scan-line {
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, transparent, #d6b45a, #1f7a3a, #d6b45a, transparent);
+      box-shadow: 0 0 18px rgba(214,180,90,.75);
+      animation: scanMove 1.6s ease-in-out infinite;
+    }
+
+    @keyframes scanMove {
+      0% { top: 6%; }
+      50% { top: 92%; }
+      100% { top: 6%; }
+    }
+
     .hint {
       position: fixed;
       left: 50%;
       bottom: 34px;
       transform: translateX(-50%);
-      z-index: 15;
+      z-index: 19;
       color: #fff;
       font-size: 14px;
-      background: rgba(0,0,0,.60);
+      background: rgba(0,0,0,.52);
       padding: 10px 14px;
       border-radius: 12px;
       white-space: nowrap;
@@ -108,8 +160,8 @@
       width: min(86vw, 430px);
       aspect-ratio: 9 / 16;
       opacity: 0;
-      transform: scale(0.78);
-      transition: all 0.35s ease;
+      transform: scale(0.82);
+      transition: all 0.32s ease;
       pointer-events: none;
     }
 
@@ -138,6 +190,12 @@
         Premi Avvia esperienza e inquadra la bottiglia. Quando viene riconosciuta, partiranno video e audio insieme.
       </div>
       <button class="btn" id="startBtn">Avvia esperienza</button>
+    </div>
+  </div>
+
+  <div class="scan-layer" id="scanLayer">
+    <div class="scan-box">
+      <div class="scan-line"></div>
     </div>
   </div>
 
@@ -177,6 +235,7 @@
     const startBtn = document.getElementById("startBtn");
     const ui = document.getElementById("ui");
     const hint = document.getElementById("hint");
+    const scanLayer = document.getElementById("scanLayer");
 
     const scene = document.getElementById("scene");
 
@@ -209,8 +268,18 @@
       }
     }
 
-    function showVideo() {
+    function showScanner() {
+      hint.style.display = "block";
+      scanLayer.style.display = "block";
+    }
+
+    function hideScanner() {
       hint.style.display = "none";
+      scanLayer.style.display = "none";
+    }
+
+    function showVideo() {
+      hideScanner();
       videoLayer.style.display = "flex";
       requestAnimationFrame(() => {
         videoWrap.classList.add("show");
@@ -219,7 +288,6 @@
 
     function hideVideo() {
       videoWrap.classList.remove("show");
-
       setTimeout(() => {
         videoLayer.style.display = "none";
       }, 220);
@@ -275,7 +343,7 @@
       playerAudio.currentTime = 0;
 
       hideVideo();
-      hint.style.display = "block";
+      showScanner();
     }
 
     startBtn.onclick = async () => {
@@ -287,7 +355,7 @@
       const startAR = async () => {
         await scene.systems["mindar-image-system"].start();
         ui.style.display = "none";
-        hint.style.display = "block";
+        showScanner();
       };
 
       if (scene.hasLoaded) {
