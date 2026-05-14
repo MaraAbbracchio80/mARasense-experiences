@@ -34,12 +34,13 @@
     }
 
     #startScreen h1 {
-      margin: 0 0 12px;
-      font-size: 30px;
+      margin: 0 0 12px 0;
+      font-size: 28px;
+      letter-spacing: 0.5px;
     }
 
     #startScreen p {
-      margin: 0 0 20px;
+      margin: 0 0 20px 0;
       font-size: 15px;
       max-width: 340px;
       line-height: 1.5;
@@ -116,7 +117,7 @@
 
     video {
       z-index: 1 !important;
-      transform: scale(1.04);
+      transform: scale(1.02);
       transform-origin: center center;
     }
 
@@ -130,7 +131,7 @@
 <body>
   <div id="startScreen">
     <h1>Vini</h1>
-    <p>Premi Avvia esperienza e inquadra la bottiglia. Quando il target viene riconosciuto, partiranno video e audio insieme.</p>
+    <p>Premi Avvia esperienza e inquadra la bottiglia. Quando uno dei target viene riconosciuto, partiranno video e audio.</p>
     <button id="startButton">Avvia esperienza</button>
   </div>
 
@@ -190,9 +191,11 @@
     const video = document.getElementById("experienceVideo");
     const audio = document.getElementById("experienceAudio");
 
-    const target0 = document.getElementById("target0");
-    const target1 = document.getElementById("target1");
-    const target2 = document.getElementById("target2");
+    const targets = [
+      document.getElementById("target0"),
+      document.getElementById("target1"),
+      document.getElementById("target2")
+    ];
 
     const planes = [
       document.getElementById("videoPlane0"),
@@ -217,14 +220,14 @@
     }
 
     function hideAllPlanes() {
-      planes.forEach(function(plane) {
+      planes.forEach((plane) => {
         plane.setAttribute("visible", false);
         plane.object3D.visible = false;
       });
     }
 
     function showPlane(index) {
-      planes.forEach(function(plane, i) {
+      planes.forEach((plane, i) => {
         const visible = i === index;
         plane.setAttribute("visible", visible);
         plane.object3D.visible = visible;
@@ -251,7 +254,7 @@
       }
     }
 
-    async function startExperience(index) {
+    async function playMedia(index) {
       if (playing) return;
 
       playing = true;
@@ -278,10 +281,11 @@
         console.warn("Errore avvio media:", e);
         setDebug("tocca lo schermo per attivare audio");
 
-        document.body.addEventListener("click", async function() {
+        document.body.addEventListener("click", async () => {
           try {
             video.currentTime = 0;
             audio.currentTime = 0;
+
             video.muted = true;
             audio.volume = 1;
 
@@ -312,13 +316,13 @@
       setDebug("video terminato");
     }
 
-    startButton.addEventListener("click", async function() {
+    startButton.addEventListener("click", async () => {
       startButton.disabled = true;
       startButton.textContent = "Avvio...";
 
       await unlockMedia();
 
-      const startAR = async function() {
+      const startAR = async () => {
         const mindarSystem = sceneEl.systems["mindar-image-system"];
 
         if (!mindarSystem) {
@@ -349,35 +353,29 @@
       }
     });
 
-    sceneEl.addEventListener("arReady", function() {
+    sceneEl.addEventListener("arReady", () => {
       setDebug("MindAR pronto");
     });
 
-    sceneEl.addEventListener("arError", function() {
+    sceneEl.addEventListener("arError", () => {
       setDebug("errore MindAR");
     });
 
-    target0.addEventListener("targetFound", function() {
-      startExperience(0);
+    targets.forEach((target, index) => {
+      target.addEventListener("targetFound", () => {
+        playMedia(index);
+      });
     });
 
-    target1.addEventListener("targetFound", function() {
-      startExperience(1);
-    });
-
-    target2.addEventListener("targetFound", function() {
-      startExperience(2);
-    });
-
-    video.addEventListener("ended", function() {
+    video.addEventListener("ended", () => {
       resetExperience();
     });
 
-    audio.addEventListener("ended", function() {
+    audio.addEventListener("ended", () => {
       audio.pause();
     });
 
-    setInterval(function() {
+    setInterval(() => {
       if (!playing && startScreen.style.display === "none") {
         showHint("Inquadra bene la bottiglia");
       }
