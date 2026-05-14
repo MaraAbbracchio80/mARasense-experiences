@@ -36,7 +36,6 @@
     #startScreen h1 {
       margin: 0 0 12px 0;
       font-size: 28px;
-      letter-spacing: 0.5px;
     }
 
     #startScreen p {
@@ -57,23 +56,6 @@
       font-weight: 800;
       cursor: pointer;
       box-shadow: 0 0 24px rgba(214,180,90,0.35);
-    }
-
-    #debugBox {
-      position: fixed;
-      top: 14px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 9999;
-      background: rgba(0,0,0,0.68);
-      color: #fff;
-      padding: 10px 14px;
-      border-radius: 10px;
-      font-size: 14px;
-      text-align: center;
-      max-width: 92vw;
-      line-height: 1.4;
-      backdrop-filter: blur(4px);
     }
 
     #scanText {
@@ -131,11 +113,10 @@
 <body>
   <div id="startScreen">
     <h1>Vini</h1>
-    <p>Premi Avvia esperienza e inquadra la bottiglia. Quando uno dei target viene riconosciuto, partiranno video e audio.</p>
+    <p>Premi Avvia esperienza e inquadra la bottiglia. Quando viene riconosciuta, partiranno video e audio.</p>
     <button id="startButton">Avvia esperienza</button>
   </div>
 
-  <div id="debugBox">Stato: attesa avvio</div>
   <div id="scanText">Inquadra bene la bottiglia</div>
 
   <a-scene
@@ -168,35 +149,57 @@
 
     <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
-    <!-- Target invisibili: servono solo per riconoscere la bottiglia -->
-    <a-entity id="target0" mindar-image-target="targetIndex: 0"></a-entity>
-    <a-entity id="target1" mindar-image-target="targetIndex: 1"></a-entity>
-    <a-entity id="target2" mindar-image-target="targetIndex: 2"></a-entity>
+    <a-entity id="target0" mindar-image-target="targetIndex: 0">
+      <a-entity id="smooth0">
+        <a-plane
+          id="videoPlane0"
+          src="#experienceVideo"
+          position="0 0 0"
+          width="1.00"
+          height="1.45"
+          material="shader: flat; transparent: true; opacity: 1"
+          visible="false"
+        ></a-plane>
+      </a-entity>
+    </a-entity>
 
-    <!-- Piano bloccato: resta fermo anche se perdi il target -->
-    <a-entity id="lockedAnchor" visible="false">
-      <a-plane
-        id="lockedVideoPlane"
-        src="#experienceVideo"
-        position="0 0 0"
-        width="1.00"
-        height="1.45"
-        material="shader: flat; transparent: true; opacity: 1"
-      ></a-plane>
+    <a-entity id="target1" mindar-image-target="targetIndex: 1">
+      <a-entity id="smooth1">
+        <a-plane
+          id="videoPlane1"
+          src="#experienceVideo"
+          position="0 0 0"
+          width="1.00"
+          height="1.45"
+          material="shader: flat; transparent: true; opacity: 1"
+          visible="false"
+        ></a-plane>
+      </a-entity>
+    </a-entity>
+
+    <a-entity id="target2" mindar-image-target="targetIndex: 2">
+      <a-entity id="smooth2">
+        <a-plane
+          id="videoPlane2"
+          src="#experienceVideo"
+          position="0 0 0"
+          width="1.00"
+          height="1.45"
+          material="shader: flat; transparent: true; opacity: 1"
+          visible="false"
+        ></a-plane>
+      </a-entity>
     </a-entity>
   </a-scene>
 
   <script>
     const startScreen = document.getElementById("startScreen");
     const startButton = document.getElementById("startButton");
-    const debugBox = document.getElementById("debugBox");
     const scanText = document.getElementById("scanText");
     const sceneEl = document.getElementById("arScene");
 
     const video = document.getElementById("experienceVideo");
     const audio = document.getElementById("experienceAudio");
-
-    const lockedAnchor = document.getElementById("lockedAnchor");
 
     const targets = [
       document.getElementById("target0"),
@@ -204,43 +207,50 @@
       document.getElementById("target2")
     ];
 
+    const smooths = [
+      document.getElementById("smooth0"),
+      document.getElementById("smooth1"),
+      document.getElementById("smooth2")
+    ];
+
+    const planes = [
+      document.getElementById("videoPlane0"),
+      document.getElementById("videoPlane1"),
+      document.getElementById("videoPlane2")
+    ];
+
+    let activeIndex = null;
     let playing = false;
-    let videoEnded = false;
-    let audioEnded = false;
+    let videoDone = false;
+    let audioDone = false;
 
-    function setDebug(text) {
-      debugBox.textContent = "Stato: " + text;
-      console.log(text);
-    }
+    const smoothed = [
+      { position: new THREE.Vector3(), quaternion: new THREE.Quaternion(), scale: new THREE.Vector3(1,1,1), ready: false },
+      { position: new THREE.Vector3(), quaternion: new THREE.Quaternion(), scale: new THREE.Vector3(1,1,1), ready: false },
+      { position: new THREE.Vector3(), quaternion: new THREE.Quaternion(), scale: new THREE.Vector3(1,1,1), ready: false }
+    ];
 
-    function showHint(text) {
-      scanText.textContent = text || "Inquadra bene la bottiglia";
-      scanText.style.display = "block";
+    function showHint() {
+      if (!playing) scanText.style.display = "block";
     }
 
     function hideHint() {
       scanText.style.display = "none";
     }
 
-    function showLockedPlane() {
-      lockedAnchor.setAttribute("visible", true);
-      lockedAnchor.object3D.visible = true;
+    function hideAllPlanes() {
+      planes.forEach((plane) => {
+        plane.setAttribute("visible", false);
+        plane.object3D.visible = false;
+      });
     }
 
-    function hideLockedPlane() {
-      lockedAnchor.setAttribute("visible", false);
-      lockedAnchor.object3D.visible = false;
-    }
-
-    function lockPlaneOnTarget(targetEl) {
-      const targetObj = targetEl.object3D;
-      const anchorObj = lockedAnchor.object3D;
-
-      anchorObj.position.copy(targetObj.position);
-      anchorObj.quaternion.copy(targetObj.quaternion);
-      anchorObj.scale.copy(targetObj.scale);
-
-      showLockedPlane();
+    function showOnlyPlane(index) {
+      planes.forEach((plane, i) => {
+        const visible = i === index;
+        plane.setAttribute("visible", visible);
+        plane.object3D.visible = visible;
+      });
     }
 
     async function unlockMedia() {
@@ -256,23 +266,46 @@
         await audio.play();
         audio.pause();
         audio.currentTime = 0;
-
-        setDebug("audio/video sbloccati");
       } catch (e) {
         console.warn("Sblocco media non completo:", e);
       }
     }
 
-    async function playMediaFromStart() {
+    function initSmoothing(index) {
+      const targetObj = targets[index].object3D;
+      const smoothObj = smooths[index].object3D;
+      const data = smoothed[index];
+
+      data.position.copy(targetObj.position);
+      data.quaternion.copy(targetObj.quaternion);
+      data.scale.copy(targetObj.scale);
+
+      smoothObj.position.copy(data.position);
+      smoothObj.quaternion.copy(data.quaternion);
+      smoothObj.scale.copy(data.scale);
+
+      data.ready = true;
+    }
+
+    async function startExperience(index) {
+      if (playing) return;
+
+      activeIndex = index;
+      playing = true;
+      videoDone = false;
+      audioDone = false;
+
+      hideHint();
+      hideAllPlanes();
+      showOnlyPlane(index);
+      initSmoothing(index);
+
       try {
         video.pause();
         audio.pause();
 
         video.currentTime = 0;
         audio.currentTime = 0;
-
-        videoEnded = false;
-        audioEnded = false;
 
         video.muted = true;
         audio.volume = 1;
@@ -281,47 +314,28 @@
           video.play(),
           audio.play()
         ]);
-
-        setDebug("target trovato: esperienza bloccata e avviata");
       } catch (e) {
         console.warn("Errore avvio media:", e);
-        setDebug("tocca lo schermo per attivare audio");
 
         document.body.addEventListener("click", async () => {
-          try {
-            video.currentTime = 0;
-            audio.currentTime = 0;
+          video.currentTime = 0;
+          audio.currentTime = 0;
+          video.muted = true;
+          audio.volume = 1;
 
-            video.muted = true;
-            audio.volume = 1;
-
-            await Promise.all([
-              video.play(),
-              audio.play()
-            ]);
-
-            setDebug("audio/video attivati");
-          } catch (err) {
-            console.warn("Errore dopo click:", err);
-          }
+          await Promise.all([
+            video.play(),
+            audio.play()
+          ]);
         }, { once: true });
       }
     }
 
-    async function startExperience(targetEl) {
-      if (playing) return;
-
-      playing = true;
-      hideHint();
-
-      lockPlaneOnTarget(targetEl);
-      await playMediaFromStart();
-    }
-
-    function finishIfBothEnded() {
-      if (!videoEnded || !audioEnded) return;
+    function finishIfReady() {
+      if (!videoDone || !audioDone) return;
 
       playing = false;
+      activeIndex = null;
 
       video.pause();
       audio.pause();
@@ -329,10 +343,8 @@
       video.currentTime = 0;
       audio.currentTime = 0;
 
-      hideLockedPlane();
-
-      showHint("Esperienza conclusa. Riinquadra la bottiglia per ripartire.");
-      setDebug("esperienza conclusa");
+      hideAllPlanes();
+      showHint();
     }
 
     startButton.addEventListener("click", async () => {
@@ -345,7 +357,6 @@
         const mindarSystem = sceneEl.systems["mindar-image-system"];
 
         if (!mindarSystem) {
-          setDebug("mindar-image-system non trovato");
           startButton.disabled = false;
           startButton.textContent = "Riprova";
           return;
@@ -354,12 +365,10 @@
         try {
           await mindarSystem.start();
           startScreen.style.display = "none";
-          hideLockedPlane();
-          showHint("Inquadra bene la bottiglia");
-          setDebug("AR avviata. Ricerca bottiglia...");
+          hideAllPlanes();
+          showHint();
         } catch (err) {
           console.error(err);
-          setDebug("errore avvio AR");
           startButton.disabled = false;
           startButton.textContent = "Riprova";
         }
@@ -372,44 +381,58 @@
       }
     });
 
-    sceneEl.addEventListener("arReady", () => {
-      setDebug("MindAR pronto");
-    });
-
-    sceneEl.addEventListener("arError", () => {
-      setDebug("errore MindAR");
-    });
-
-    targets.forEach((target) => {
+    targets.forEach((target, index) => {
       target.addEventListener("targetFound", () => {
-        startExperience(target);
+        startExperience(index);
       });
 
       target.addEventListener("targetLost", () => {
-        if (playing) {
-          setDebug("target perso, ma esperienza continua fino alla fine");
-          return;
-        }
-
-        showHint("Target perso. Riinquadra la bottiglia.");
+        if (playing) return;
+        hideAllPlanes();
+        showHint();
       });
     });
 
     video.addEventListener("ended", () => {
-      videoEnded = true;
-      finishIfBothEnded();
+      videoDone = true;
+      finishIfReady();
     });
 
     audio.addEventListener("ended", () => {
-      audioEnded = true;
-      finishIfBothEnded();
+      audioDone = true;
+      finishIfReady();
+    });
+
+    sceneEl.addEventListener("renderstart", () => {
+      const renderer = sceneEl.renderer;
+
+      renderer.setAnimationLoop(() => {
+        renderer.render(sceneEl.object3D, sceneEl.camera);
+
+        if (activeIndex === null || !playing) return;
+
+        const index = activeIndex;
+        const targetObj = targets[index].object3D;
+        const smoothObj = smooths[index].object3D;
+        const data = smoothed[index];
+
+        if (!data.ready) return;
+
+        data.position.lerp(targetObj.position, 0.045);
+        data.quaternion.slerp(targetObj.quaternion, 0.035);
+        data.scale.lerp(targetObj.scale, 0.045);
+
+        smoothObj.position.copy(data.position);
+        smoothObj.quaternion.copy(data.quaternion);
+        smoothObj.scale.copy(data.scale);
+      });
     });
 
     setInterval(() => {
       if (!playing && startScreen.style.display === "none") {
-        showHint("Inquadra bene la bottiglia");
+        showHint();
       }
-    }, 900);
+    }, 1000);
   </script>
 </body>
 </html>
