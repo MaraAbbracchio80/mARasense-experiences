@@ -1,77 +1,21 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Vini - mARasense</title>
 
-  <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+  <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
 
   <style>
     html, body {
       margin: 0;
-      padding: 0;
-      width: 100vw;
-      height: 100vh;
+      width: 100%;
+      height: 100%;
       overflow: hidden;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
       background: #000;
-      font-family: Arial, sans-serif;
-    }
-
-    #startScreen {
-      position: fixed;
-      inset: 0;
-      background: radial-gradient(circle at center, #102015 0%, #000 75%);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      z-index: 10000;
-      color: #fff;
-      text-align: center;
-      padding: 24px;
-    }
-
-    #startScreen h1 {
-      margin: 0 0 12px 0;
-      font-size: 28px;
-    }
-
-    #startScreen p {
-      margin: 0 0 20px 0;
-      font-size: 15px;
-      max-width: 340px;
-      line-height: 1.5;
-      color: #ddd;
-    }
-
-    #startButton {
-      background: linear-gradient(90deg, #1f7a3a, #d6b45a);
-      color: #fff;
-      border: none;
-      border-radius: 12px;
-      padding: 14px 22px;
-      font-size: 16px;
-      font-weight: 800;
-      cursor: pointer;
-      box-shadow: 0 0 24px rgba(214,180,90,0.35);
-    }
-
-    #scanText {
-      position: fixed;
-      left: 50%;
-      bottom: 36px;
-      transform: translateX(-50%);
-      z-index: 9998;
-      color: #fff;
-      font-size: 14px;
-      background: rgba(0,0,0,0.60);
-      padding: 10px 14px;
-      border-radius: 10px;
-      white-space: nowrap;
-      backdrop-filter: blur(4px);
-      display: none;
     }
 
     a-scene {
@@ -79,360 +23,292 @@
       inset: 0 !important;
       width: 100vw !important;
       height: 100vh !important;
-      overflow: hidden !important;
-      z-index: 10;
+      z-index: 1;
       background: transparent !important;
     }
 
-    video,
-    canvas,
-    .a-canvas {
-      position: fixed !important;
-      inset: 0 !important;
+    canvas.a-canvas {
       width: 100vw !important;
       height: 100vh !important;
-      min-width: 100vw !important;
-      min-height: 100vh !important;
-      object-fit: cover !important;
-      background: transparent !important;
     }
 
-    video {
-      z-index: 1 !important;
-      transform: scale(1.02);
-      transform-origin: center center;
+    .overlay {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 20;
+      padding: 18px;
+      background: radial-gradient(circle at center, #102015 0%, #000 75%);
     }
 
-    canvas,
-    .a-canvas {
-      z-index: 2 !important;
+    .card {
+      width: min(560px, 100%);
+      background: rgba(255,255,255,.92);
+      border-radius: 22px;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 18px 55px rgba(0,0,0,.35);
+    }
+
+    .title {
+      font-size: 24px;
+      font-weight: 900;
+      color: #1f7a3a;
+    }
+
+    .sub {
+      font-size: 14px;
+      margin-top: 10px;
+      color: #19351f;
+      line-height: 1.45;
+    }
+
+    .btn {
+      margin-top: 15px;
+      border: none;
+      border-radius: 999px;
+      padding: 13px 20px;
+      font-weight: 900;
+      cursor: pointer;
+      background: linear-gradient(90deg, #1f7a3a, #d6b45a);
+      color: white;
+      box-shadow: 0 8px 22px rgba(0,0,0,.20);
+    }
+
+    .hint {
+      position: fixed;
+      left: 50%;
+      bottom: 34px;
+      transform: translateX(-50%);
+      z-index: 15;
+      color: #fff;
+      font-size: 14px;
+      background: rgba(0,0,0,.60);
+      padding: 10px 14px;
+      border-radius: 12px;
+      white-space: nowrap;
+      display: none;
+      backdrop-filter: blur(4px);
+    }
+
+    .video-layer {
+      position: fixed;
+      inset: 0;
+      z-index: 25;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: transparent;
+      pointer-events: none;
+    }
+
+    .video-wrap {
+      width: min(86vw, 430px);
+      aspect-ratio: 9 / 16;
+      opacity: 0;
+      transform: scale(0.78);
+      transition: all 0.35s ease;
+      pointer-events: none;
+    }
+
+    .video-wrap.show {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    #playerVideo {
+      width: 100%;
+      height: 100%;
+      border-radius: 18px;
+      object-fit: contain;
+      background: transparent;
+      display: block;
     }
   </style>
 </head>
 
 <body>
-  <div id="startScreen">
-    <h1>Vini</h1>
-    <p>Premi Avvia esperienza e inquadra la bottiglia. Quando viene riconosciuta, partiranno video e audio.</p>
-    <button id="startButton">Avvia esperienza</button>
+
+  <div class="overlay" id="ui">
+    <div class="card">
+      <div class="title">Vini AR</div>
+      <div class="sub">
+        Premi Avvia esperienza e inquadra la bottiglia. Quando viene riconosciuta, partiranno video e audio insieme.
+      </div>
+      <button class="btn" id="startBtn">Avvia esperienza</button>
+    </div>
   </div>
 
-  <div id="scanText">Inquadra bene la bottiglia</div>
+  <div class="hint" id="hint">Inquadra bene la bottiglia</div>
 
-  <a-scene
-    id="arScene"
-    vr-mode-ui="enabled: false"
-    device-orientation-permission-ui="enabled: false"
-    loading-screen="enabled: false"
-    renderer="colorManagement: true; physicallyCorrectLights: true; alpha: true"
-    color-space="sRGB"
-    mindar-image="imageTargetSrc: ./targets.mind; uiLoading: no; uiScanning: no; uiError: no; autoStart: false;"
-  >
-    <a-assets>
+  <div class="video-layer" id="videoLayer">
+    <div class="video-wrap" id="videoWrap">
       <video
-        id="experienceVideo"
+        id="playerVideo"
         src="./assets/videos/vino.mp4"
-        preload="auto"
-        muted
         playsinline
         webkit-playsinline
-        crossorigin="anonymous"
-      ></video>
-
-      <audio
-        id="experienceAudio"
-        src="./assets/audio/vino.mp3"
         preload="auto"
-        crossorigin="anonymous"
-      ></audio>
-    </a-assets>
+        muted
+      ></video>
+    </div>
+  </div>
 
-    <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+  <audio id="playerAudio" src="./assets/audio/vino.mp3" preload="auto"></audio>
 
-    <a-entity id="target0" mindar-image-target="targetIndex: 0">
-      <a-entity id="smooth0">
-        <a-plane
-          id="videoPlane0"
-          src="#experienceVideo"
-          position="0 0 0"
-          width="1.00"
-          height="1.45"
-          material="shader: flat; transparent: true; opacity: 1"
-          visible="false"
-        ></a-plane>
-      </a-entity>
-    </a-entity>
+  <a-scene
+    id="scene"
+    mindar-image="imageTargetSrc: ./targets.mind; autoStart:false; uiLoading:no; uiScanning:no; uiError:no;"
+    embedded
+    vr-mode-ui="enabled:false"
+    device-orientation-permission-ui="enabled:false"
+    renderer="alpha:true; colorManagement:true;"
+  >
+    <a-camera position="0 0 0" look-controls="enabled:false"></a-camera>
 
-    <a-entity id="target1" mindar-image-target="targetIndex: 1">
-      <a-entity id="smooth1">
-        <a-plane
-          id="videoPlane1"
-          src="#experienceVideo"
-          position="0 0 0"
-          width="1.00"
-          height="1.45"
-          material="shader: flat; transparent: true; opacity: 1"
-          visible="false"
-        ></a-plane>
-      </a-entity>
-    </a-entity>
-
-    <a-entity id="target2" mindar-image-target="targetIndex: 2">
-      <a-entity id="smooth2">
-        <a-plane
-          id="videoPlane2"
-          src="#experienceVideo"
-          position="0 0 0"
-          width="1.00"
-          height="1.45"
-          material="shader: flat; transparent: true; opacity: 1"
-          visible="false"
-        ></a-plane>
-      </a-entity>
-    </a-entity>
+    <a-entity id="t0" mindar-image-target="targetIndex:0"></a-entity>
+    <a-entity id="t1" mindar-image-target="targetIndex:1"></a-entity>
+    <a-entity id="t2" mindar-image-target="targetIndex:2"></a-entity>
   </a-scene>
 
   <script>
-    const startScreen = document.getElementById("startScreen");
-    const startButton = document.getElementById("startButton");
-    const scanText = document.getElementById("scanText");
-    const sceneEl = document.getElementById("arScene");
+    const startBtn = document.getElementById("startBtn");
+    const ui = document.getElementById("ui");
+    const hint = document.getElementById("hint");
 
-    const video = document.getElementById("experienceVideo");
-    const audio = document.getElementById("experienceAudio");
+    const scene = document.getElementById("scene");
 
-    const targets = [
-      document.getElementById("target0"),
-      document.getElementById("target1"),
-      document.getElementById("target2")
-    ];
+    const videoLayer = document.getElementById("videoLayer");
+    const videoWrap = document.getElementById("videoWrap");
+    const playerVideo = document.getElementById("playerVideo");
+    const playerAudio = document.getElementById("playerAudio");
 
-    const smooths = [
-      document.getElementById("smooth0"),
-      document.getElementById("smooth1"),
-      document.getElementById("smooth2")
-    ];
+    const t0 = document.getElementById("t0");
+    const t1 = document.getElementById("t1");
+    const t2 = document.getElementById("t2");
 
-    const planes = [
-      document.getElementById("videoPlane0"),
-      document.getElementById("videoPlane1"),
-      document.getElementById("videoPlane2")
-    ];
-
-    let activeIndex = null;
     let playing = false;
-    let videoDone = false;
-    let audioDone = false;
-
-    const smoothed = [
-      { position: new THREE.Vector3(), quaternion: new THREE.Quaternion(), scale: new THREE.Vector3(1,1,1), ready: false },
-      { position: new THREE.Vector3(), quaternion: new THREE.Quaternion(), scale: new THREE.Vector3(1,1,1), ready: false },
-      { position: new THREE.Vector3(), quaternion: new THREE.Quaternion(), scale: new THREE.Vector3(1,1,1), ready: false }
-    ];
-
-    function showHint() {
-      if (!playing) scanText.style.display = "block";
-    }
-
-    function hideHint() {
-      scanText.style.display = "none";
-    }
-
-    function hideAllPlanes() {
-      planes.forEach((plane) => {
-        plane.setAttribute("visible", false);
-        plane.object3D.visible = false;
-      });
-    }
-
-    function showOnlyPlane(index) {
-      planes.forEach((plane, i) => {
-        const visible = i === index;
-        plane.setAttribute("visible", visible);
-        plane.object3D.visible = visible;
-      });
-    }
 
     async function unlockMedia() {
       try {
-        video.muted = true;
-        video.currentTime = 0;
-        await video.play();
-        video.pause();
-        video.currentTime = 0;
+        playerVideo.muted = true;
+        playerVideo.currentTime = 0;
+        await playerVideo.play();
+        playerVideo.pause();
+        playerVideo.currentTime = 0;
 
-        audio.volume = 1;
-        audio.currentTime = 0;
-        await audio.play();
-        audio.pause();
-        audio.currentTime = 0;
+        playerAudio.volume = 1;
+        playerAudio.currentTime = 0;
+        await playerAudio.play();
+        playerAudio.pause();
+        playerAudio.currentTime = 0;
       } catch (e) {
-        console.warn("Sblocco media non completo:", e);
+        console.log("unlock media warning", e);
       }
     }
 
-    function initSmoothing(index) {
-      const targetObj = targets[index].object3D;
-      const smoothObj = smooths[index].object3D;
-      const data = smoothed[index];
-
-      data.position.copy(targetObj.position);
-      data.quaternion.copy(targetObj.quaternion);
-      data.scale.copy(targetObj.scale);
-
-      smoothObj.position.copy(data.position);
-      smoothObj.quaternion.copy(data.quaternion);
-      smoothObj.scale.copy(data.scale);
-
-      data.ready = true;
+    function showVideo() {
+      hint.style.display = "none";
+      videoLayer.style.display = "flex";
+      requestAnimationFrame(() => {
+        videoWrap.classList.add("show");
+      });
     }
 
-    async function startExperience(index) {
+    function hideVideo() {
+      videoWrap.classList.remove("show");
+
+      setTimeout(() => {
+        videoLayer.style.display = "none";
+      }, 220);
+    }
+
+    async function playExperience() {
       if (playing) return;
 
-      activeIndex = index;
       playing = true;
-      videoDone = false;
-      audioDone = false;
 
-      hideHint();
-      hideAllPlanes();
-      showOnlyPlane(index);
-      initSmoothing(index);
+      playerVideo.pause();
+      playerAudio.pause();
+
+      playerVideo.currentTime = 0;
+      playerAudio.currentTime = 0;
+
+      playerVideo.muted = true;
+      playerAudio.volume = 1;
+
+      showVideo();
 
       try {
-        video.pause();
-        audio.pause();
-
-        video.currentTime = 0;
-        audio.currentTime = 0;
-
-        video.muted = true;
-        audio.volume = 1;
-
         await Promise.all([
-          video.play(),
-          audio.play()
+          playerVideo.play(),
+          playerAudio.play()
         ]);
       } catch (e) {
-        console.warn("Errore avvio media:", e);
+        console.log("play error", e);
 
         document.body.addEventListener("click", async () => {
-          video.currentTime = 0;
-          audio.currentTime = 0;
-          video.muted = true;
-          audio.volume = 1;
+          try {
+            playerVideo.currentTime = 0;
+            playerAudio.currentTime = 0;
 
-          await Promise.all([
-            video.play(),
-            audio.play()
-          ]);
+            await Promise.all([
+              playerVideo.play(),
+              playerAudio.play()
+            ]);
+          } catch (err) {
+            console.log("play after tap error", err);
+          }
         }, { once: true });
       }
     }
 
-    function finishIfReady() {
-      if (!videoDone || !audioDone) return;
-
+    function resetExperience() {
       playing = false;
-      activeIndex = null;
 
-      video.pause();
-      audio.pause();
+      playerVideo.pause();
+      playerAudio.pause();
 
-      video.currentTime = 0;
-      audio.currentTime = 0;
+      playerVideo.currentTime = 0;
+      playerAudio.currentTime = 0;
 
-      hideAllPlanes();
-      showHint();
+      hideVideo();
+      hint.style.display = "block";
     }
 
-    startButton.addEventListener("click", async () => {
-      startButton.disabled = true;
-      startButton.textContent = "Avvio...";
+    startBtn.onclick = async () => {
+      startBtn.disabled = true;
+      startBtn.textContent = "Avvio...";
 
       await unlockMedia();
 
       const startAR = async () => {
-        const mindarSystem = sceneEl.systems["mindar-image-system"];
-
-        if (!mindarSystem) {
-          startButton.disabled = false;
-          startButton.textContent = "Riprova";
-          return;
-        }
-
-        try {
-          await mindarSystem.start();
-          startScreen.style.display = "none";
-          hideAllPlanes();
-          showHint();
-        } catch (err) {
-          console.error(err);
-          startButton.disabled = false;
-          startButton.textContent = "Riprova";
-        }
+        await scene.systems["mindar-image-system"].start();
+        ui.style.display = "none";
+        hint.style.display = "block";
       };
 
-      if (sceneEl.hasLoaded) {
+      if (scene.hasLoaded) {
         startAR();
       } else {
-        sceneEl.addEventListener("loaded", startAR, { once: true });
+        scene.addEventListener("loaded", startAR, { once: true });
       }
+    };
+
+    t0.addEventListener("targetFound", playExperience);
+    t1.addEventListener("targetFound", playExperience);
+    t2.addEventListener("targetFound", playExperience);
+
+    playerVideo.addEventListener("ended", () => {
+      resetExperience();
     });
 
-    targets.forEach((target, index) => {
-      target.addEventListener("targetFound", () => {
-        startExperience(index);
-      });
-
-      target.addEventListener("targetLost", () => {
-        if (playing) return;
-        hideAllPlanes();
-        showHint();
-      });
+    playerAudio.addEventListener("ended", () => {
+      playerAudio.pause();
     });
-
-    video.addEventListener("ended", () => {
-      videoDone = true;
-      finishIfReady();
-    });
-
-    audio.addEventListener("ended", () => {
-      audioDone = true;
-      finishIfReady();
-    });
-
-    sceneEl.addEventListener("renderstart", () => {
-      const renderer = sceneEl.renderer;
-
-      renderer.setAnimationLoop(() => {
-        renderer.render(sceneEl.object3D, sceneEl.camera);
-
-        if (activeIndex === null || !playing) return;
-
-        const index = activeIndex;
-        const targetObj = targets[index].object3D;
-        const smoothObj = smooths[index].object3D;
-        const data = smoothed[index];
-
-        if (!data.ready) return;
-
-        data.position.lerp(targetObj.position, 0.045);
-        data.quaternion.slerp(targetObj.quaternion, 0.035);
-        data.scale.lerp(targetObj.scale, 0.045);
-
-        smoothObj.position.copy(data.position);
-        smoothObj.quaternion.copy(data.quaternion);
-        smoothObj.scale.copy(data.scale);
-      });
-    });
-
-    setInterval(() => {
-      if (!playing && startScreen.style.display === "none") {
-        showHint();
-      }
-    }, 1000);
   </script>
+
 </body>
 </html>
