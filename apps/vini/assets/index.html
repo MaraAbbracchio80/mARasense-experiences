@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Esperienza AR Vino</title>
+
+  <!-- AFRAME + MINDAR -->
+  <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+
+  <style>
+    :root{
+      --verde-scuro:#163d2a;
+      --verde:#5f8f70;
+      --oro:#d8a94a;
+      --oro-chiaro:#f0d58a;
+    }
+
+    html,body{
+      margin:0;
+      padding:0;
+      width:100vw;
+      height:100vh;
+      overflow:hidden;
+      background:#000;
+      font-family:Arial,sans-serif;
+    }
+
+    #startScreen{
+      position:fixed;
+      inset:0;
+      background:
+        radial-gradient(circle at center, rgba(240,213,138,.28) 0%, rgba(240,213,138,0) 46%),
+        linear-gradient(180deg,var(--verde) 0%,var(--verde-scuro) 100%);
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      z-index:10000;
+      color:#fff;
+      text-align:center;
+      padding:24px;
+    }
+
+    #startScreen h1{
+      margin:0 0 14px 0;
+      font-size:28px;
+      color:var(--oro-chiaro);
+    }
+
+    #startScreen p{
+      margin:0 0 24px 0;
+      max-width:340px;
+      line-height:1.5;
+      font-size:15px;
+      color:rgba(255,255,255,.92);
+    }
+
+    #startButton{
+      background:linear-gradient(180deg,var(--oro-chiaro),var(--oro));
+      color:#17351f;
+      border:none;
+      border-radius:999px;
+      padding:14px 24px;
+      font-size:16px;
+      font-weight:900;
+      cursor:pointer;
+      box-shadow:0 0 24px rgba(216,169,74,.35);
+    }
+
+    #startButton:active{
+      transform:scale(.98);
+    }
+
+    a-scene{
+      position:fixed !important;
+      inset:0 !important;
+      width:100vw !important;
+      height:100vh !important;
+      overflow:hidden !important;
+      z-index:10;
+      background:transparent !important;
+    }
+
+    video,
+    canvas,
+    .a-canvas{
+      position:fixed !important;
+      inset:0 !important;
+      width:100vw !important;
+      height:100vh !important;
+      min-width:100vw !important;
+      min-height:100vh !important;
+      object-fit:cover !important;
+      background:transparent !important;
+    }
+
+    video{
+      z-index:1 !important;
+      transform:scale(1.01);
+      transform-origin:center center;
+    }
+
+    canvas,
+    .a-canvas{
+      z-index:2 !important;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- SCHERMATA INIZIALE -->
+  <div id="startScreen">
+    <h1>Esperienza AR Vino</h1>
+
+    <p>
+      Premi il pulsante poi inquadra
+      l'etichetta della bottiglia.
+    </p>
+
+    <button id="startButton">
+      Avvia esperienza
+    </button>
+  </div>
+
+  <!-- SCENA AR -->
+  <a-scene
+    id="arScene"
+    vr-mode-ui="enabled: false"
+    device-orientation-permission-ui="enabled: false"
+    loading-screen="enabled: false"
+    renderer="colorManagement: true; physicallyCorrectLights: true; alpha: true"
+    color-space="sRGB"
+    mindar-image="
+      imageTargetSrc: ./vini/targets.mind;
+      uiLoading: no;
+      uiScanning: no;
+      uiError: no;
+      autoStart: false;
+      maxTrack: 1;
+    "
+  >
+
+    <!-- ASSETS -->
+    <a-assets>
+
+      <!-- VIDEO -->
+      <video
+        id="vinoVideo"
+        src="./assets/videos/vino.mp4"
+        preload="auto"
+        playsinline
+        webkit-playsinline
+        crossorigin="anonymous"
+        muted
+      ></video>
+
+      <!-- AUDIO -->
+      <audio
+        id="vinoAudio"
+        src="./assets/audio/vino.mp3"
+        preload="auto"
+        crossorigin="anonymous"
+      ></audio>
+
+    </a-assets>
+
+    <!-- CAMERA -->
+    <a-camera
+      position="0 0 0"
+      look-controls="enabled: false"
+    ></a-camera>
+
+    <!-- TARGET 0 -->
+    <a-entity
+      id="target0"
+      mindar-image-target="targetIndex: 0"
+    >
+      <a-plane
+        id="videoPlane0"
+        src="#vinoVideo"
+        position="0 0 0"
+        width="1.20"
+        height="1.75"
+        material="shader: flat; transparent: true; opacity: 1"
+        visible="false"
+      ></a-plane>
+    </a-entity>
+
+    <!-- TARGET 1 -->
+    <a-entity
+      id="target1"
+      mindar-image-target="targetIndex: 1"
+    >
+      <a-plane
+        id="videoPlane1"
+        src="#vinoVideo"
+        position="0 0 0"
+        width="1.20"
+        height="1.75"
+        material="shader: flat; transparent: true; opacity: 1"
+        visible="false"
+      ></a-plane>
+    </a-entity>
+
+    <!-- TARGET 2 -->
+    <a-entity
+      id="target2"
+      mindar-image-target="targetIndex: 2"
+    >
+      <a-plane
+        id="videoPlane2"
+        src="#vinoVideo"
+        position="0 0 0"
+        width="1.20"
+        height="1.75"
+        material="shader: flat; transparent: true; opacity: 1"
+        visible="false"
+      ></a-plane>
+    </a-entity>
+
+    <!-- TARGET 3 -->
+    <a-entity
+      id="target3"
+      mindar-image-target="targetIndex: 3"
+    >
+      <a-plane
+        id="videoPlane3"
+        src="#vinoVideo"
+        position="0 0 0"
+        width="1.20"
+        height="1.75"
+        material="shader: flat; transparent: true; opacity: 1"
+        visible="false"
+      ></a-plane>
+    </a-entity>
+
+  </a-scene>
+
+  <script>
+    const startScreen = document.getElementById("startScreen");
+    const startButton = document.getElementById("startButton");
+
+    const sceneEl = document.getElementById("arScene");
+
+    const video = document.getElementById("vinoVideo");
+    const audio = document.getElementById("vinoAudio");
+
+    const targets = [
+      document.getElementById("target0"),
+      document.getElementById("target1"),
+      document.getElementById("target2"),
+      document.getElementById("target3")
+    ];
+
+    const planes = [
+      document.getElementById("videoPlane0"),
+      document.getElementById("videoPlane1"),
+      document.getElementById("videoPlane2"),
+      document.getElementById("videoPlane3")
+    ];
+
+    let experienceStarted = false;
+
+    function showPlanes() {
+      planes.forEach((plane) => {
+        plane.setAttribute("visible", true);
+        plane.object3D.visible = true;
+      });
+    }
+
+    function hidePlanes() {
+      planes.forEach((plane) => {
+        plane.setAttribute("visible", false);
+        plane.object3D.visible = false;
+      });
+    }
+
+    async function unlockMedia() {
+
+      try {
+        video.muted = true;
+        video.currentTime = 0;
+
+        await video.play();
+
+        video.pause();
+        video.currentTime = 0;
+
+      } catch(e) {
+        console.warn(e);
+      }
+
+      try {
+
+        audio.currentTime = 0;
+
+        await audio.play();
+
+        audio.pause();
+        audio.currentTime = 0;
+
+      } catch(e) {
+        console.warn(e);
+      }
+    }
+
+    async function playExperience() {
+
+      if (experienceStarted) return;
+
+      experienceStarted = true;
+
+      try {
+
+        video.pause();
+        audio.pause();
+
+        video.currentTime = 0;
+        audio.currentTime = 0;
+
+        showPlanes();
+
+        const playVideo = video.play();
+        const playAudio = audio.play();
+
+        await Promise.allSettled([
+          playVideo,
+          playAudio
+        ]);
+
+      } catch(e) {
+
+        console.error(e);
+
+      }
+    }
+
+    startButton.addEventListener("click", async () => {
+
+      startButton.disabled = true;
+      startButton.textContent = "Avvio...";
+
+      await unlockMedia();
+
+      const startAR = async () => {
+
+        const mindarSystem =
+          sceneEl.systems["mindar-image-system"];
+
+        if (!mindarSystem) {
+
+          startButton.disabled = false;
+          startButton.textContent = "Riprova";
+
+          return;
+        }
+
+        try {
+
+          await mindarSystem.start();
+
+          startScreen.style.display = "none";
+
+          hidePlanes();
+
+        } catch(err) {
+
+          console.error(err);
+
+          startButton.disabled = false;
+          startButton.textContent = "Riprova";
+        }
+      };
+
+      if (sceneEl.hasLoaded) {
+
+        startAR();
+
+      } else {
+
+        sceneEl.addEventListener(
+          "loaded",
+          startAR,
+          { once:true }
+        );
+      }
+    });
+
+    // TUTTI I TARGET FANNO PARTIRE
+    // LO STESSO VIDEO + AUDIO
+    targets.forEach((target) => {
+
+      target.addEventListener(
+        "targetFound",
+        async () => {
+
+          await playExperience();
+
+        }
+      );
+
+    });
+
+    // NON FERMARE SE PERDE IL TARGET
+    // così continua fino alla fine
+
+    video.addEventListener("ended", async () => {
+
+      video.pause();
+      audio.pause();
+
+      video.currentTime = 0;
+      audio.currentTime = 0;
+
+      hidePlanes();
+
+      experienceStarted = false;
+
+      try {
+
+        await sceneEl
+          .systems["mindar-image-system"]
+          .stop();
+
+      } catch(e) {}
+
+    });
+
+  </script>
+
+</body>
+</html>
