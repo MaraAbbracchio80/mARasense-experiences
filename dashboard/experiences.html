@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>MaraSense - Esperienze</title>
+
+  <link rel="icon" href="https://ndaprove.newdigitalapp.it/docs/MARASENSELOGO.png" />
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at top left, rgba(138, 43, 226, 0.08), transparent 35%),
+        radial-gradient(circle at bottom right, rgba(0, 234, 255, 0.06), transparent 35%),
+        #f5f7fb;
+      color: #111;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .page {
+      width: 100%;
+      max-width: 1300px;
+      margin: 0 auto;
+      padding: 28px 18px 50px;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 24px;
+      padding: 22px;
+      background: rgba(255, 255, 255, 0.96);
+      border: 1px solid rgba(138, 43, 226, 0.18);
+      border-radius: 24px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .header img {
+      width: 74px;
+      height: 74px;
+      object-fit: contain;
+      animation: rotateLogo 8s linear infinite;
+    }
+
+    @keyframes rotateLogo {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 30px;
+      color: #111;
+    }
+
+    .header p {
+      margin: 8px 0 0;
+      color: #666;
+      font-size: 15px;
+      line-height: 1.5;
+    }
+
+    .top-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: flex-end;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.96);
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
+      margin-bottom: 22px;
+    }
+
+    .filters {
+      display: grid;
+      grid-template-columns: 1.2fr 0.7fr 0.7fr 0.7fr;
+      gap: 14px;
+      align-items: end;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 14px;
+      color: #444;
+      font-weight: 600;
+    }
+
+    input,
+    select {
+      width: 100%;
+      border: 1px solid #d8dde7;
+      border-radius: 14px;
+      padding: 13px 14px;
+      background: #ffffff;
+      color: #111;
+      font-size: 15px;
+      outline: none;
+      transition: 0.2s;
+    }
+
+    input:focus,
+    select:focus {
+      border-color: #8a2be2;
+      box-shadow: 0 0 0 4px rgba(138, 43, 226, 0.12);
+    }
+
+    button,
+    .button-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      border-radius: 15px;
+      padding: 13px 18px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: bold;
+      color: white;
+      text-decoration: none;
+      background: linear-gradient(135deg, #8a2be2, #00bcd4);
+      box-shadow: 0 8px 24px rgba(138, 43, 226, 0.22);
+      transition: 0.2s;
+      white-space: nowrap;
+    }
+
+    button:hover,
+    .button-link:hover {
+      transform: translateY(-1px);
+      opacity: 0.96;
+    }
+
+    button.secondary,
+    .button-link.secondary {
+      background: #ffffff;
+      color: #111;
+      border: 1px solid #d7dde7;
+      box-shadow: none;
+    }
+
+    button.danger {
+      background: #ffffff;
+      color: #b91c1c;
+      border: 1px solid #fecaca;
+      box-shadow: none;
+    }
+
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+    }
+
+    .summary-box {
+      background: #f7f9fc;
+      border: 1px solid #e7ebf3;
+      border-radius: 18px;
+      padding: 16px;
+    }
+
+    .summary-number {
+      font-size: 28px;
+      font-weight: 800;
+      color: #111;
+    }
+
+    .summary-label {
+      margin-top: 6px;
+      font-size: 13px;
+      color: #666;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 980px;
+    }
+
+    th,
+    td {
+      text-align: left;
+      padding: 14px 12px;
+      border-bottom: 1px solid #edf0f5;
+      vertical-align: top;
+      font-size: 14px;
+    }
+
+    th {
+      color: #555;
+      font-size: 13px;
+      background: #f7f9fc;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+
+    tr:hover td {
+      background: #fbfcff;
+    }
+
+    .name {
+      font-weight: 800;
+      color: #111;
+    }
+
+    .small {
+      display: block;
+      margin-top: 4px;
+      color: #666;
+      font-size: 12px;
+      line-height: 1.4;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 6px 9px;
+      border-radius: 999px;
+      background: rgba(138, 43, 226, 0.08);
+      color: #5b21b6;
+      border: 1px solid rgba(138, 43, 226, 0.12);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .badge.cyan {
+      background: rgba(0, 188, 212, 0.08);
+      color: #007f8f;
+      border-color: rgba(0, 188, 212, 0.16);
+    }
+
+    .row-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .row-actions a,
+    .row-actions button {
+      padding: 9px 11px;
+      border-radius: 12px;
+      font-size: 12px;
+    }
+
+    .empty {
+      padding: 36px 18px;
+      text-align: center;
+      color: #666;
+      line-height: 1.6;
+    }
+
+    .status {
+      margin-top: 14px;
+      color: #00a6bc;
+      font-size: 14px;
+      min-height: 20px;
+    }
+
+    .note {
+      margin-top: 14px;
+      color: #666;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 950px) {
+      .header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .top-actions {
+        justify-content: flex-start;
+      }
+
+      .filters {
+        grid-template-columns: 1fr;
+      }
+
+      .summary {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .header h1 {
+        font-size: 25px;
+      }
+    }
+
+    @media (max-width: 540px) {
+      .summary {
+        grid-template-columns: 1fr;
+      }
+
+      .header-left {
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="page">
+
+    <section class="header">
+      <div class="header-left">
+        <img src="https://ndaprove.newdigitalapp.it/docs/MARASENSELOGO.png" alt="MaraSense Logo" />
+
+        <div>
+          <h1>Esperienze MaraSense</h1>
+          <p>
+            Elenco delle esperienze generate dal gestionale.
+            La cartella apps resta separata e non viene modificata.
+          </p>
+        </div>
+      </div>
+
+      <div class="top-actions">
+        <a class="button-link secondary" href="./index.html">+ Nuova esperienza</a>
+        <button onclick="loadExperiences()">Aggiorna elenco</button>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="filters">
+        <div>
+          <label for="searchInput">Cerca</label>
+          <input id="searchInput" type="text" placeholder="Cerca per nome, settore, contenuto..." />
+        </div>
+
+        <div>
+          <label for="sectorFilter">Settore</label>
+          <select id="sectorFilter">
+            <option value="">Tutti</option>
+            <option value="food">Food</option>
+            <option value="painting">Painting</option>
+            <option value="sport">Sport</option>
+            <option value="eventi">Eventi</option>
+            <option value="matrimoni">Matrimoni</option>
+            <option value="museo">Museo</option>
+            <option value="retail">Retail</option>
+            <option value="custom">Custom</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="typeFilter">Tipo</label>
+          <select id="typeFilter">
+            <option value="">Tutti</option>
+            <option value="ar-video">AR target + video</option>
+            <option value="ar-audio">AR target + audio</option>
+            <option value="ar-video-audio">AR video + audio</option>
+            <option value="multi-target">Multi-target</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="sortFilter">Ordine</label>
+          <select id="sortFilter">
+            <option value="newest">Più recenti</option>
+            <option value="oldest">Meno recenti</option>
+            <option value="name">Nome A-Z</option>
+            <option value="sector">Settore A-Z</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="status" id="status"></div>
+    </section>
+
+    <section class="card">
+      <div class="summary">
+        <div class="summary-box">
+          <div class="summary-number" id="totalCount">0</div>
+          <div class="summary-label">Esperienze totali</div>
+        </div>
+
+        <div class="summary-box">
+          <div class="summary-number" id="visibleCount">0</div>
+          <div class="summary-label">Visibili con i filtri</div>
+        </div>
+
+        <div class="summary-box">
+          <div class="summary-number" id="targetCount">0</div>
+          <div class="summary-label">Immagini target registrate</div>
+        </div>
+
+        <div class="summary-box">
+          <div class="summary-number" id="contentCount">0</div>
+          <div class="summary-label">Contenuti registrati</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Esperienza</th>
+              <th>Settore</th>
+              <th>Tipo</th>
+              <th>Creata</th>
+              <th>Aggiornata</th>
+              <th>Target</th>
+              <th>Contenuti</th>
+              <th>Azioni</th>
+            </tr>
+          </thead>
+
+          <tbody id="experiencesBody">
+            <tr>
+              <td colspan="8" class="empty">
+                Caricamento elenco esperienze...
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="note">
+        Questa pagina legge il file <strong>managed-experiences/index.json</strong>.
+        Quando collegheremo la Firebase Function a GitHub, questo elenco verrà aggiornato automaticamente.
+      </p>
+    </section>
+
+  </main>
+
+  <script>
+    const INDEX_URL = "../managed-experiences/index.json";
+
+    let allExperiences = [];
+
+    function formatDate(value) {
+      if (!value) return "-";
+
+      try {
+        const date = new Date(value);
+
+        if (Number.isNaN(date.getTime())) {
+          return "-";
+        }
+
+        return date.toLocaleString("it-IT", {
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+          hour: "2-digit",
+          minute: "2-digit"
+        });
+      } catch (error) {
+        return "-";
+      }
+    }
+
+    function safeText(value) {
+      if (value === null || value === undefined) {
+        return "";
+      }
+
+      return String(value);
+    }
+
+    function getExperienceSearchText(item) {
+      return [
+        item.name,
+        item.title,
+        item.sector,
+        item.type,
+        item.slug,
+        item.folder,
+        item.publicUrl,
+        Array.isArray(item.targetImages)
+          ? item.targetImages.map((target) => `${target.label || ""} ${target.file || ""}`).join(" ")
+          : "",
+        Array.isArray(item.contents)
+          ? item.contents.map((content) => `${content.label || ""} ${content.file || ""}`).join(" ")
+          : ""
+      ].join(" ").toLowerCase();
+    }
+
+    function countTargets(item) {
+      if (Array.isArray(item.targetImages)) {
+        return item.targetImages.length;
+      }
+
+      if (Array.isArray(item.targets)) {
+        return item.targets.length;
+      }
+
+      return 0;
+    }
+
+    function countContents(item) {
+      if (Array.isArray(item.contents)) {
+        return item.contents.length;
+      }
+
+      if (Array.isArray(item.targets)) {
+        return item.targets.length;
+      }
+
+      return item.contentFile ? 1 : 0;
+    }
+
+    function getPublicUrl(item) {
+      if (item.publicUrl) return item.publicUrl;
+      if (item.meta && item.meta.publicUrl) return item.meta.publicUrl;
+
+      const folder = item.folder || (item.meta && item.meta.generatedFolder);
+
+      if (folder) {
+        return "https://marasenseexperiences-ar.web.app/" + folder;
+      }
+
+      return "#";
+    }
+
+    function getEditUrl(item) {
+      const folder = item.folder || (item.meta && item.meta.generatedFolder) || "";
+      const id = item.id || folder.replace(/^managed-experiences\//, "").replace(/\/$/, "");
+
+      return "./edit.html?id=" + encodeURIComponent(id);
+    }
+
+    function normalizeExperience(item) {
+      const meta = item.meta || {};
+
+      return {
+        id: item.id || meta.id || `${item.sector || meta.sector || "custom"}/${item.slug || meta.slug || ""}`,
+        name: item.name || item.title || meta.title || "Senza nome",
+        title: item.title || item.name || meta.title || "Senza nome",
+        sector: item.sector || meta.sector || "custom",
+        type: item.type || meta.type || "-",
+        slug: item.slug || meta.slug || "",
+        createdAt: item.createdAt || meta.createdAt || "",
+        updatedAt: item.updatedAt || meta.updatedAt || item.createdAt || meta.createdAt || "",
+        folder: item.folder || meta.generatedFolder || "",
+        publicUrl: item.publicUrl || meta.publicUrl || "",
+        targetImages: Array.isArray(item.targetImages) ? item.targetImages : [],
+        contents: Array.isArray(item.contents) ? item.contents : [],
+        targets: Array.isArray(item.targets) ? item.targets : [],
+        raw: item
+      };
+    }
+
+    async function loadExperiences() {
+      const status = document.getElementById("status");
+      const body = document.getElementById("experiencesBody");
+
+      status.textContent = "Caricamento elenco...";
+      body.innerHTML = `
+        <tr>
+          <td colspan="8" class="empty">
+            Caricamento elenco esperienze...
+          </td>
+        </tr>
+      `;
+
+      try {
+        const response = await fetch(INDEX_URL, {
+          cache: "no-store"
+        });
+
+        if (!response.ok) {
+          throw new Error("File index.json non trovato o non leggibile.");
+        }
+
+        const data = await response.json();
+
+        if (!Array.isArray(data)) {
+          throw new Error("Il file index.json deve contenere un array.");
+        }
+
+        allExperiences = data.map(normalizeExperience);
+
+        status.textContent = "Elenco caricato.";
+        renderExperiences();
+      } catch (error) {
+        console.error(error);
+
+        allExperiences = [];
+        renderExperiences();
+
+        status.textContent =
+          "Non riesco a leggere managed-experiences/index.json. Verifica che esista e contenga [].";
+      }
+    }
+
+    function getFilteredExperiences() {
+      const search = document.getElementById("searchInput").value.trim().toLowerCase();
+      const sector = document.getElementById("sectorFilter").value;
+      const type = document.getElementById("typeFilter").value;
+      const sort = document.getElementById("sortFilter").value;
+
+      let items = [...allExperiences];
+
+      if (search) {
+        items = items.filter((item) =>
+          getExperienceSearchText(item).includes(search)
+        );
+      }
+
+      if (sector) {
+        items = items.filter((item) => item.sector === sector);
+      }
+
+      if (type) {
+        items = items.filter((item) => item.type === type);
+      }
+
+      items.sort((a, b) => {
+        if (sort === "oldest") {
+          return new Date(a.createdAt || 0) - new Date(b.createdAt || 0);
+        }
+
+        if (sort === "name") {
+          return safeText(a.name).localeCompare(safeText(b.name));
+        }
+
+        if (sort === "sector") {
+          return safeText(a.sector).localeCompare(safeText(b.sector));
+        }
+
+        return new Date(b.createdAt || 0) - new Date(a.createdAt || 0);
+      });
+
+      return items;
+    }
+
+    function renderExperiences() {
+      const body = document.getElementById("experiencesBody");
+      const filtered = getFilteredExperiences();
+
+      document.getElementById("totalCount").textContent = allExperiences.length;
+      document.getElementById("visibleCount").textContent = filtered.length;
+
+      document.getElementById("targetCount").textContent =
+        allExperiences.reduce((sum, item) => sum + countTargets(item), 0);
+
+      document.getElementById("contentCount").textContent =
+        allExperiences.reduce((sum, item) => sum + countContents(item), 0);
+
+      if (filtered.length === 0) {
+        body.innerHTML = `
+          <tr>
+            <td colspan="8" class="empty">
+              Nessuna esperienza trovata.
+              <br>
+              Se hai appena creato il file index.json con [], è normale.
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      body.innerHTML = filtered.map((item) => {
+        const publicUrl = getPublicUrl(item);
+        const editUrl = getEditUrl(item);
+
+        const targetCountValue = countTargets(item);
+        const contentCountValue = countContents(item);
+
+        const contentsPreview = Array.isArray(item.contents)
+          ? item.contents.slice(0, 3).map((content) => content.label || content.file || "contenuto").join(", ")
+          : "";
+
+        const targetsPreview = Array.isArray(item.targetImages)
+          ? item.targetImages.slice(0, 3).map((target) => target.label || target.file || "target").join(", ")
+          : "";
+
+        return `
+          <tr>
+            <td>
+              <span class="name">${safeText(item.name)}</span>
+              <span class="small">${safeText(item.folder || item.id)}</span>
+            </td>
+
+            <td>
+              <span class="badge">${safeText(item.sector)}</span>
+            </td>
+
+            <td>
+              <span class="badge cyan">${safeText(item.type)}</span>
+            </td>
+
+            <td>${formatDate(item.createdAt)}</td>
+
+            <td>${formatDate(item.updatedAt)}</td>
+
+            <td>
+              ${targetCountValue}
+              <span class="small">${safeText(targetsPreview)}</span>
+            </td>
+
+            <td>
+              ${contentCountValue}
+              <span class="small">${safeText(contentsPreview)}</span>
+            </td>
+
+            <td>
+              <div class="row-actions">
+                <a class="button-link secondary" href="${publicUrl}" target="_blank">Apri</a>
+                <a class="button-link secondary" href="${editUrl}">Modifica</a>
+                <button class="secondary" onclick="copyText('${publicUrl.replace(/'/g, "\\'")}')">Copia</button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    function copyText(text) {
+      if (!text || text === "#") return;
+
+      navigator.clipboard.writeText(text)
+        .then(() => {
+          document.getElementById("status").textContent = "Link copiato.";
+        })
+        .catch(() => {
+          document.getElementById("status").textContent = "Copia manualmente il link.";
+        });
+    }
+
+    document.getElementById("searchInput").addEventListener("input", renderExperiences);
+    document.getElementById("sectorFilter").addEventListener("change", renderExperiences);
+    document.getElementById("typeFilter").addEventListener("change", renderExperiences);
+    document.getElementById("sortFilter").addEventListener("change", renderExperiences);
+
+    window.addEventListener("load", loadExperiences);
+  </script>
+</body>
+</html>
