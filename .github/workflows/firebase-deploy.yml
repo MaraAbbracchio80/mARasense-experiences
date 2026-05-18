@@ -42,6 +42,15 @@ jobs:
         run: |
           echo "GOOGLE_APPLICATION_CREDENTIALS=$HOME/gcp-key.json" >> $GITHUB_ENV
 
+      - name: Debug Firebase files
+        run: |
+          pwd
+          ls -la
+          echo "---- firebase.json ----"
+          cat firebase.json
+          echo "---- functions ----"
+          ls -la functions
+
       - name: Deploy Firebase Hosting
         run: firebase deploy --only hosting --project marasenseexperiences-ar
 
