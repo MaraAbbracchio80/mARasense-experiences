@@ -1,0 +1,30 @@
+{
+  "title": "MaraSense Experience",
+  "type": "ar-video",
+  "sector": "food",
+
+  "targetFile": "targets.mind",
+
+  "sharedImage": "shared.jpg",
+
+  "contentFile": "content.mp4",
+
+  "autoPlay": true,
+
+  "requireContentEnd": false,
+
+  "stopOnTargetLost": true,
+
+  "transparentBg": true,
+
+  "lensUi": true,
+
+  "multiTarget": false,
+
+  "targets": [
+    {
+      "id": 0,
+      "content": "content.mp4"
+    }
+  ]
+}
