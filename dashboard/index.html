@@ -26,7 +26,7 @@
 
     .page {
       width: 100%;
-      max-width: 1250px;
+      max-width: 1300px;
       margin: 0 auto;
       padding: 28px 18px 50px;
     }
@@ -40,9 +40,7 @@
       background: rgba(255, 255, 255, 0.96);
       border: 1px solid rgba(138, 43, 226, 0.18);
       border-radius: 24px;
-      box-shadow:
-        0 8px 30px rgba(0, 0, 0, 0.06),
-        0 0 20px rgba(138, 43, 226, 0.05);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
     }
 
     .header img {
@@ -160,6 +158,38 @@
       line-height: 1.4;
     }
 
+    .block {
+      margin-bottom: 18px;
+      padding: 16px;
+      border: 1px solid #e7ebf3;
+      background: #f7f9fc;
+      border-radius: 18px;
+    }
+
+    .block-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+      font-weight: 700;
+      color: #111;
+    }
+
+    .small-button {
+      padding: 9px 12px;
+      border-radius: 12px;
+      font-size: 13px;
+      box-shadow: none;
+    }
+
+    .danger {
+      background: #ffffff;
+      color: #b91c1c;
+      border: 1px solid #fecaca;
+      box-shadow: none;
+    }
+
     .actions {
       display: flex;
       flex-wrap: wrap;
@@ -233,7 +263,7 @@
     }
 
     pre {
-      max-height: 360px;
+      max-height: 420px;
       overflow: auto;
       background: #111827;
       color: #d1fae5;
@@ -243,23 +273,6 @@
       line-height: 1.55;
       white-space: pre-wrap;
       word-break: break-word;
-    }
-
-    .qr-placeholder {
-      width: 170px;
-      height: 170px;
-      margin-top: 14px;
-      border-radius: 14px;
-      border: 10px solid white;
-      background:
-        linear-gradient(45deg, #111 25%, transparent 25%),
-        linear-gradient(-45deg, #111 25%, transparent 25%),
-        linear-gradient(45deg, transparent 75%, #111 75%),
-        linear-gradient(-45deg, transparent 75%, #111 75%);
-      background-size: 28px 28px;
-      background-position: 0 0, 0 14px, 14px -14px, -14px 0;
-      background-color: #fff;
-      box-shadow: 0 6px 18px rgba(0,0,0,0.08);
     }
 
     .note {
@@ -293,20 +306,16 @@
 </head>
 
 <body>
-
   <main class="page">
 
     <section class="header">
-      <img
-        src="https://ndaprove.newdigitalapp.it/docs/MARASENSELOGO.png"
-        alt="MaraSense Logo"
-      />
+      <img src="https://ndaprove.newdigitalapp.it/docs/MARASENSELOGO.png" alt="MaraSense Logo" />
 
       <div>
         <h1>MaraSense Experience Manager</h1>
         <p>
-          Dashboard privata per creare esperienze AR automatiche
-          senza modificare la cartella apps.
+          Dashboard privata per creare esperienze AR automatiche.
+          La cartella apps resta intoccabile.
         </p>
       </div>
     </section>
@@ -333,11 +342,7 @@
 
         <div class="field">
           <label for="experienceName">Nome esperienza</label>
-          <input
-            id="experienceName"
-            type="text"
-            placeholder="Esempio: vino rosso demo"
-          />
+          <input id="experienceName" type="text" placeholder="Esempio: vino rosso demo" />
         </div>
 
         <div class="field">
@@ -356,13 +361,35 @@
         </div>
 
         <div class="field">
-          <label for="sharedImage">Carica immagine shared / anteprima</label>
+          <label>Immagini target di riferimento</label>
+          <p class="note">
+            Queste immagini servono come memoria interna per sapere quali immagini sono state usate come target.
+            Non sono l’anteprima pubblica.
+          </p>
+
+          <div id="targetImagesContainer"></div>
+
+          <button type="button" class="secondary" onclick="addTargetImageBlock()">
+            + Aggiungi immagine target
+          </button>
+        </div>
+
+        <div class="field">
+          <label for="sharedImage">Carica immagine shared / anteprima pubblica</label>
           <input id="sharedImage" type="file" accept="image/*" />
         </div>
 
         <div class="field">
-          <label for="contentFile">Carica contenuto</label>
-          <input id="contentFile" type="file" accept="video/*,audio/*,image/*" />
+          <label>Contenuti esperienza</label>
+          <p class="note">
+            Puoi aggiungere più contenuti. Per ogni contenuto scegli a quale target è collegato.
+          </p>
+
+          <div id="contentsContainer"></div>
+
+          <button type="button" class="secondary" onclick="addContentBlock()">
+            + Aggiungi contenuto
+          </button>
         </div>
 
         <div class="field">
@@ -442,8 +469,13 @@
           </div>
 
           <div class="preview-line">
-            <strong>Target:</strong>
+            <strong>Target .mind:</strong>
             <span id="pMind">-</span>
+          </div>
+
+          <div class="preview-line">
+            <strong>Immagini target:</strong>
+            <span id="pTargetImages">-</span>
           </div>
 
           <div class="preview-line">
@@ -452,14 +484,13 @@
           </div>
 
           <div class="preview-line">
-            <strong>Contenuto:</strong>
-            <span id="pContent">-</span>
+            <strong>Contenuti:</strong>
+            <span id="pContents">-</span>
           </div>
 
         </div>
 
         <div class="preview-box">
-
           <div class="preview-line">
             <strong>Cartella prevista:</strong>
           </div>
@@ -467,11 +498,9 @@
           <div class="preview-line" id="pFolder">
             managed-experiences/-/-/
           </div>
-
         </div>
 
         <div class="result" id="resultBox">
-
           <strong>Esperienza pronta per la generazione</strong>
 
           <div class="preview-line" style="margin-top:12px;">
@@ -484,13 +513,6 @@
             <button onclick="openExperience()">Apri link</button>
             <button class="secondary" onclick="copyLink()">Copia link</button>
           </div>
-
-          <div class="qr-placeholder" title="Placeholder QR"></div>
-
-          <p class="note">
-            Il QR è ancora un segnaposto. Lo genereremo automaticamente nel prossimo step backend.
-          </p>
-
         </div>
 
         <div class="config-box" id="configBox">
@@ -504,16 +526,14 @@
           </div>
 
           <p class="note">
-            Questo è il file <strong>config.json</strong> che il gestionale dovrà creare
-            dentro la cartella della nuova esperienza.
+            Questo config è già predisposto per più immagini target e più contenuti.
           </p>
 
         </div>
 
         <p class="note">
-          Questa versione prepara già tutti i dati per il backend.
-          Il prossimo step sarà collegare una Firebase Function che riceve questo pacchetto
-          e crea davvero i file nella cartella <strong>managed-experiences</strong>.
+          Prossimo step: pagina elenco esperienze e file
+          <strong>managed-experiences/index.json</strong>.
         </p>
 
       </aside>
@@ -526,6 +546,8 @@
     const BASE_URL = "https://marasenseexperiences-ar.web.app";
 
     let lastGeneratedConfig = null;
+    let targetImageCounter = 0;
+    let contentCounter = 0;
 
     function slugify(text) {
       return text
@@ -538,9 +560,7 @@
         .replace(/^-+|-+$/g, "");
     }
 
-    function getFileName(inputId) {
-      const input = document.getElementById(inputId);
-
+    function getFileNameFromInput(input) {
       if (!input.files || input.files.length === 0) {
         return "-";
       }
@@ -548,26 +568,146 @@
       return input.files[0].name;
     }
 
-    function normalizeContentName(fileName) {
+    function normalizeExtension(fileName, fallbackBaseName) {
       if (!fileName || fileName === "-") {
-        return "-";
+        return fallbackBaseName + ".jpg";
       }
 
       const lower = fileName.toLowerCase();
 
-      if (lower.endsWith(".mp4")) return "content.mp4";
-      if (lower.endsWith(".webm")) return "content.webm";
-      if (lower.endsWith(".mov")) return "content.mov";
+      if (lower.endsWith(".jpg") || lower.endsWith(".jpeg")) return fallbackBaseName + ".jpg";
+      if (lower.endsWith(".png")) return fallbackBaseName + ".png";
+      if (lower.endsWith(".webp")) return fallbackBaseName + ".webp";
+      if (lower.endsWith(".mp4")) return fallbackBaseName + ".mp4";
+      if (lower.endsWith(".webm")) return fallbackBaseName + ".webm";
+      if (lower.endsWith(".mov")) return fallbackBaseName + ".mov";
+      if (lower.endsWith(".mp3")) return fallbackBaseName + ".mp3";
+      if (lower.endsWith(".wav")) return fallbackBaseName + ".wav";
+      if (lower.endsWith(".m4a")) return fallbackBaseName + ".m4a";
 
-      if (lower.endsWith(".mp3")) return "content.mp3";
-      if (lower.endsWith(".wav")) return "content.wav";
-      if (lower.endsWith(".m4a")) return "content.m4a";
+      return fallbackBaseName;
+    }
 
-      if (lower.endsWith(".jpg") || lower.endsWith(".jpeg")) return "content.jpg";
-      if (lower.endsWith(".png")) return "content.png";
-      if (lower.endsWith(".webp")) return "content.webp";
+    function addTargetImageBlock() {
+      targetImageCounter++;
 
-      return fileName;
+      const container = document.getElementById("targetImagesContainer");
+
+      const block = document.createElement("div");
+      block.className = "block target-image-block";
+      block.dataset.targetId = String(targetImageCounter - 1);
+
+      block.innerHTML = `
+        <div class="block-title">
+          <span>Target immagine ${targetImageCounter}</span>
+          <button type="button" class="small-button danger" onclick="removeBlock(this)">
+            Rimuovi
+          </button>
+        </div>
+
+        <div class="field">
+          <label>Nome target / descrizione</label>
+          <input class="target-label" type="text" placeholder="Esempio: etichetta frontale" />
+        </div>
+
+        <div class="field">
+          <label>Immagine target</label>
+          <input class="target-file" type="file" accept="image/*" />
+        </div>
+      `;
+
+      container.appendChild(block);
+      refreshTargetOptions();
+    }
+
+    function addContentBlock() {
+      contentCounter++;
+
+      const container = document.getElementById("contentsContainer");
+
+      const block = document.createElement("div");
+      block.className = "block content-block";
+      block.dataset.contentId = String(contentCounter - 1);
+
+      block.innerHTML = `
+        <div class="block-title">
+          <span>Contenuto ${contentCounter}</span>
+          <button type="button" class="small-button danger" onclick="removeBlock(this)">
+            Rimuovi
+          </button>
+        </div>
+
+        <div class="field">
+          <label>Nome contenuto / descrizione</label>
+          <input class="content-label" type="text" placeholder="Esempio: video introduzione" />
+        </div>
+
+        <div class="field">
+          <label>File contenuto</label>
+          <input class="content-file" type="file" accept="video/*,audio/*,image/*" />
+        </div>
+
+        <div class="field">
+          <label>Target collegato</label>
+          <select class="linked-target"></select>
+        </div>
+      `;
+
+      container.appendChild(block);
+      refreshTargetOptions();
+    }
+
+    function removeBlock(button) {
+      const block = button.closest(".block");
+
+      if (block) {
+        block.remove();
+      }
+
+      refreshTargetOptions();
+    }
+
+    function refreshTargetOptions() {
+      const targetBlocks = Array.from(document.querySelectorAll(".target-image-block"));
+
+      const targetOptions = targetBlocks.map((block, index) => {
+        const labelInput = block.querySelector(".target-label");
+        const label = labelInput && labelInput.value.trim()
+          ? labelInput.value.trim()
+          : `Target ${index + 1}`;
+
+        return {
+          id: index,
+          label
+        };
+      });
+
+      const selects = document.querySelectorAll(".linked-target");
+
+      selects.forEach((select) => {
+        const currentValue = select.value;
+
+        select.innerHTML = "";
+
+        if (targetOptions.length === 0) {
+          const option = document.createElement("option");
+          option.value = "0";
+          option.textContent = "Target 1";
+          select.appendChild(option);
+          return;
+        }
+
+        targetOptions.forEach((target) => {
+          const option = document.createElement("option");
+          option.value = String(target.id);
+          option.textContent = target.label;
+          select.appendChild(option);
+        });
+
+        if (currentValue) {
+          select.value = currentValue;
+        }
+      });
     }
 
     function normalizeSharedName(fileName) {
@@ -584,7 +724,49 @@
       return "shared.jpg";
     }
 
+    function getTargetImages() {
+      const blocks = Array.from(document.querySelectorAll(".target-image-block"));
+
+      return blocks.map((block, index) => {
+        const label = block.querySelector(".target-label").value.trim() || `Target ${index + 1}`;
+        const fileInput = block.querySelector(".target-file");
+        const originalFile = getFileNameFromInput(fileInput);
+
+        return {
+          id: index,
+          label,
+          originalFile,
+          file: originalFile === "-"
+            ? "-"
+            : normalizeExtension(originalFile, `target-${index + 1}`)
+        };
+      });
+    }
+
+    function getContents() {
+      const blocks = Array.from(document.querySelectorAll(".content-block"));
+
+      return blocks.map((block, index) => {
+        const label = block.querySelector(".content-label").value.trim() || `Contenuto ${index + 1}`;
+        const fileInput = block.querySelector(".content-file");
+        const linkedTarget = parseInt(block.querySelector(".linked-target").value || "0", 10);
+        const originalFile = getFileNameFromInput(fileInput);
+
+        return {
+          id: index,
+          label,
+          targetId: linkedTarget,
+          originalFile,
+          file: originalFile === "-"
+            ? "-"
+            : normalizeExtension(originalFile, `content-${index + 1}`)
+        };
+      });
+    }
+
     function getExperienceData() {
+      refreshTargetOptions();
+
       const sector = document.getElementById("sector").value;
 
       const name = document
@@ -596,13 +778,14 @@
 
       const slug = slugify(name);
 
-      const originalMindFile = getFileName("mindFile");
-      const originalSharedImage = getFileName("sharedImage");
-      const originalContentFile = getFileName("contentFile");
+      const mindInput = document.getElementById("mindFile");
+      const originalMindFile = getFileNameFromInput(mindInput);
 
-      const targetFile = originalMindFile === "-" ? "-" : "targets.mind";
-      const sharedImage = normalizeSharedName(originalSharedImage);
-      const contentFile = normalizeContentName(originalContentFile);
+      const sharedInput = document.getElementById("sharedImage");
+      const originalSharedImage = getFileNameFromInput(sharedInput);
+
+      const targetImages = getTargetImages();
+      const contents = getContents();
 
       return {
         sector,
@@ -611,12 +794,13 @@
         slug,
 
         originalMindFile,
-        originalSharedImage,
-        originalContentFile,
+        targetFile: originalMindFile === "-" ? "-" : "targets.mind",
 
-        targetFile,
-        sharedImage,
-        contentFile,
+        originalSharedImage,
+        sharedImage: normalizeSharedName(originalSharedImage),
+
+        targetImages,
+        contents,
 
         notes: document.getElementById("notes").value.trim(),
 
@@ -631,6 +815,11 @@
     }
 
     function buildConfig(data) {
+      const firstContent = data.contents[0] || {
+        file: "content-1.mp4",
+        targetId: 0
+      };
+
       return {
         title: data.name,
         type: data.type,
@@ -638,7 +827,7 @@
 
         targetFile: data.targetFile,
         sharedImage: data.sharedImage,
-        contentFile: data.contentFile,
+        contentFile: firstContent.file,
 
         autoPlay: data.options.autoPlay,
         requireContentEnd: data.options.requireContentEnd,
@@ -646,49 +835,61 @@
         transparentBg: data.options.transparentBg,
         lensUi: data.options.lensUi,
 
-        multiTarget: data.type === "multi-target",
+        multiTarget: data.type === "multi-target" || data.contents.length > 1 || data.targetImages.length > 1,
 
-        targets: [
-          {
-            id: 0,
-            content: data.contentFile
-          }
-        ],
+        targetImages: data.targetImages.map((target) => ({
+          id: target.id,
+          label: target.label,
+          file: target.file,
+          originalFile: target.originalFile
+        })),
+
+        contents: data.contents.map((content) => ({
+          id: content.id,
+          label: content.label,
+          targetId: content.targetId,
+          file: content.file,
+          originalFile: content.originalFile
+        })),
+
+        targets: data.contents.map((content) => ({
+          id: content.targetId,
+          content: content.file,
+          label: content.label
+        })),
 
         meta: {
           slug: data.slug,
           notes: data.notes,
-          originalFiles: {
-            mind: data.originalMindFile,
-            sharedImage: data.originalSharedImage,
-            content: data.originalContentFile
-          },
-          generatedFolder: `managed-experiences/${data.sector}/${data.slug}/`
+          generatedFolder: `managed-experiences/${data.sector}/${data.slug}/`,
+          createdAt: new Date().toISOString()
         }
       };
+    }
+
+    function validateData(data) {
+      if (!data.name) return "Inserisci il nome esperienza.";
+      if (!data.slug) return "Nome esperienza non valido.";
+      if (data.originalMindFile === "-") return "Carica il file .mind.";
+      if (data.contents.length === 0) return "Aggiungi almeno un contenuto.";
+
+      const emptyContent = data.contents.find((content) => content.originalFile === "-");
+
+      if (emptyContent) {
+        return "Ogni contenuto aggiunto deve avere un file.";
+      }
+
+      return "";
     }
 
     function generatePreview() {
       const data = getExperienceData();
       const status = document.getElementById("status");
 
-      if (!data.name) {
-        status.textContent = "Inserisci il nome esperienza.";
-        return;
-      }
+      const error = validateData(data);
 
-      if (!data.slug) {
-        status.textContent = "Nome esperienza non valido.";
-        return;
-      }
-
-      if (data.originalMindFile === "-") {
-        status.textContent = "Carica il file .mind.";
-        return;
-      }
-
-      if (data.originalContentFile === "-") {
-        status.textContent = "Carica un contenuto.";
+      if (error) {
+        status.textContent = error;
         return;
       }
 
@@ -703,13 +904,22 @@
       document.getElementById("pMind").textContent =
         `${data.originalMindFile} → ${data.targetFile}`;
 
+      document.getElementById("pTargetImages").textContent =
+        data.targetImages.length === 0
+          ? "-"
+          : data.targetImages.map((target) =>
+              `${target.originalFile} → ${target.file}`
+            ).join(" | ");
+
       document.getElementById("pShared").textContent =
         data.originalSharedImage === "-"
           ? "-"
           : `${data.originalSharedImage} → ${data.sharedImage}`;
 
-      document.getElementById("pContent").textContent =
-        `${data.originalContentFile} → ${data.contentFile}`;
+      document.getElementById("pContents").textContent =
+        data.contents.map((content) =>
+          `${content.originalFile} → ${content.file} / target ${content.targetId}`
+        ).join(" | ");
 
       document.getElementById("pFolder").textContent = folder;
 
@@ -727,41 +937,34 @@
       document.getElementById("configBox").style.display = "block";
 
       status.textContent =
-        "Anteprima e config.json generati correttamente.";
+        "Anteprima e config.json multi-contenuto generati correttamente.";
     }
 
     function copyLink() {
       const link = document.getElementById("finalLink").textContent;
 
-      if (!link || link === "-") {
-        return;
-      }
+      if (!link || link === "-") return;
 
-      navigator.clipboard
-        .writeText(link)
+      navigator.clipboard.writeText(link)
         .then(() => {
           document.getElementById("status").textContent = "Link copiato.";
         })
         .catch(() => {
-          document.getElementById("status").textContent =
-            "Copia manualmente il link.";
+          document.getElementById("status").textContent = "Copia manualmente il link.";
         });
     }
 
     function copyConfig() {
       if (!lastGeneratedConfig) {
-        document.getElementById("status").textContent =
-          "Genera prima la configurazione.";
+        document.getElementById("status").textContent = "Genera prima la configurazione.";
         return;
       }
 
       const configText = JSON.stringify(lastGeneratedConfig, null, 2);
 
-      navigator.clipboard
-        .writeText(configText)
+      navigator.clipboard.writeText(configText)
         .then(() => {
-          document.getElementById("status").textContent =
-            "Config.json copiato.";
+          document.getElementById("status").textContent = "Config.json copiato.";
         })
         .catch(() => {
           document.getElementById("status").textContent =
@@ -779,16 +982,18 @@
 
     function resetForm() {
       lastGeneratedConfig = null;
+      targetImageCounter = 0;
+      contentCounter = 0;
 
       document.getElementById("experienceName").value = "";
       document.getElementById("experienceType").value = "ar-video";
       document.getElementById("sector").value = "food";
-
       document.getElementById("mindFile").value = "";
       document.getElementById("sharedImage").value = "";
-      document.getElementById("contentFile").value = "";
-
       document.getElementById("notes").value = "";
+
+      document.getElementById("targetImagesContainer").innerHTML = "";
+      document.getElementById("contentsContainer").innerHTML = "";
 
       document.getElementById("autoPlay").checked = true;
       document.getElementById("requireEnd").checked = false;
@@ -801,11 +1006,10 @@
       document.getElementById("pSlug").textContent = "-";
       document.getElementById("pType").textContent = "-";
       document.getElementById("pMind").textContent = "-";
+      document.getElementById("pTargetImages").textContent = "-";
       document.getElementById("pShared").textContent = "-";
-      document.getElementById("pContent").textContent = "-";
-
-      document.getElementById("pFolder").textContent =
-        "managed-experiences/-/-/";
+      document.getElementById("pContents").textContent = "-";
+      document.getElementById("pFolder").textContent = "managed-experiences/-/-/";
 
       document.getElementById("finalLink").textContent = "-";
       document.getElementById("finalLink").href = "#";
@@ -813,10 +1017,22 @@
       document.getElementById("resultBox").style.display = "none";
       document.getElementById("configBox").style.display = "none";
       document.getElementById("configPreview").textContent = "{}";
-
       document.getElementById("status").textContent = "";
-    }
-  </script>
 
+      addTargetImageBlock();
+      addContentBlock();
+    }
+
+    document.addEventListener("input", function(event) {
+      if (event.target.classList.contains("target-label")) {
+        refreshTargetOptions();
+      }
+    });
+
+    window.addEventListener("load", function() {
+      addTargetImageBlock();
+      addContentBlock();
+    });
+  </script>
 </body>
 </html>
