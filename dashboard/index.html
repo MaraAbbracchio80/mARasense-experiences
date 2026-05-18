@@ -16,38 +16,30 @@
     body {
       margin: 0;
       min-height: 100vh;
-
       background:
         radial-gradient(circle at top left, rgba(138, 43, 226, 0.08), transparent 35%),
         radial-gradient(circle at bottom right, rgba(0, 234, 255, 0.06), transparent 35%),
         #f5f7fb;
-
       color: #111;
       font-family: Arial, Helvetica, sans-serif;
     }
 
     .page {
       width: 100%;
-      max-width: 1200px;
+      max-width: 1250px;
       margin: 0 auto;
       padding: 28px 18px 50px;
     }
-
-    /* HEADER */
 
     .header {
       display: flex;
       align-items: center;
       gap: 18px;
-
       margin-bottom: 26px;
       padding: 22px;
-
       background: rgba(255, 255, 255, 0.96);
-
       border: 1px solid rgba(138, 43, 226, 0.18);
       border-radius: 24px;
-
       box-shadow:
         0 8px 30px rgba(0, 0, 0, 0.06),
         0 0 20px rgba(138, 43, 226, 0.05);
@@ -78,27 +70,18 @@
       line-height: 1.5;
     }
 
-    /* GRID */
-
     .grid {
       display: grid;
-      grid-template-columns: 1.2fr 0.8fr;
+      grid-template-columns: 1.05fr 0.95fr;
       gap: 22px;
     }
 
-    /* CARD */
-
     .card {
       background: rgba(255, 255, 255, 0.96);
-
       border: 1px solid rgba(0, 0, 0, 0.06);
-
       border-radius: 24px;
-
       padding: 24px;
-
-      box-shadow:
-        0 8px 30px rgba(0, 0, 0, 0.05);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
     }
 
     .card h2 {
@@ -106,8 +89,6 @@
       font-size: 23px;
       color: #111;
     }
-
-    /* FORM */
 
     .field {
       margin-bottom: 18px;
@@ -125,21 +106,13 @@
     select,
     textarea {
       width: 100%;
-
       border: 1px solid #d8dde7;
-
       border-radius: 14px;
-
       padding: 13px 14px;
-
       background: #ffffff;
-
       color: #111;
-
       font-size: 15px;
-
       outline: none;
-
       transition: 0.2s;
     }
 
@@ -147,9 +120,7 @@
     select:focus,
     textarea:focus {
       border-color: #8a2be2;
-
-      box-shadow:
-        0 0 0 4px rgba(138, 43, 226, 0.12);
+      box-shadow: 0 0 0 4px rgba(138, 43, 226, 0.12);
     }
 
     input[type="file"] {
@@ -162,8 +133,6 @@
       resize: vertical;
     }
 
-    /* CHECK */
-
     .options {
       display: grid;
       gap: 12px;
@@ -174,13 +143,9 @@
       display: flex;
       align-items: center;
       gap: 12px;
-
       background: #f7f9fc;
-
       padding: 14px;
-
       border-radius: 14px;
-
       border: 1px solid #e7ebf3;
     }
 
@@ -195,8 +160,6 @@
       line-height: 1.4;
     }
 
-    /* BUTTONS */
-
     .actions {
       display: flex;
       flex-wrap: wrap;
@@ -206,24 +169,14 @@
 
     button {
       border: none;
-
       border-radius: 15px;
-
       padding: 14px 20px;
-
       cursor: pointer;
-
       font-size: 15px;
       font-weight: bold;
-
       color: white;
-
-      background:
-        linear-gradient(135deg, #8a2be2, #00bcd4);
-
-      box-shadow:
-        0 8px 24px rgba(138, 43, 226, 0.22);
-
+      background: linear-gradient(135deg, #8a2be2, #00bcd4);
+      box-shadow: 0 8px 24px rgba(138, 43, 226, 0.22);
       transition: 0.2s;
     }
 
@@ -235,23 +188,15 @@
     button.secondary {
       background: #ffffff;
       color: #111;
-
       border: 1px solid #d7dde7;
-
       box-shadow: none;
     }
 
-    /* PREVIEW */
-
     .preview-box {
       background: #f7f9fc;
-
       border-radius: 18px;
-
       padding: 18px;
-
       border: 1px solid #e7ebf3;
-
       margin-bottom: 18px;
     }
 
@@ -267,19 +212,12 @@
       color: #111;
     }
 
-    /* RESULT */
-
     .result {
       display: none;
-
       margin-top: 18px;
-
       padding: 18px;
-
       border-radius: 18px;
-
       background: rgba(0, 188, 212, 0.06);
-
       border: 1px solid rgba(0, 188, 212, 0.24);
     }
 
@@ -289,55 +227,56 @@
       word-break: break-word;
     }
 
-    /* QR */
+    .config-box {
+      display: none;
+      margin-top: 18px;
+    }
+
+    pre {
+      max-height: 360px;
+      overflow: auto;
+      background: #111827;
+      color: #d1fae5;
+      border-radius: 16px;
+      padding: 16px;
+      font-size: 13px;
+      line-height: 1.55;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
 
     .qr-placeholder {
       width: 170px;
       height: 170px;
-
       margin-top: 14px;
-
       border-radius: 14px;
-
       border: 10px solid white;
-
       background:
         linear-gradient(45deg, #111 25%, transparent 25%),
         linear-gradient(-45deg, #111 25%, transparent 25%),
         linear-gradient(45deg, transparent 75%, #111 75%),
         linear-gradient(-45deg, transparent 75%, #111 75%);
-
       background-size: 28px 28px;
       background-position: 0 0, 0 14px, 14px -14px, -14px 0;
-
       background-color: #fff;
-
-      box-shadow:
-        0 6px 18px rgba(0,0,0,0.08);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.08);
     }
 
     .note {
       margin-top: 14px;
-
       font-size: 13px;
-
       line-height: 1.6;
-
       color: #666;
     }
 
     .status {
       margin-top: 14px;
-
       color: #00a6bc;
-
       font-size: 14px;
-
       min-height: 20px;
     }
 
-    @media (max-width: 900px) {
-
+    @media (max-width: 950px) {
       .grid {
         grid-template-columns: 1fr;
       }
@@ -349,7 +288,6 @@
       .header h1 {
         font-size: 25px;
       }
-
     }
   </style>
 </head>
@@ -366,7 +304,6 @@
 
       <div>
         <h1>MaraSense Experience Manager</h1>
-
         <p>
           Dashboard privata per creare esperienze AR automatiche
           senza modificare la cartella apps.
@@ -376,15 +313,12 @@
 
     <section class="grid">
 
-      <!-- LEFT -->
-
       <div class="card">
 
         <h2>Nuova esperienza</h2>
 
         <div class="field">
           <label for="sector">Settore</label>
-
           <select id="sector">
             <option value="food">Food</option>
             <option value="painting">Painting</option>
@@ -399,7 +333,6 @@
 
         <div class="field">
           <label for="experienceName">Nome esperienza</label>
-
           <input
             id="experienceName"
             type="text"
@@ -409,173 +342,78 @@
 
         <div class="field">
           <label for="experienceType">Tipo esperienza</label>
-
           <select id="experienceType">
-            <option value="ar-video">
-              AR target + video
-            </option>
-
-            <option value="ar-audio">
-              AR target + audio
-            </option>
-
-            <option value="ar-video-audio">
-              AR target + video con audio
-            </option>
-
-            <option value="multi-target">
-              Multi-target
-            </option>
+            <option value="ar-video">AR target + video</option>
+            <option value="ar-audio">AR target + audio</option>
+            <option value="ar-video-audio">AR target + video con audio</option>
+            <option value="multi-target">Multi-target</option>
           </select>
         </div>
 
         <div class="field">
-          <label for="mindFile">
-            Carica file MindAR (.mind)
-          </label>
-
-          <input
-            id="mindFile"
-            type="file"
-            accept=".mind"
-          />
+          <label for="mindFile">Carica file MindAR (.mind)</label>
+          <input id="mindFile" type="file" accept=".mind" />
         </div>
 
         <div class="field">
-          <label for="sharedImage">
-            Carica immagine shared / anteprima
-          </label>
-
-          <input
-            id="sharedImage"
-            type="file"
-            accept="image/*"
-          />
+          <label for="sharedImage">Carica immagine shared / anteprima</label>
+          <input id="sharedImage" type="file" accept="image/*" />
         </div>
 
         <div class="field">
-          <label for="contentFile">
-            Carica contenuto
-          </label>
-
-          <input
-            id="contentFile"
-            type="file"
-            accept="video/*,audio/*,image/*"
-          />
+          <label for="contentFile">Carica contenuto</label>
+          <input id="contentFile" type="file" accept="video/*,audio/*,image/*" />
         </div>
 
         <div class="field">
           <label for="notes">Note interne</label>
-
           <textarea
             id="notes"
             placeholder="Annotazioni, istruzioni o dettagli dell’esperienza..."
           ></textarea>
         </div>
 
-        <!-- OPTIONS -->
-
         <div class="field">
-
-          <label>
-            Opzioni comportamento AR
-          </label>
+          <label>Opzioni comportamento AR</label>
 
           <div class="options">
 
             <label class="check-row">
-              <input
-                id="autoPlay"
-                type="checkbox"
-                checked
-              />
-
-              <span>
-                Avvia contenuto automaticamente
-                quando trova il target
-              </span>
+              <input id="autoPlay" type="checkbox" checked />
+              <span>Avvia contenuto automaticamente quando trova il target</span>
             </label>
 
             <label class="check-row">
-              <input
-                id="requireEnd"
-                type="checkbox"
-              />
-
-              <span>
-                Il contenuto deve terminare
-                prima della ricerca di un altro target
-              </span>
+              <input id="requireEnd" type="checkbox" />
+              <span>Il contenuto deve terminare prima della ricerca di un altro target</span>
             </label>
 
             <label class="check-row">
-              <input
-                id="stopOnLost"
-                type="checkbox"
-                checked
-              />
-
-              <span>
-                Se il target viene perso,
-                interrompi il contenuto
-              </span>
+              <input id="stopOnLost" type="checkbox" checked />
+              <span>Se il target viene perso, interrompi il contenuto</span>
             </label>
 
             <label class="check-row">
-              <input
-                id="transparentBg"
-                type="checkbox"
-                checked
-              />
-
-              <span>
-                Sfondo trasparente senza barra laterale
-              </span>
+              <input id="transparentBg" type="checkbox" checked />
+              <span>Sfondo trasparente senza barra laterale</span>
             </label>
 
             <label class="check-row">
-              <input
-                id="lensUi"
-                type="checkbox"
-                checked
-              />
-
-              <span>
-                Mostra interfaccia tipo lens
-                durante la ricerca target
-              </span>
+              <input id="lensUi" type="checkbox" checked />
+              <span>Mostra interfaccia tipo lens durante la ricerca target</span>
             </label>
 
           </div>
-
         </div>
-
-        <!-- BUTTONS -->
 
         <div class="actions">
-
-          <button onclick="generatePreview()">
-            Procedi
-          </button>
-
-          <button
-            class="secondary"
-            onclick="resetForm()"
-          >
-            Pulisci
-          </button>
-
+          <button onclick="generatePreview()">Procedi</button>
+          <button class="secondary" onclick="resetForm()">Pulisci</button>
         </div>
 
-        <div
-          class="status"
-          id="status"
-        ></div>
+        <div class="status" id="status"></div>
 
       </div>
-
-      <!-- RIGHT -->
 
       <aside class="card">
 
@@ -626,85 +464,56 @@
             <strong>Cartella prevista:</strong>
           </div>
 
-          <div
-            class="preview-line"
-            id="pFolder"
-          >
+          <div class="preview-line" id="pFolder">
             managed-experiences/-/-/
           </div>
 
         </div>
 
-        <!-- RESULT -->
+        <div class="result" id="resultBox">
 
-        <div
-          class="result"
-          id="resultBox"
-        >
+          <strong>Esperienza pronta per la generazione</strong>
 
-          <strong>
-            Esperienza pronta per la generazione
-          </strong>
-
-          <div
-            class="preview-line"
-            style="margin-top:12px;"
-          >
-
+          <div class="preview-line" style="margin-top:12px;">
             Link previsto:
             <br />
-
-            <a
-              id="finalLink"
-              href="#"
-              target="_blank"
-            >
-              -
-            </a>
-
+            <a id="finalLink" href="#" target="_blank">-</a>
           </div>
 
           <div class="actions">
-
-            <button onclick="openExperience()">
-              Apri link
-            </button>
-
-            <button
-              class="secondary"
-              onclick="copyLink()"
-            >
-              Copia link
-            </button>
-
+            <button onclick="openExperience()">Apri link</button>
+            <button class="secondary" onclick="copyLink()">Copia link</button>
           </div>
 
-          <div
-            class="qr-placeholder"
-            title="Placeholder QR"
-          ></div>
+          <div class="qr-placeholder" title="Placeholder QR"></div>
 
           <p class="note">
-            Nel prossimo step genereremo automaticamente:
-            HTML, QR code, cartella esperienza e pubblicazione GitHub.
+            Il QR è ancora un segnaposto. Lo genereremo automaticamente nel prossimo step backend.
+          </p>
+
+        </div>
+
+        <div class="config-box" id="configBox">
+
+          <h2 style="margin-top: 24px;">Config generato</h2>
+
+          <pre id="configPreview">{}</pre>
+
+          <div class="actions">
+            <button onclick="copyConfig()">Copia config.json</button>
+          </div>
+
+          <p class="note">
+            Questo è il file <strong>config.json</strong> che il gestionale dovrà creare
+            dentro la cartella della nuova esperienza.
           </p>
 
         </div>
 
         <p class="note">
-
-          Questa è la V1 frontend della dashboard.
-
-          <br><br>
-
-          Non modifica GitHub e non tocca la cartella apps.
-
-          <br><br>
-
-          Nel prossimo step collegheremo:
-          Firebase Functions + GitHub API
-          per creare davvero le esperienze automatiche.
-
+          Questa versione prepara già tutti i dati per il backend.
+          Il prossimo step sarà collegare una Firebase Function che riceve questo pacchetto
+          e crea davvero i file nella cartella <strong>managed-experiences</strong>.
         </p>
 
       </aside>
@@ -714,12 +523,11 @@
   </main>
 
   <script>
+    const BASE_URL = "https://marasenseexperiences-ar.web.app";
 
-    const BASE_URL =
-      "https://marasenseexperiences-ar.web.app";
+    let lastGeneratedConfig = null;
 
     function slugify(text) {
-
       return text
         .toString()
         .normalize("NFD")
@@ -728,210 +536,249 @@
         .trim()
         .replace(/[^a-z0-9]+/g, "-")
         .replace(/^-+|-+$/g, "");
-
     }
 
     function getFileName(inputId) {
+      const input = document.getElementById(inputId);
 
-      const input =
-        document.getElementById(inputId);
-
-      if (!input.files || input.files.length === 0)
+      if (!input.files || input.files.length === 0) {
         return "-";
+      }
 
       return input.files[0].name;
+    }
 
+    function normalizeContentName(fileName) {
+      if (!fileName || fileName === "-") {
+        return "-";
+      }
+
+      const lower = fileName.toLowerCase();
+
+      if (lower.endsWith(".mp4")) return "content.mp4";
+      if (lower.endsWith(".webm")) return "content.webm";
+      if (lower.endsWith(".mov")) return "content.mov";
+
+      if (lower.endsWith(".mp3")) return "content.mp3";
+      if (lower.endsWith(".wav")) return "content.wav";
+      if (lower.endsWith(".m4a")) return "content.m4a";
+
+      if (lower.endsWith(".jpg") || lower.endsWith(".jpeg")) return "content.jpg";
+      if (lower.endsWith(".png")) return "content.png";
+      if (lower.endsWith(".webp")) return "content.webp";
+
+      return fileName;
+    }
+
+    function normalizeSharedName(fileName) {
+      if (!fileName || fileName === "-") {
+        return "shared.jpg";
+      }
+
+      const lower = fileName.toLowerCase();
+
+      if (lower.endsWith(".jpg") || lower.endsWith(".jpeg")) return "shared.jpg";
+      if (lower.endsWith(".png")) return "shared.png";
+      if (lower.endsWith(".webp")) return "shared.webp";
+
+      return "shared.jpg";
     }
 
     function getExperienceData() {
+      const sector = document.getElementById("sector").value;
 
-      const sector =
-        document.getElementById("sector").value;
+      const name = document
+        .getElementById("experienceName")
+        .value
+        .trim();
 
-      const name =
-        document.getElementById("experienceName")
-          .value
-          .trim();
+      const type = document.getElementById("experienceType").value;
 
-      const type =
-        document.getElementById("experienceType").value;
+      const slug = slugify(name);
 
-      const slug =
-        slugify(name);
+      const originalMindFile = getFileName("mindFile");
+      const originalSharedImage = getFileName("sharedImage");
+      const originalContentFile = getFileName("contentFile");
+
+      const targetFile = originalMindFile === "-" ? "-" : "targets.mind";
+      const sharedImage = normalizeSharedName(originalSharedImage);
+      const contentFile = normalizeContentName(originalContentFile);
 
       return {
-
         sector,
         name,
         type,
         slug,
 
-        mindFile:
-          getFileName("mindFile"),
+        originalMindFile,
+        originalSharedImage,
+        originalContentFile,
 
-        sharedImage:
-          getFileName("sharedImage"),
+        targetFile,
+        sharedImage,
+        contentFile,
 
-        contentFile:
-          getFileName("contentFile"),
-
-        notes:
-          document.getElementById("notes")
-            .value
-            .trim(),
+        notes: document.getElementById("notes").value.trim(),
 
         options: {
-
-          autoPlay:
-            document.getElementById("autoPlay").checked,
-
-          requireEnd:
-            document.getElementById("requireEnd").checked,
-
-          stopOnLost:
-            document.getElementById("stopOnLost").checked,
-
-          transparentBg:
-            document.getElementById("transparentBg").checked,
-
-          lensUi:
-            document.getElementById("lensUi").checked
-
+          autoPlay: document.getElementById("autoPlay").checked,
+          requireContentEnd: document.getElementById("requireEnd").checked,
+          stopOnTargetLost: document.getElementById("stopOnLost").checked,
+          transparentBg: document.getElementById("transparentBg").checked,
+          lensUi: document.getElementById("lensUi").checked
         }
-
       };
+    }
 
+    function buildConfig(data) {
+      return {
+        title: data.name,
+        type: data.type,
+        sector: data.sector,
+
+        targetFile: data.targetFile,
+        sharedImage: data.sharedImage,
+        contentFile: data.contentFile,
+
+        autoPlay: data.options.autoPlay,
+        requireContentEnd: data.options.requireContentEnd,
+        stopOnTargetLost: data.options.stopOnTargetLost,
+        transparentBg: data.options.transparentBg,
+        lensUi: data.options.lensUi,
+
+        multiTarget: data.type === "multi-target",
+
+        targets: [
+          {
+            id: 0,
+            content: data.contentFile
+          }
+        ],
+
+        meta: {
+          slug: data.slug,
+          notes: data.notes,
+          originalFiles: {
+            mind: data.originalMindFile,
+            sharedImage: data.originalSharedImage,
+            content: data.originalContentFile
+          },
+          generatedFolder: `managed-experiences/${data.sector}/${data.slug}/`
+        }
+      };
     }
 
     function generatePreview() {
-
-      const data =
-        getExperienceData();
-
-      const status =
-        document.getElementById("status");
+      const data = getExperienceData();
+      const status = document.getElementById("status");
 
       if (!data.name) {
-
-        status.textContent =
-          "Inserisci il nome esperienza.";
-
+        status.textContent = "Inserisci il nome esperienza.";
         return;
-
       }
 
       if (!data.slug) {
-
-        status.textContent =
-          "Nome esperienza non valido.";
-
+        status.textContent = "Nome esperienza non valido.";
         return;
-
       }
 
-      if (data.mindFile === "-") {
-
-        status.textContent =
-          "Carica il file .mind.";
-
+      if (data.originalMindFile === "-") {
+        status.textContent = "Carica il file .mind.";
         return;
-
       }
 
-      if (data.contentFile === "-") {
-
-        status.textContent =
-          "Carica un contenuto.";
-
+      if (data.originalContentFile === "-") {
+        status.textContent = "Carica un contenuto.";
         return;
-
       }
 
-      const folder =
-        `managed-experiences/${data.sector}/${data.slug}/`;
+      const folder = `managed-experiences/${data.sector}/${data.slug}/`;
+      const link = `${BASE_URL}/${folder}`;
 
-      const link =
-        `${BASE_URL}/${folder}`;
+      document.getElementById("pSector").textContent = data.sector;
+      document.getElementById("pName").textContent = data.name;
+      document.getElementById("pSlug").textContent = data.slug;
+      document.getElementById("pType").textContent = data.type;
 
-      document.getElementById("pSector")
-        .textContent = data.sector;
+      document.getElementById("pMind").textContent =
+        `${data.originalMindFile} → ${data.targetFile}`;
 
-      document.getElementById("pName")
-        .textContent = data.name;
+      document.getElementById("pShared").textContent =
+        data.originalSharedImage === "-"
+          ? "-"
+          : `${data.originalSharedImage} → ${data.sharedImage}`;
 
-      document.getElementById("pSlug")
-        .textContent = data.slug;
+      document.getElementById("pContent").textContent =
+        `${data.originalContentFile} → ${data.contentFile}`;
 
-      document.getElementById("pType")
-        .textContent = data.type;
+      document.getElementById("pFolder").textContent = folder;
 
-      document.getElementById("pMind")
-        .textContent = data.mindFile;
-
-      document.getElementById("pShared")
-        .textContent = data.sharedImage;
-
-      document.getElementById("pContent")
-        .textContent = data.contentFile;
-
-      document.getElementById("pFolder")
-        .textContent = folder;
-
-      const finalLink =
-        document.getElementById("finalLink");
-
+      const finalLink = document.getElementById("finalLink");
       finalLink.textContent = link;
       finalLink.href = link;
 
-      document.getElementById("resultBox")
-        .style.display = "block";
+      document.getElementById("resultBox").style.display = "block";
+
+      lastGeneratedConfig = buildConfig(data);
+
+      document.getElementById("configPreview").textContent =
+        JSON.stringify(lastGeneratedConfig, null, 2);
+
+      document.getElementById("configBox").style.display = "block";
 
       status.textContent =
-        "Anteprima esperienza generata.";
-
+        "Anteprima e config.json generati correttamente.";
     }
 
     function copyLink() {
+      const link = document.getElementById("finalLink").textContent;
 
-      const link =
-        document.getElementById("finalLink")
-          .textContent;
-
-      if (!link || link === "-")
+      if (!link || link === "-") {
         return;
+      }
 
       navigator.clipboard
         .writeText(link)
         .then(() => {
-
-          document.getElementById("status")
-            .textContent = "Link copiato.";
-
+          document.getElementById("status").textContent = "Link copiato.";
         })
         .catch(() => {
-
-          document.getElementById("status")
-            .textContent =
-              "Copia manualmente il link.";
-
+          document.getElementById("status").textContent =
+            "Copia manualmente il link.";
         });
+    }
 
+    function copyConfig() {
+      if (!lastGeneratedConfig) {
+        document.getElementById("status").textContent =
+          "Genera prima la configurazione.";
+        return;
+      }
+
+      const configText = JSON.stringify(lastGeneratedConfig, null, 2);
+
+      navigator.clipboard
+        .writeText(configText)
+        .then(() => {
+          document.getElementById("status").textContent =
+            "Config.json copiato.";
+        })
+        .catch(() => {
+          document.getElementById("status").textContent =
+            "Non riesco a copiare automaticamente. Copia il config manualmente.";
+        });
     }
 
     function openExperience() {
-
-      const href =
-        document.getElementById("finalLink").href;
+      const href = document.getElementById("finalLink").href;
 
       if (href && href !== "#") {
-
         window.open(href, "_blank");
-
       }
-
     }
 
     function resetForm() {
+      lastGeneratedConfig = null;
 
       document.getElementById("experienceName").value = "";
       document.getElementById("experienceType").value = "ar-video";
@@ -957,23 +804,18 @@
       document.getElementById("pShared").textContent = "-";
       document.getElementById("pContent").textContent = "-";
 
-      document.getElementById("pFolder")
-        .textContent = "managed-experiences/-/-/";
+      document.getElementById("pFolder").textContent =
+        "managed-experiences/-/-/";
 
-      document.getElementById("finalLink")
-        .textContent = "-";
+      document.getElementById("finalLink").textContent = "-";
+      document.getElementById("finalLink").href = "#";
 
-      document.getElementById("finalLink")
-        .href = "#";
+      document.getElementById("resultBox").style.display = "none";
+      document.getElementById("configBox").style.display = "none";
+      document.getElementById("configPreview").textContent = "{}";
 
-      document.getElementById("resultBox")
-        .style.display = "none";
-
-      document.getElementById("status")
-        .textContent = "";
-
+      document.getElementById("status").textContent = "";
     }
-
   </script>
 
 </body>
