@@ -1,6 +1,6 @@
 require("dotenv").config();
 
-const functions = require("firebase-functions");
+const { onRequest } = require("firebase-functions/v2/https");
 const express = require("express");
 const cors = require("cors");
 const axios = require("axios");
@@ -1110,7 +1110,12 @@ app.post("/createManagedExperience", async (req, res) => {
   }
 });
 
-exports.api = functions
-  .region("europe-west1")
-  .https
-  .onRequest(app);
+exports.api = onRequest(
+  {
+    region: "europe-west1",
+    cors: true,
+    timeoutSeconds: 300,
+    memory: "1GiB"
+  },
+  app
+);
