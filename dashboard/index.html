@@ -433,10 +433,11 @@
           </div>
         </div>
 
-        <div class="actions">
-          <button onclick="generatePreview()">Procedi</button>
-          <button class="secondary" onclick="resetForm()">Pulisci</button>
-        </div>
+<div class="actions">
+  <button onclick="generatePreview()">Procedi</button>
+  <button onclick="createExperienceOnGitHub()">Crea esperienza su GitHub</button>
+  <button class="secondary" onclick="resetForm()">Pulisci</button>
+</div>
 
         <div class="status" id="status"></div>
 
@@ -543,7 +544,8 @@
   </main>
 
   <script>
-    const BASE_URL = "https://marasenseexperiences-ar.web.app";
+    const API_CREATE_EXPERIENCE =
+  "https://europe-west1-marasenseexperiences-ar.cloudfunctions.net/api/createManagedExperience";
 
     let lastGeneratedConfig = null;
     let targetImageCounter = 0;
@@ -939,7 +941,82 @@
       status.textContent =
         "Anteprima e config.json multi-contenuto generati correttamente.";
     }
+async function createExperienceOnGitHub() {
+  const status = document.getElementById("status");
 
+  const data = getExperienceData();
+  const error = validateData(data);
+
+  if (error) {
+    status.textContent = error;
+    return;
+  }
+
+  const config = buildConfig(data);
+
+  const payload = {
+    name: data.name,
+    title: data.name,
+    sector: data.sector,
+    type: data.type,
+    slug: data.slug,
+    notes: data.notes,
+
+    targetFile: config.targetFile,
+    sharedImage: config.sharedImage,
+    contentFile: config.contentFile,
+
+    options: {
+      autoPlay: config.autoPlay,
+      requireContentEnd: config.requireContentEnd,
+      stopOnTargetLost: config.stopOnTargetLost,
+      transparentBg: config.transparentBg,
+      lensUi: config.lensUi
+    },
+
+    targetImages: config.targetImages,
+    contents: config.contents
+  };
+
+  status.textContent = "Creazione esperienza su GitHub in corso...";
+
+  try {
+    const response = await fetch(API_CREATE_EXPERIENCE, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(payload)
+    });
+
+    const result = await response.json();
+
+    if (!response.ok || !result.ok) {
+      console.error(result);
+      status.textContent =
+        "Errore creazione esperienza: " +
+        (result.error || result.detail || "errore sconosciuto");
+      return;
+    }
+
+    const finalLink = document.getElementById("finalLink");
+
+    finalLink.textContent = result.publicUrl;
+    finalLink.href = result.publicUrl;
+
+    document.getElementById("resultBox").style.display = "block";
+
+    status.textContent =
+      "Esperienza creata su GitHub. Attendi il deploy automatico e poi apri il link.";
+
+    console.log("Esperienza creata:", result);
+  } catch (error) {
+    console.error(error);
+
+    status.textContent =
+      "Errore di connessione alla Function. Controlla console o deploy.";
+  }
+}
     function copyLink() {
       const link = document.getElementById("finalLink").textContent;
 
