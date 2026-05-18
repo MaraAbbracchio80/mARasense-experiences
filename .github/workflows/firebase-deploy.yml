@@ -50,6 +50,6 @@ jobs:
           cat firebase.json
           echo "---- functions ----"
           ls -la functions
-          
+
       - name: Deploy Firebase Functions
-        run: firebase deploy --only functions --project marasenseexperiences-ar
+        run: firebase deploy --only functions --project marasenseexperiences-ar --force
