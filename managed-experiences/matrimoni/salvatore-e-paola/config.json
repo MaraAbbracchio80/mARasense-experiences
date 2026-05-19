@@ -1,0 +1,82 @@
+{
+  "title": "Salvatore e Paola",
+  "type": "ar-video",
+  "sector": "matrimoni",
+  "targetFile": "targets.mind",
+  "sharedImage": "shared.png",
+  "contentFile": "content-1.mp4",
+  "autoPlay": true,
+  "requireContentEnd": false,
+  "stopOnTargetLost": true,
+  "transparentBg": true,
+  "lensUi": true,
+  "multiTarget": true,
+  "targetImages": [
+    {
+      "id": 0,
+      "label": "pagina 1",
+      "file": "target-1.png",
+      "originalFile": "1.png"
+    },
+    {
+      "id": 1,
+      "label": "pagina 2",
+      "file": "target-2.png",
+      "originalFile": "2.png"
+    },
+    {
+      "id": 2,
+      "label": "pagina 4",
+      "file": "target-3.png",
+      "originalFile": "4.png"
+    }
+  ],
+  "contents": [
+    {
+      "id": 0,
+      "label": "proposta",
+      "targetId": 0,
+      "file": "content-1.mp4",
+      "originalFile": "proposta.mp4"
+    },
+    {
+      "id": 1,
+      "label": "salvatore",
+      "targetId": 1,
+      "file": "content-2.mp4",
+      "originalFile": "salvatore.mp4"
+    },
+    {
+      "id": 2,
+      "label": "video sposi",
+      "targetId": 2,
+      "file": "content-3.mp4",
+      "originalFile": "videosposi.mp4"
+    }
+  ],
+  "targets": [
+    {
+      "id": 0,
+      "content": "content-1.mp4",
+      "label": "proposta"
+    },
+    {
+      "id": 1,
+      "content": "content-2.mp4",
+      "label": "salvatore"
+    },
+    {
+      "id": 2,
+      "content": "content-3.mp4",
+      "label": "video sposi"
+    }
+  ],
+  "meta": {
+    "slug": "salvatore-e-paola",
+    "notes": "",
+    "generatedFolder": "managed-experiences/matrimoni/salvatore-e-paola/",
+    "publicUrl": "https://marasenseexperiences-ar.web.app/managed-experiences/matrimoni/salvatore-e-paola/",
+    "createdAt": "2026-05-19T11:39:20.324Z",
+    "updatedAt": "2026-05-19T11:39:20.324Z"
+  }
+}
