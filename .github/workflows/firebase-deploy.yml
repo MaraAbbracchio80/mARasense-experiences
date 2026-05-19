@@ -51,5 +51,8 @@ jobs:
           echo "---- functions ----"
           ls -la functions
 
+      - name: Deploy Firebase Hosting
+        run: firebase deploy --only hosting --project marasenseexperiences-ar --force
+        
       - name: Deploy Firebase Functions
         run: firebase deploy --only functions --project marasenseexperiences-ar --force
