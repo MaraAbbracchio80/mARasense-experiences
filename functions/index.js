@@ -8,7 +8,7 @@ const axios = require("axios");
 const app = express();
 
 app.use(cors({ origin: true }));
-app.use(express.json({ limit: "25mb" }));
+app.use(express.json({ limit: "80mb" }));
 
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 const GITHUB_OWNER = process.env.GITHUB_OWNER || "MaraAbbracchio80";
@@ -16,7 +16,6 @@ const GITHUB_REPO = process.env.GITHUB_REPO || "mARasense-experiences";
 const GITHUB_BRANCH = process.env.GITHUB_BRANCH || "main";
 
 const BASE_URL = "https://marasenseexperiences-ar.web.app";
-
 const GITHUB_API_BASE = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}`;
 
 const ALLOWED_SECTORS = [
@@ -41,10 +40,7 @@ const TEMPLATE_HTML = `<!DOCTYPE html>
 <html lang="it">
 <head>
   <meta charset="UTF-8" />
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
-  />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 
   <title>MaraSense Experience</title>
 
@@ -86,11 +82,9 @@ const TEMPLATE_HTML = `<!DOCTYPE html>
       inset: 0;
       z-index: 20;
       pointer-events: none;
-
       display: flex;
       align-items: center;
       justify-content: center;
-
       background: rgba(0, 0, 0, 0.08);
     }
 
@@ -165,20 +159,15 @@ const TEMPLATE_HTML = `<!DOCTYPE html>
       bottom: max(32px, env(safe-area-inset-bottom));
       transform: translateX(-50%);
       z-index: 25;
-
       width: min(88vw, 420px);
       text-align: center;
-
       color: white;
       font-size: 15px;
       line-height: 1.4;
-
       padding: 12px 16px;
       border-radius: 999px;
-
       background: rgba(0, 0, 0, 0.42);
       backdrop-filter: blur(12px);
-
       box-shadow: 0 0 18px rgba(0, 0, 0, 0.28);
     }
 
@@ -186,17 +175,14 @@ const TEMPLATE_HTML = `<!DOCTYPE html>
       position: fixed;
       inset: 0;
       z-index: 50;
-
       display: flex;
       align-items: center;
       justify-content: center;
       flex-direction: column;
-
       background:
         radial-gradient(circle at top left, rgba(138, 43, 226, 0.32), transparent 34%),
         radial-gradient(circle at bottom right, rgba(0, 234, 255, 0.24), transparent 34%),
         #050505;
-
       color: white;
       text-align: center;
       padding: 24px;
@@ -236,30 +222,23 @@ const TEMPLATE_HTML = `<!DOCTYPE html>
       font-size: 16px;
       font-weight: 700;
       cursor: pointer;
-
       background: linear-gradient(135deg, #8a2be2, #00bcd4);
       box-shadow: 0 0 24px rgba(138, 43, 226, 0.38);
     }
 
     #errorBox {
       display: none;
-
       position: fixed;
       left: 50%;
       top: 50%;
       transform: translate(-50%, -50%);
-
       z-index: 80;
-
       width: min(88vw, 520px);
       padding: 18px;
-
       background: rgba(0, 0, 0, 0.78);
       color: white;
-
       border-radius: 18px;
       border: 1px solid rgba(255, 255, 255, 0.16);
-
       line-height: 1.5;
       text-align: center;
     }
@@ -296,27 +275,9 @@ const TEMPLATE_HTML = `<!DOCTYPE html>
     </div>
   </div>
 
-  <div id="statusText">
-    Inquadra il target
-  </div>
+  <div id="statusText">Inquadra il target</div>
 
   <div id="errorBox"></div>
-
-  <video
-    id="contentVideo"
-    src="content-1.mp4"
-    preload="auto"
-    playsinline
-    webkit-playsinline
-    crossorigin="anonymous"
-  ></video>
-
-  <audio
-    id="contentAudio"
-    src="content-1.mp3"
-    preload="auto"
-    crossorigin="anonymous"
-  ></audio>
 
   <a-scene
     id="arScene"
@@ -365,7 +326,6 @@ const TEMPLATE_HTML = `<!DOCTYPE html>
     let config = { ...DEFAULT_CONFIG };
     let sceneEl = null;
     let contentPlaying = false;
-    let contentEnded = false;
     let currentMedia = null;
     let currentTargetVisible = null;
     let experienceStarted = false;
@@ -589,7 +549,6 @@ const TEMPLATE_HTML = `<!DOCTYPE html>
       const file = content.file;
       const plane = document.getElementById("planeContent" + content.id);
 
-      contentEnded = false;
       contentPlaying = true;
       currentTargetVisible = targetId;
 
@@ -619,7 +578,6 @@ const TEMPLATE_HTML = `<!DOCTYPE html>
           });
 
         media.onended = () => {
-          contentEnded = true;
           contentPlaying = false;
           currentMedia = null;
           hideAllPlanes();
@@ -645,7 +603,6 @@ const TEMPLATE_HTML = `<!DOCTYPE html>
           });
 
         audio.onended = () => {
-          contentEnded = true;
           contentPlaying = false;
           currentMedia = null;
 
@@ -657,7 +614,6 @@ const TEMPLATE_HTML = `<!DOCTYPE html>
       }
 
       if (isImage(file)) {
-        contentEnded = true;
         contentPlaying = false;
         setStatus("Immagine visualizzata");
       }
@@ -722,7 +678,6 @@ const TEMPLATE_HTML = `<!DOCTYPE html>
       await loadConfig();
     });
   </script>
-
 </body>
 </html>`;
 
@@ -763,12 +718,24 @@ function isValidPathSegment(value) {
   return /^[a-z0-9._-]+$/i.test(value);
 }
 
-function encodeBase64(text) {
+function isValidFilePayload(file) {
+  if (!file) return false;
+  if (typeof file !== "object") return false;
+  if (!isValidPathSegment(file.path)) return false;
+  if (!file.content || typeof file.content !== "string") return false;
+  return true;
+}
+
+function encodeTextBase64(text) {
   return Buffer.from(text, "utf8").toString("base64");
 }
 
 function decodeBase64(content) {
   return Buffer.from(content || "", "base64").toString("utf8");
+}
+
+function cleanBase64Content(value) {
+  return String(value || "").replace(/^data:.*?;base64,/, "").replace(/\s/g, "");
 }
 
 async function githubGetFile(path) {
@@ -792,12 +759,12 @@ async function githubGetFile(path) {
   }
 }
 
-async function githubPutFile(path, content, message, sha) {
+async function githubPutFileBase64(path, base64Content, message, sha) {
   const url = `${GITHUB_API_BASE}/contents/${encodeURIComponent(path).replace(/%2F/g, "/")}`;
 
   const body = {
     message,
-    content: encodeBase64(content),
+    content: cleanBase64Content(base64Content),
     branch: GITHUB_BRANCH
   };
 
@@ -810,6 +777,10 @@ async function githubPutFile(path, content, message, sha) {
   });
 
   return response.data;
+}
+
+async function githubPutFileText(path, content, message, sha) {
+  return githubPutFileBase64(path, encodeTextBase64(content), message, sha);
 }
 
 async function readJsonFile(path, fallbackValue) {
@@ -859,6 +830,10 @@ function normalizeExperiencePayload(body) {
         }
       ];
 
+  const files = Array.isArray(body.files)
+    ? body.files
+    : [];
+
   return {
     sector,
     type,
@@ -870,7 +845,8 @@ function normalizeExperiencePayload(body) {
     contentFile,
     options,
     targetImages,
-    contents
+    contents,
+    files
   };
 }
 
@@ -916,6 +892,12 @@ function validateExperience(data) {
   for (const target of data.targetImages) {
     if (target.file && target.file !== "-" && !isValidPathSegment(target.file)) {
       return `Nome file immagine target non valido: ${target.file}`;
+    }
+  }
+
+  for (const file of data.files) {
+    if (!isValidFilePayload(file)) {
+      return "Payload file non valido.";
     }
   }
 
@@ -992,6 +974,9 @@ function buildIndexRecord(config, folder, publicUrl) {
     updatedAt: config.meta.updatedAt,
     folder,
     publicUrl,
+    sharedImage: config.sharedImage,
+    targetFile: config.targetFile,
+    contentFile: config.contentFile,
     targetImages: config.targetImages || [],
     contents: config.contents || [],
     targets: config.targets || []
@@ -1022,7 +1007,7 @@ async function updateExperiencesIndex(record) {
 
   const content = JSON.stringify(list, null, 2) + "\n";
 
-  await githubPutFile(
+  await githubPutFileText(
     indexPath,
     content,
     `Update managed experiences index: ${record.name}`,
@@ -1032,11 +1017,31 @@ async function updateExperiencesIndex(record) {
   return list;
 }
 
+async function writeUploadedFiles(folder, files, experienceName) {
+  const writtenFiles = [];
+
+  for (const file of files) {
+    const path = `${folder}${file.path}`;
+    const existing = await githubGetFile(path);
+
+    await githubPutFileBase64(
+      path,
+      file.content,
+      `Upload file for managed experience ${experienceName}: ${file.path}`,
+      existing ? existing.sha : undefined
+    );
+
+    writtenFiles.push(path);
+  }
+
+  return writtenFiles;
+}
+
 app.get("/", (req, res) => {
   res.status(200).json({
     ok: true,
     service: "MaraSense Experience Manager",
-    version: "2.0.0",
+    version: "3.0.0",
     githubRepo: `${GITHUB_OWNER}/${GITHUB_REPO}`,
     branch: GITHUB_BRANCH
   });
@@ -1068,29 +1073,32 @@ app.post("/createManagedExperience", async (req, res) => {
     const existingHtml = await githubGetFile(htmlPath);
     const existingConfig = await githubGetFile(configPath);
 
-    await githubPutFile(
+    await githubPutFileText(
       htmlPath,
       TEMPLATE_HTML,
       `Create managed experience HTML: ${data.name}`,
       existingHtml ? existingHtml.sha : undefined
     );
 
-    await githubPutFile(
+    await githubPutFileText(
       configPath,
       JSON.stringify(config, null, 2) + "\n",
       `Create managed experience config: ${data.name}`,
       existingConfig ? existingConfig.sha : undefined
     );
 
+    const writtenFiles = await writeUploadedFiles(folder, data.files, data.name);
+
     const updatedIndex = await updateExperiencesIndex(record);
 
     return res.status(200).json({
       ok: true,
-      message: "Esperienza creata/aggiornata su GitHub.",
+      message: "Esperienza creata/aggiornata su GitHub con file.",
       folder,
       publicUrl,
       config,
       record,
+      writtenFiles,
       indexCount: updatedIndex.length
     });
   } catch (error) {
