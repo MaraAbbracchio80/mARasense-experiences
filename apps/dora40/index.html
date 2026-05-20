@@ -1,262 +1,112 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dora 40 | Invito Digitale</title>
+  <meta name="description" content="Invito digitale per il quarantesimo compleanno di Dora." />
   <style>
-    :root {
-      --bg: #120b0a;
-      --panel: rgba(39, 22, 18, 0.82);
-      --line: rgba(244, 214, 170, 0.18);
-      --text: #f7efe7;
-      --muted: rgba(247, 239, 231, 0.76);
-      --gold: #efc98e;
-      --gold-2: #ffddab;
+    :root{
+      --bg:#110a09;--panel:rgba(38,22,18,.78);--line:rgba(244,214,170,.2);
+      --text:#f7efe7;--muted:rgba(247,239,231,.78);--gold:#efc98e;--gold2:#ffddab;
     }
-    * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
-    body {
-      margin: 0;
-      font-family: "Segoe UI", sans-serif;
-      color: var(--text);
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;font-family:"Segoe UI",sans-serif;color:var(--text);
       background:
-        radial-gradient(circle at top, rgba(184, 122, 58, 0.22), transparent 34%),
-        linear-gradient(180deg, #170d0b 0%, #0f0908 48%, #080505 100%);
+        radial-gradient(circle at top, rgba(184,122,58,.22), transparent 34%),
+        linear-gradient(180deg,#170d0b 0%,#0f0908 48%,#080505 100%);
     }
-    .wrap { max-width: 1100px; margin: 0 auto; padding: 0 18px 40px; }
-    .topbar {
-      position: sticky;
-      top: 0;
-      z-index: 10;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 16px 0;
-      background: linear-gradient(180deg, rgba(17,10,9,.95), rgba(17,10,9,.55), transparent);
-      backdrop-filter: blur(10px);
+    .wrap{max-width:1100px;margin:0 auto;padding:0 18px}
+    .topbar{
+      position:sticky;top:0;z-index:10;display:flex;justify-content:space-between;align-items:center;
+      padding:16px 0;background:linear-gradient(180deg, rgba(17,10,9,.95), rgba(17,10,9,.55), transparent);
+      backdrop-filter:blur(10px)
     }
-    .brand {
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      padding: 12px 16px;
-      background: rgba(255,255,255,.03);
+    .brand{
+      border:1px solid var(--line);border-radius:999px;padding:12px 16px;background:rgba(255,255,255,.03)
     }
-    .brand small {
-      display: block;
-      letter-spacing: .28em;
-      text-transform: uppercase;
-      color: var(--muted);
-      font-size: 10px;
+    .brand small{display:block;letter-spacing:.28em;text-transform:uppercase;color:var(--muted);font-size:10px}
+    .brand strong{font:italic 30px Georgia,serif;font-weight:500}
+    .btn,.btn2,button{
+      display:inline-flex;align-items:center;justify-content:center;min-height:46px;padding:0 18px;border-radius:999px;
+      text-decoration:none;border:1px solid var(--line);font:inherit;cursor:pointer
     }
-    .brand strong {
-      font: italic 30px Georgia, serif;
-      font-weight: 500;
+    .btn{background:linear-gradient(135deg,var(--gold2),var(--gold));color:#2d1708;border-color:rgba(255,228,188,.3)}
+    .btn2{background:rgba(255,255,255,.04);color:var(--text)}
+    .hero{min-height:92vh;display:grid;align-items:center;padding:32px 0 24px}
+    .hero-card,.panel,.form,.result{
+      border:1px solid var(--line);border-radius:28px;background:var(--panel);backdrop-filter:blur(16px)
     }
-    .btn, .btn2, button {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 46px;
-      padding: 0 18px;
-      border-radius: 999px;
-      text-decoration: none;
-      border: 1px solid var(--line);
-      font: inherit;
-      cursor: pointer;
-    }
-    .btn {
-      background: linear-gradient(135deg, var(--gold-2), var(--gold));
-      color: #2d1708;
-      border-color: rgba(255,228,188,.3);
-    }
-    .btn2 {
-      background: rgba(255,255,255,.04);
-      color: var(--text);
-    }
-    .hero {
-      min-height: 90vh;
-      display: grid;
-      align-items: center;
-      padding: 26px 0 20px;
-    }
-    .hero-card, .panel, .form, .result {
-      border: 1px solid var(--line);
-      border-radius: 28px;
-      background: var(--panel);
-      backdrop-filter: blur(16px);
-    }
-    .hero-card {
-      padding: 32px;
+    .hero-card{
+      padding:32px;
       background:
         radial-gradient(circle at 20% 12%, rgba(255,223,178,.18), transparent 20%),
         radial-gradient(circle at 86% 22%, rgba(255,199,118,.16), transparent 18%),
         linear-gradient(145deg, rgba(45,27,21,.92), rgba(16,10,9,.96));
     }
-    .hero-grid {
-      display: grid;
-      gap: 24px;
-    }
-    .kicker {
-      margin: 0;
-      font-size: 12px;
-      letter-spacing: .34em;
-      text-transform: uppercase;
-      color: var(--gold);
-    }
-    h1 {
-      margin: 12px 0 0;
-      font: italic 500 clamp(64px, 14vw, 110px) Georgia, serif;
-      line-height: .92;
-    }
-    .subtitle {
-      margin: 12px 0 0;
-      font: 500 clamp(18px, 3vw, 24px) Georgia, serif;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-    }
-    .copy, .text, .card p, .result p {
-      color: var(--muted);
-      line-height: 1.75;
-    }
-    .copy { max-width: 560px; margin: 16px 0 0; }
-    .actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 22px;
-    }
-    .monogram {
-      width: min(280px, 58vw);
-      aspect-ratio: 1;
-      border-radius: 50%;
-      display: grid;
-      place-items: center;
-      margin: auto;
-      border: 1px solid rgba(255,226,188,.2);
+    .hero-grid{display:grid;gap:24px}
+    .kicker{margin:0;font-size:12px;letter-spacing:.34em;text-transform:uppercase;color:var(--gold)}
+    h1{margin:12px 0 0;font:italic 500 clamp(64px,14vw,110px) Georgia,serif;line-height:.92}
+    .subtitle{margin:12px 0 0;font:500 clamp(18px,3vw,24px) Georgia,serif;letter-spacing:.08em;text-transform:uppercase}
+    .copy{max-width:560px;margin:16px 0 0;line-height:1.75;color:var(--muted)}
+    .actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:22px}
+    .monogram{
+      width:min(280px,58vw);aspect-ratio:1;border-radius:50%;display:grid;place-items:center;margin:auto;
+      border:1px solid rgba(255,226,188,.2);
       background:
         radial-gradient(circle at 30% 30%, rgba(255,225,183,.24), transparent 30%),
         linear-gradient(180deg, rgba(255,236,210,.08), rgba(255,207,131,.02)),
         rgba(255,255,255,.03);
-      box-shadow: inset 0 0 0 16px rgba(255,255,255,.02);
+      box-shadow:inset 0 0 0 16px rgba(255,255,255,.02);
     }
-    .monogram span {
-      font: italic clamp(84px, 18vw, 140px) Georgia, serif;
-      color: var(--gold-2);
+    .monogram span{font:italic clamp(84px,18vw,140px) Georgia,serif;color:var(--gold2)}
+    .countdown{
+      margin-top:18px;display:grid;grid-template-columns:repeat(4,1fr);gap:12px;padding:14px;
+      border:1px solid var(--line);border-radius:24px;background:rgba(15,9,8,.6)
     }
-    .countdown {
-      margin-top: 18px;
-      display: grid;
-      grid-template-columns: repeat(4,1fr);
-      gap: 12px;
-      padding: 14px;
-      border: 1px solid var(--line);
-      border-radius: 24px;
-      background: rgba(15,9,8,.6);
+    .count{
+      min-height:84px;display:grid;place-items:center;text-align:center;border-radius:18px;background:rgba(255,247,235,.04)
     }
-    .count {
-      min-height: 84px;
-      display: grid;
-      place-items: center;
-      text-align: center;
-      border-radius: 18px;
-      background: rgba(255,247,235,.04);
+    .count strong{display:block;font-size:clamp(28px,5vw,40px);color:var(--gold2)}
+    .count small{color:var(--muted);letter-spacing:.12em;text-transform:uppercase;font-size:11px}
+    section{padding:16px 0}
+    .tag{display:block;margin-bottom:8px;color:var(--gold);letter-spacing:.24em;text-transform:uppercase;font-size:11px}
+    h2{margin:0 0 12px;font:500 clamp(30px,4vw,46px) Georgia,serif;line-height:1.08}
+    .panel{padding:22px}
+    .text{color:var(--muted);line-height:1.8;margin:0}
+    .grid3,.grid4,.rsvp-grid{display:grid;gap:14px}
+    .card{
+      border:1px solid var(--line);border-radius:22px;padding:18px;background:rgba(255,255,255,.03)
     }
-    .count strong {
-      display: block;
-      font-size: clamp(28px, 5vw, 40px);
-      color: var(--gold-2);
+    .card span{display:block;margin-bottom:8px;color:var(--gold2);letter-spacing:.12em}
+    .card h3,.card strong{margin:0 0 8px;font-size:18px}
+    .card p{margin:0;color:var(--muted);line-height:1.7}
+    .form{padding:18px;display:grid;gap:14px}
+    label{display:grid;gap:6px;color:var(--muted)}
+    input,select,textarea{
+      width:100%;padding:14px 16px;border-radius:16px;border:1px solid rgba(255,226,188,.14);
+      background:rgba(255,255,255,.04);color:var(--text);font:inherit
     }
-    .count small {
-      color: var(--muted);
-      letter-spacing: .12em;
-      text-transform: uppercase;
-      font-size: 11px;
+    textarea{resize:vertical;min-height:120px}
+    .result{padding:18px;display:grid;gap:12px}
+    .result p{margin:0;color:var(--muted);line-height:1.7}
+    @media (min-width:760px){
+      .hero-grid{grid-template-columns:1.15fr .85fr;align-items:center}
+      .grid3{grid-template-columns:repeat(3,1fr)}
+      .grid4{grid-template-columns:repeat(4,1fr)}
+      .rsvp-grid{grid-template-columns:1.1fr .9fr;align-items:start}
     }
-    section { padding: 16px 0; }
-    .tag {
-      display: block;
-      margin-bottom: 8px;
-      color: var(--gold);
-      letter-spacing: .24em;
-      text-transform: uppercase;
-      font-size: 11px;
-    }
-    h2 {
-      margin: 0 0 12px;
-      font: 500 clamp(30px, 4vw, 46px) Georgia, serif;
-      line-height: 1.08;
-    }
-    .panel { padding: 22px; }
-    .text { margin: 0; }
-    .grid3, .grid4, .rsvp-grid {
-      display: grid;
-      gap: 14px;
-    }
-    .card {
-      border: 1px solid var(--line);
-      border-radius: 22px;
-      padding: 18px;
-      background: rgba(255,255,255,.03);
-    }
-    .card span {
-      display: block;
-      margin-bottom: 8px;
-      color: var(--gold-2);
-      letter-spacing: .12em;
-    }
-    .card h3, .card strong {
-      margin: 0 0 8px;
-      font-size: 18px;
-    }
-    .card p { margin: 0; }
-    .form {
-      padding: 18px;
-      display: grid;
-      gap: 14px;
-    }
-    label {
-      display: grid;
-      gap: 6px;
-      color: var(--muted);
-    }
-    input, select, textarea {
-      width: 100%;
-      padding: 14px 16px;
-      border-radius: 16px;
-      border: 1px solid rgba(255,226,188,.14);
-      background: rgba(255,255,255,.04);
-      color: var(--text);
-      font: inherit;
-    }
-    textarea {
-      resize: vertical;
-      min-height: 120px;
-    }
-    .result {
-      padding: 18px;
-      display: grid;
-      gap: 12px;
-    }
-    .result p { margin: 0; }
-    @media (min-width:760px) {
-      .hero-grid { grid-template-columns: 1.15fr .85fr; align-items: center; }
-      .grid3 { grid-template-columns: repeat(3,1fr); }
-      .grid4 { grid-template-columns: repeat(4,1fr); }
-      .rsvp-grid { grid-template-columns: 1.1fr .9fr; align-items: start; }
-    }
-    @media (max-width:640px) {
-      .countdown { grid-template-columns: repeat(2,1fr); }
+    @media (max-width:640px){
+      .countdown{grid-template-columns:repeat(2,1fr)}
     }
   </style>
 </head>
 <body>
   <div class="wrap">
     <header class="topbar">
-      <div class="brand">
-        <small>Save the Date</small>
-        <strong>Dora</strong>
-      </div>
+      <div class="brand"><small>Save the Date</small><strong>Dora</strong></div>
       <a class="btn2" href="#rsvp">RSVP</a>
     </header>
 
@@ -288,9 +138,7 @@
     <section>
       <span class="tag">L'evento</span>
       <h2>Un invito pensato per chi farà parte di questa serata.</h2>
-      <div class="panel">
-        <p class="text">Una serata speciale per celebrare i primi quarant'anni di Dora tra bellezza, emozione e persone care. Qui trovi il conto alla rovescia, i dettagli della festa, la conferma di presenza e la posizione esatta per raggiungerci.</p>
-      </div>
+      <div class="panel"><p class="text">Una serata speciale per celebrare i primi quarant'anni di Dora tra bellezza, emozione e persone care. Qui trovi il conto alla rovescia, i dettagli della festa, la conferma di presenza e la posizione esatta per raggiungerci.</p></div>
     </section>
 
     <section>
@@ -367,20 +215,18 @@
       seconds: document.getElementById("seconds")
     };
 
-    function pad(v) { return String(v).padStart(2, "0"); }
-
-    function tick() {
+    function pad(v){ return String(v).padStart(2,"0"); }
+    function tick(){
       const d = eventDate - Date.now();
       if (d <= 0) {
         Object.values(fields).forEach(el => el.textContent = "00");
         return;
       }
-      fields.days.textContent = pad(Math.floor(d / (1000 * 60 * 60 * 24)));
-      fields.hours.textContent = pad(Math.floor((d / (1000 * 60 * 60)) % 24));
-      fields.minutes.textContent = pad(Math.floor((d / (1000 * 60)) % 60));
+      fields.days.textContent = pad(Math.floor(d / (1000*60*60*24)));
+      fields.hours.textContent = pad(Math.floor((d / (1000*60*60)) % 24));
+      fields.minutes.textContent = pad(Math.floor((d / (1000*60)) % 60));
       fields.seconds.textContent = pad(Math.floor((d / 1000) % 60));
     }
-
     tick();
     setInterval(tick, 1000);
 
