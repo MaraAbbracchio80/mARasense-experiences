@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dora 40 | Invito Digitale</title>
+  <style>
+    :root {
+      --bg: #120b0a;
+      --panel: rgba(39, 22, 18, 0.82);
+      --line: rgba(244, 214, 170, 0.18);
+      --text: #f7efe7;
+      --muted: rgba(247, 239, 231, 0.76);
+      --gold: #efc98e;
+      --gold-2: #ffddab;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top, rgba(184, 122, 58, 0.22), transparent 34%),
+        linear-gradient(180deg, #170d0b 0%, #0f0908 48%, #080505 100%);
+    }
+    .wrap { max-width: 1100px; margin: 0 auto; padding: 0 18px 40px; }
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 0;
+      background: linear-gradient(180deg, rgba(17,10,9,.95), rgba(17,10,9,.55), transparent);
+      backdrop-filter: blur(10px);
+    }
+    .brand {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 12px 16px;
+      background: rgba(255,255,255,.03);
+    }
+    .brand small {
+      display: block;
+      letter-spacing: .28em;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-size: 10px;
+    }
+    .brand strong {
+      font: italic 30px Georgia, serif;
+      font-weight: 500;
+    }
+    .btn, .btn2, button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 46px;
+      padding: 0 18px;
+      border-radius: 999px;
+      text-decoration: none;
+      border: 1px solid var(--line);
+      font: inherit;
+      cursor: pointer;
+    }
+    .btn {
+      background: linear-gradient(135deg, var(--gold-2), var(--gold));
+      color: #2d1708;
+      border-color: rgba(255,228,188,.3);
+    }
+    .btn2 {
+      background: rgba(255,255,255,.04);
+      color: var(--text);
+    }
+    .hero {
+      min-height: 90vh;
+      display: grid;
+      align-items: center;
+      padding: 26px 0 20px;
+    }
+    .hero-card, .panel, .form, .result {
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      background: var(--panel);
+      backdrop-filter: blur(16px);
+    }
+    .hero-card {
+      padding: 32px;
+      background:
+        radial-gradient(circle at 20% 12%, rgba(255,223,178,.18), transparent 20%),
+        radial-gradient(circle at 86% 22%, rgba(255,199,118,.16), transparent 18%),
+        linear-gradient(145deg, rgba(45,27,21,.92), rgba(16,10,9,.96));
+    }
+    .hero-grid {
+      display: grid;
+      gap: 24px;
+    }
+    .kicker {
+      margin: 0;
+      font-size: 12px;
+      letter-spacing: .34em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+    h1 {
+      margin: 12px 0 0;
+      font: italic 500 clamp(64px, 14vw, 110px) Georgia, serif;
+      line-height: .92;
+    }
+    .subtitle {
+      margin: 12px 0 0;
+      font: 500 clamp(18px, 3vw, 24px) Georgia, serif;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .copy, .text, .card p, .result p {
+      color: var(--muted);
+      line-height: 1.75;
+    }
+    .copy { max-width: 560px; margin: 16px 0 0; }
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 22px;
+    }
+    .monogram {
+      width: min(280px, 58vw);
+      aspect-ratio: 1;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      margin: auto;
+      border: 1px solid rgba(255,226,188,.2);
+      background:
+        radial-gradient(circle at 30% 30%, rgba(255,225,183,.24), transparent 30%),
+        linear-gradient(180deg, rgba(255,236,210,.08), rgba(255,207,131,.02)),
+        rgba(255,255,255,.03);
+      box-shadow: inset 0 0 0 16px rgba(255,255,255,.02);
+    }
+    .monogram span {
+      font: italic clamp(84px, 18vw, 140px) Georgia, serif;
+      color: var(--gold-2);
+    }
+    .countdown {
+      margin-top: 18px;
+      display: grid;
+      grid-template-columns: repeat(4,1fr);
+      gap: 12px;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      background: rgba(15,9,8,.6);
+    }
+    .count {
+      min-height: 84px;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      border-radius: 18px;
+      background: rgba(255,247,235,.04);
+    }
+    .count strong {
+      display: block;
+      font-size: clamp(28px, 5vw, 40px);
+      color: var(--gold-2);
+    }
+    .count small {
+      color: var(--muted);
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      font-size: 11px;
+    }
+    section { padding: 16px 0; }
+    .tag {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--gold);
+      letter-spacing: .24em;
+      text-transform: uppercase;
+      font-size: 11px;
+    }
+    h2 {
+      margin: 0 0 12px;
+      font: 500 clamp(30px, 4vw, 46px) Georgia, serif;
+      line-height: 1.08;
+    }
+    .panel { padding: 22px; }
+    .text { margin: 0; }
+    .grid3, .grid4, .rsvp-grid {
+      display: grid;
+      gap: 14px;
+    }
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      padding: 18px;
+      background: rgba(255,255,255,.03);
+    }
+    .card span {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--gold-2);
+      letter-spacing: .12em;
+    }
+    .card h3, .card strong {
+      margin: 0 0 8px;
+      font-size: 18px;
+    }
+    .card p { margin: 0; }
+    .form {
+      padding: 18px;
+      display: grid;
+      gap: 14px;
+    }
+    label {
+      display: grid;
+      gap: 6px;
+      color: var(--muted);
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 14px 16px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,226,188,.14);
+      background: rgba(255,255,255,.04);
+      color: var(--text);
+      font: inherit;
+    }
+    textarea {
+      resize: vertical;
+      min-height: 120px;
+    }
+    .result {
+      padding: 18px;
+      display: grid;
+      gap: 12px;
+    }
+    .result p { margin: 0; }
+    @media (min-width:760px) {
+      .hero-grid { grid-template-columns: 1.15fr .85fr; align-items: center; }
+      .grid3 { grid-template-columns: repeat(3,1fr); }
+      .grid4 { grid-template-columns: repeat(4,1fr); }
+      .rsvp-grid { grid-template-columns: 1.1fr .9fr; align-items: start; }
+    }
+    @media (max-width:640px) {
+      .countdown { grid-template-columns: repeat(2,1fr); }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="topbar">
+      <div class="brand">
+        <small>Save the Date</small>
+        <strong>Dora</strong>
+      </div>
+      <a class="btn2" href="#rsvp">RSVP</a>
+    </header>
+
+    <section class="hero">
+      <div class="hero-card">
+        <div class="hero-grid">
+          <div>
+            <p class="kicker">21 Luglio 2026</p>
+            <h1>Dora</h1>
+            <p class="subtitle">40th Birthday Celebration</p>
+            <p class="copy">Una notte di luce, eleganza e persone importanti da vivere insieme. Qui trovi tutti i dettagli per esserci.</p>
+            <div class="actions">
+              <a class="btn" href="#rsvp">Conferma invito</a>
+              <a class="btn2" href="#location">Scopri la location</a>
+            </div>
+          </div>
+          <div class="monogram"><span>D</span></div>
+        </div>
+      </div>
+
+      <div class="countdown" aria-live="polite">
+        <div class="count"><div><strong id="days">00</strong><small>Giorni</small></div></div>
+        <div class="count"><div><strong id="hours">00</strong><small>Ore</small></div></div>
+        <div class="count"><div><strong id="minutes">00</strong><small>Minuti</small></div></div>
+        <div class="count"><div><strong id="seconds">00</strong><small>Secondi</small></div></div>
+      </div>
+    </section>
+
+    <section>
+      <span class="tag">L'evento</span>
+      <h2>Un invito pensato per chi farà parte di questa serata.</h2>
+      <div class="panel">
+        <p class="text">Una serata speciale per celebrare i primi quarant'anni di Dora tra bellezza, emozione e persone care. Qui trovi il conto alla rovescia, i dettagli della festa, la conferma di presenza e la posizione esatta per raggiungerci.</p>
+      </div>
+    </section>
+
+    <section>
+      <span class="tag">La storia di Dora</span>
+      <h2>Quarant'anni di luce, carattere e momenti che meritano festa.</h2>
+      <div class="grid3">
+        <article class="card"><span>01</span><h3>Eleganza</h3><p>Dora ha un modo tutto suo di lasciare il segno: con stile, intensità e una presenza che resta.</p></article>
+        <article class="card"><span>02</span><h3>Cuore</h3><p>In questi anni ha costruito ricordi, legami e momenti veri. Questa festa nasce per restituire quell'affetto.</p></article>
+        <article class="card"><span>03</span><h3>Nuovo capitolo</h3><p>I quaranta non sono un numero da contare, ma un capitolo da celebrare con energia e persone giuste accanto.</p></article>
+      </div>
+    </section>
+
+    <section>
+      <span class="tag">Dettagli</span>
+      <h2>Tutto quello che serve, in un colpo d'occhio.</h2>
+      <div class="grid4">
+        <div class="card"><strong>Data</strong><p>Martedì 21 Luglio 2026</p></div>
+        <div class="card"><strong>Orario</strong><p>Ore 20:30</p></div>
+        <div class="card"><strong>Dress code</strong><p>Elegante serale</p></div>
+        <div class="card"><strong>Occasione</strong><p>40 anni di Dora</p></div>
+      </div>
+    </section>
+
+    <section id="location">
+      <span class="tag">Location</span>
+      <h2>La serata prenderà vita in una cornice speciale.</h2>
+      <div class="panel">
+        <p style="margin:0 0 6px;font:500 24px Georgia,serif">Bacoli</p>
+        <p class="text">Via Spiaggia Romana, 31, 80070 Bacoli NA</p>
+        <div class="actions" style="margin-top:18px">
+          <a class="btn" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Via%20Spiaggia%20Romana%2C%2031%2C%2080070%20Bacoli%20NA">Apri in Maps</a>
+          <a class="btn2" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&destination=Via%20Spiaggia%20Romana%2C%2031%2C%2080070%20Bacoli%20NA">Indicazioni</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="rsvp">
+      <span class="tag">RSVP</span>
+      <h2>Fai sapere se ci sarai.</h2>
+      <div class="rsvp-grid">
+        <form class="form" id="rsvp-form">
+          <label>Nome e cognome <input name="guestName" type="text" required></label>
+          <label>Risposta
+            <select name="attendance" required>
+              <option value="">Seleziona</option>
+              <option value="Partecipo con piacere">Partecipo con piacere</option>
+              <option value="Non riesco a esserci">Non riesco a esserci</option>
+            </select>
+          </label>
+          <label>Numero accompagnatori <input name="companions" type="number" min="0" max="6" value="0"></label>
+          <label>Contatto <input name="guestContact" type="text" placeholder="Telefono oppure email"></label>
+          <label>Messaggio per Dora <textarea name="guestMessage" placeholder="Scrivi un pensiero, una nota o un augurio..."></textarea></label>
+          <button type="submit">Prepara il messaggio</button>
+        </form>
+
+        <div class="result" id="result" hidden>
+          <p><strong>Messaggio pronto</strong></p>
+          <p id="resultText"></p>
+          <div class="actions" style="margin-top:0">
+            <button type="button" id="copyBtn">Copia testo</button>
+            <a class="btn2" id="waLink" href="#" target="_blank" rel="noopener">Apri WhatsApp</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const eventDate = new Date("2026-07-21T20:30:00+02:00").getTime();
+    const fields = {
+      days: document.getElementById("days"),
+      hours: document.getElementById("hours"),
+      minutes: document.getElementById("minutes"),
+      seconds: document.getElementById("seconds")
+    };
+
+    function pad(v) { return String(v).padStart(2, "0"); }
+
+    function tick() {
+      const d = eventDate - Date.now();
+      if (d <= 0) {
+        Object.values(fields).forEach(el => el.textContent = "00");
+        return;
+      }
+      fields.days.textContent = pad(Math.floor(d / (1000 * 60 * 60 * 24)));
+      fields.hours.textContent = pad(Math.floor((d / (1000 * 60 * 60)) % 24));
+      fields.minutes.textContent = pad(Math.floor((d / (1000 * 60)) % 60));
+      fields.seconds.textContent = pad(Math.floor((d / 1000) % 60));
+    }
+
+    tick();
+    setInterval(tick, 1000);
+
+    const form = document.getElementById("rsvp-form");
+    const result = document.getElementById("result");
+    const resultText = document.getElementById("resultText");
+    const waLink = document.getElementById("waLink");
+    const copyBtn = document.getElementById("copyBtn");
+    const whatsappNumber = "393336564297";
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const data = new FormData(form);
+      const message = [
+        "RSVP per Dora",
+        `Nome: ${data.get("guestName")}`,
+        `Risposta: ${data.get("attendance")}`,
+        `Accompagnatori: ${data.get("companions")}`,
+        `Contatto: ${data.get("guestContact") || "Non indicato"}`,
+        `Messaggio: ${data.get("guestMessage") || "Nessun messaggio aggiunto"}`
+      ].join(" | ");
+
+      resultText.textContent = message;
+      waLink.href = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+      result.hidden = false;
+      result.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    });
+
+    copyBtn.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(resultText.textContent.trim());
+        copyBtn.textContent = "Copiato";
+        setTimeout(() => copyBtn.textContent = "Copia testo", 1500);
+      } catch {
+        alert("Non sono riuscito a copiare il testo.");
+      }
+    });
+  </script>
+</body>
+</html>
