@@ -999,8 +999,13 @@
   const result = await response.json();
 
   if (!response.ok || !result.ok) {
-    throw new Error(result.error || result.detail || "Errore creazione upload URL");
-  }
+  console.error("Errore getUploadUrl:", result);
+  throw new Error(
+    (result.error || "Errore creazione upload URL") +
+    " - " +
+    (result.detail || JSON.stringify(result))
+  );
+}
 
   const uploadResponse = await fetch(result.uploadUrl, {
     method: "PUT",
