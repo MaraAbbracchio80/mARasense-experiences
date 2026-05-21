@@ -50,6 +50,7 @@ jobs:
           cat firebase.json
           echo "---- functions ----"
           ls -la functions
+          echo "Deploy triggered after CORS update"
 
       - name: Deploy Firebase Hosting
         run: firebase deploy --only hosting --project marasenseexperiences-ar --force
