@@ -39,7 +39,7 @@ const GITHUB_REPO = process.env.GITHUB_REPO || "mARasense-experiences";
 const GITHUB_BRANCH = process.env.GITHUB_BRANCH || "main";
 const STORAGE_BUCKET =
   process.env.STORAGE_BUCKET ||
-  "marasenseexperiences-ar.appspot.com";
+  "marasenseexperiences-ar.firebasestorage.app";
 
 const BASE_URL = "https://marasenseexperiences-ar.web.app";
 const GITHUB_API_BASE = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}`;
