@@ -7,7 +7,20 @@ const axios = require("axios");
 
 const app = express();
 
-app.use(cors({ origin: true }));
+const ALLOWED_ORIGINS = [
+  "https://marasenseexperiences-ar.web.app",
+  "https://marasenseexperiences-ar.firebaseapp.com",
+  "http://localhost:5000",
+  "http://127.0.0.1:5000"
+];
+
+const corsOptions = {
+  origin: ALLOWED_ORIGINS,
+  methods: ["GET", "POST", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"]
+};
+
+app.use(cors(corsOptions));
 app.use(express.json({ limit: "80mb" }));
 
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
@@ -41,19 +54,15 @@ const TEMPLATE_HTML = `<!DOCTYPE html>
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-
   <title>MaraSense Experience</title>
 
   <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
 
   <style>
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
-    html,
-    body {
+    html, body {
       margin: 0;
       width: 100%;
       height: 100%;
@@ -246,7 +255,6 @@ const TEMPLATE_HTML = `<!DOCTYPE html>
 </head>
 
 <body>
-
   <div id="startScreen">
     <img
       src="shared.jpg"
@@ -276,7 +284,6 @@ const TEMPLATE_HTML = `<!DOCTYPE html>
   </div>
 
   <div id="statusText">Inquadra il target</div>
-
   <div id="errorBox"></div>
 
   <a-scene
@@ -368,16 +375,11 @@ const TEMPLATE_HTML = `<!DOCTYPE html>
 
     async function loadConfig() {
       try {
-        const response = await fetch("config.json", {
-          cache: "no-store"
-        });
+        const response = await fetch("config.json", { cache: "no-store" });
 
         if (response.ok) {
           const remoteConfig = await response.json();
-          config = {
-            ...DEFAULT_CONFIG,
-            ...remoteConfig
-          };
+          config = { ...DEFAULT_CONFIG, ...remoteConfig };
         }
       } catch (error) {
         console.warn("Config non trovato, uso valori default.", error);
@@ -495,9 +497,7 @@ const TEMPLATE_HTML = `<!DOCTYPE html>
         setupTargetEvents();
       } catch (error) {
         console.error(error);
-        showError(
-          "Non riesco ad avviare la fotocamera. Controlla i permessi del browser e ricarica la pagina."
-        );
+        showError("Non riesco ad avviare la fotocamera. Controlla i permessi del browser e ricarica la pagina.");
       }
     }
 
@@ -735,7 +735,9 @@ function decodeBase64(content) {
 }
 
 function cleanBase64Content(value) {
-  return String(value || "").replace(/^data:.*?;base64,/, "").replace(/\s/g, "");
+  return String(value || "")
+    .replace(/^data:.*?;base64,/, "")
+    .replace(/\s/g, "");
 }
 
 async function githubGetFile(path) {
@@ -806,13 +808,11 @@ function normalizeExperiencePayload(body) {
   const type = body.type;
   const name = body.name || body.title;
   const notes = body.notes || "";
-
   const slug = slugify(body.slug || name);
 
   const targetFile = body.targetFile || "targets.mind";
   const sharedImage = body.sharedImage || "shared.jpg";
   const contentFile = body.contentFile || "content-1.mp4";
-
   const options = body.options || {};
 
   const targetImages = Array.isArray(body.targetImages)
@@ -987,9 +987,7 @@ async function updateExperiencesIndex(record) {
   const indexPath = "managed-experiences/index.json";
 
   const { value, sha } = await readJsonFile(indexPath, []);
-
   const list = Array.isArray(value) ? value : [];
-
   const existingIndex = list.findIndex((item) => item.id === record.id);
 
   if (existingIndex >= 0) {
@@ -1088,7 +1086,6 @@ app.post("/createManagedExperience", async (req, res) => {
     );
 
     const writtenFiles = await writeUploadedFiles(folder, data.files, data.name);
-
     const updatedIndex = await updateExperiencesIndex(record);
 
     return res.status(200).json({
@@ -1117,6 +1114,16 @@ app.post("/createManagedExperience", async (req, res) => {
     });
   }
 });
+
+exports.api = onRequest(
+  {
+    region: "europe-west1",
+    cors: ALLOWED_ORIGINS,
+    timeoutSeconds: 300,
+    memory: "1GiB"
+  },
+  app
+);
 
 exports.api = onRequest(
   {
