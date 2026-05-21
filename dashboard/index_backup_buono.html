@@ -549,9 +549,6 @@
   const API_CREATE_EXPERIENCE =
     "https://europe-west1-marasenseexperiences-ar.cloudfunctions.net/api/createManagedExperience";
 
-  const API_GET_UPLOAD_URL =
-    "https://europe-west1-marasenseexperiences-ar.cloudfunctions.net/api/getUploadUrl";
-
   let lastGeneratedConfig = null;
   let targetImageCounter = 0;
   let contentCounter = 0;
@@ -984,90 +981,54 @@
       "Anteprima e config.json multi-contenuto generati correttamente.";
   }
 
-  async function uploadFileToStorage(file, storagePath) {
-  const response = await fetch(API_GET_UPLOAD_URL, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      path: storagePath,
-      contentType: file.type || "application/octet-stream"
-    })
-  });
+  async function collectUploadedFiles(config) {
+    const uploadedFiles = [];
 
-  const result = await response.json();
+    const mindFileInput = document.getElementById("mindFile");
+    const sharedInput = document.getElementById("sharedImage");
 
-  if (!response.ok || !result.ok) {
-    throw new Error(result.error || result.detail || "Errore creazione upload URL");
-  }
-
-  const uploadResponse = await fetch(result.uploadUrl, {
-    method: "PUT",
-    headers: {
-      "Content-Type": file.type || "application/octet-stream",
-      "x-goog-meta-firebasestoragedownloadtokens": result.token
-    },
-    body: file
-  });
-
-  if (!uploadResponse.ok) {
-    throw new Error("Errore upload Firebase Storage");
-  }
-
-  return result.downloadUrl;
-}
-
-async function collectUploadedFiles(config, data) {
-  const folder = `managed-experiences/${data.sector}/${data.slug}/storage/`;
-
-  const mindFileInput = document.getElementById("mindFile");
-  const sharedInput = document.getElementById("sharedImage");
-
-  if (mindFileInput.files[0]) {
-    config.targetFile = await uploadFileToStorage(
-      mindFileInput.files[0],
-      folder + "targets.mind"
-    );
-  }
-
-  if (sharedInput.files[0]) {
-    config.sharedImage = await uploadFileToStorage(
-      sharedInput.files[0],
-      folder + config.sharedImage
-    );
-  }
-
-  const targetBlocks = document.querySelectorAll(".target-image-block");
-
-  for (let i = 0; i < targetBlocks.length; i++) {
-    const fileInput = targetBlocks[i].querySelector(".target-file");
-
-    if (fileInput.files[0] && config.targetImages[i]) {
-      config.targetImages[i].file = await uploadFileToStorage(
-        fileInput.files[0],
-        folder + config.targetImages[i].file
-      );
+    if (mindFileInput.files[0]) {
+      uploadedFiles.push({
+        path: config.targetFile,
+        content: await fileToBase64(mindFileInput.files[0])
+      });
     }
-  }
 
-  const contentBlocks = document.querySelectorAll(".content-block");
-
-  for (let i = 0; i < contentBlocks.length; i++) {
-    const fileInput = contentBlocks[i].querySelector(".content-file");
-
-    if (fileInput.files[0] && config.contents[i]) {
-      config.contents[i].file = await uploadFileToStorage(
-        fileInput.files[0],
-        folder + config.contents[i].file
-      );
+    if (sharedInput.files[0]) {
+      uploadedFiles.push({
+        path: config.sharedImage,
+        content: await fileToBase64(sharedInput.files[0])
+      });
     }
+
+    const targetBlocks = document.querySelectorAll(".target-image-block");
+
+    for (let i = 0; i < targetBlocks.length; i++) {
+      const fileInput = targetBlocks[i].querySelector(".target-file");
+
+      if (fileInput.files[0] && config.targetImages[i]) {
+        uploadedFiles.push({
+          path: config.targetImages[i].file,
+          content: await fileToBase64(fileInput.files[0])
+        });
+      }
+    }
+
+    const contentBlocks = document.querySelectorAll(".content-block");
+
+    for (let i = 0; i < contentBlocks.length; i++) {
+      const fileInput = contentBlocks[i].querySelector(".content-file");
+
+      if (fileInput.files[0] && config.contents[i]) {
+        uploadedFiles.push({
+          path: config.contents[i].file,
+          content: await fileToBase64(fileInput.files[0])
+        });
+      }
+    }
+
+    return uploadedFiles;
   }
-
-  config.contentFile = config.contents[0].file;
-
-  return [];
-}
 
   async function createExperienceOnGitHub() {
     const status = document.getElementById("status");
@@ -1081,12 +1042,7 @@ async function collectUploadedFiles(config, data) {
     }
 
     const config = buildConfig(data);
-
-    status.textContent =
-      "Caricamento file su Firebase Storage in corso...";
-
-    const uploadedFiles =
-      await collectUploadedFiles(config, data);
+    const uploadedFiles = await collectUploadedFiles(config);
 
     const payload = {
       name: data.name,
@@ -1114,7 +1070,7 @@ async function collectUploadedFiles(config, data) {
     };
 
     status.textContent =
-      "Creazione esperienza su GitHub in corso...";
+      "Caricamento file e creazione esperienza su GitHub in corso...";
 
     try {
       const response = await fetch(API_CREATE_EXPERIENCE, {
