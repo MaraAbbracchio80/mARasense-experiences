@@ -37,7 +37,9 @@ const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 const GITHUB_OWNER = process.env.GITHUB_OWNER || "MaraAbbracchio80";
 const GITHUB_REPO = process.env.GITHUB_REPO || "mARasense-experiences";
 const GITHUB_BRANCH = process.env.GITHUB_BRANCH || "main";
-const STORAGE_BUCKET = process.env.STORAGE_BUCKET || "marasenseexperiences-ar.firebasestorage.app";
+const STORAGE_BUCKET =
+  process.env.STORAGE_BUCKET ||
+  "marasenseexperiences-ar.appspot.com";
 
 const BASE_URL = "https://marasenseexperiences-ar.web.app";
 const GITHUB_API_BASE = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}`;
