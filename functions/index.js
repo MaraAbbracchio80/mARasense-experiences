@@ -38,7 +38,7 @@ app.use(cors({
   allowedHeaders: ["Content-Type", "Authorization"]
 }));
 
-app.use(express.json({ limit: "80mb" }));
+app.use(express.json({ limit: "5mb" }));
 
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 const GITHUB_OWNER = process.env.GITHUB_OWNER || "MaraAbbracchio80";
@@ -48,36 +48,10 @@ const GITHUB_BRANCH = process.env.GITHUB_BRANCH || "main";
 const BASE_URL = "https://marasenseexperiences-ar.web.app";
 const GITHUB_API_BASE = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}`;
 
-const ALLOWED_SECTORS = [
-  "food",
-  "painting",
-  "sport",
-  "eventi",
-  "matrimoni",
-  "museo",
-  "retail",
-  "custom"
-];
+const ALLOWED_SECTORS = ["food", "painting", "sport", "eventi", "matrimoni", "museo", "retail", "custom"];
+const ALLOWED_TYPES = ["ar-video", "ar-audio", "ar-video-audio", "multi-target"];
 
-const ALLOWED_TYPES = [
-  "ar-video",
-  "ar-audio",
-  "ar-video-audio",
-  "multi-target"
-];
-
-const FALLBACK_TEMPLATE_HTML = `<!DOCTYPE html>
-<html lang="it">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MaraSense Experience</title>
-</head>
-<body>
-  <h1>MaraSense Experience</h1>
-  <p>Template AR non trovato. Verifica managed-experiences/_template/index.html.</p>
-</body>
-</html>`;
+const FALLBACK_TEMPLATE_HTML = `<!DOCTYPE html><html lang="it"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>MaraSense Experience</title></head><body><h1>MaraSense Experience</h1><p>Template AR non trovato.</p></body></html>`;
 
 function requireGithubToken() {
   if (!GITHUB_TOKEN) {
@@ -89,7 +63,6 @@ function requireGithubToken() {
 
 function githubHeaders() {
   requireGithubToken();
-
   return {
     Authorization: `Bearer ${GITHUB_TOKEN}`,
     Accept: "application/vnd.github+json",
@@ -108,20 +81,20 @@ function slugify(text) {
 }
 
 function isValidPathSegment(value) {
-  if (!value) return false;
-  if (typeof value !== "string") return false;
-  if (value.includes("..")) return false;
-  if (value.includes("/")) return false;
-  if (value.includes("\\")) return false;
+  if (!value || typeof value !== "string") return false;
+  if (value.includes("..") || value.includes("/") || value.includes("\\")) return false;
   return /^[a-z0-9._-]+$/i.test(value);
 }
 
-function isValidFilePayload(file) {
-  if (!file) return false;
-  if (typeof file !== "object") return false;
-  if (!isValidPathSegment(file.path)) return false;
-  if (!file.content || typeof file.content !== "string") return false;
-  return true;
+function isValidAssetReference(value) {
+  if (!value || typeof value !== "string") return false;
+  if (isValidPathSegment(value)) return true;
+  try {
+    const url = new URL(value);
+    return url.protocol === "https:" || url.protocol === "http:";
+  } catch (error) {
+    return false;
+  }
 }
 
 function encodeTextBase64(text) {
@@ -133,9 +106,7 @@ function decodeBase64(content) {
 }
 
 function cleanBase64Content(value) {
-  return String(value || "")
-    .replace(/^data:.*?;base64,/, "")
-    .replace(/\s/g, "");
+  return String(value || "").replace(/^data:.*?;base64,/, "").replace(/\s/g, "");
 }
 
 function githubPathUrl(path) {
@@ -148,13 +119,9 @@ async function githubGetFile(path) {
       headers: githubHeaders(),
       params: { ref: GITHUB_BRANCH }
     });
-
     return response.data;
   } catch (error) {
-    if (error.response && error.response.status === 404) {
-      return null;
-    }
-
+    if (error.response && error.response.status === 404) return null;
     throw error;
   }
 }
@@ -166,14 +133,9 @@ async function githubPutFileBase64(path, base64Content, message, sha) {
     branch: GITHUB_BRANCH
   };
 
-  if (sha) {
-    body.sha = sha;
-  }
+  if (sha) body.sha = sha;
 
-  const response = await axios.put(githubPathUrl(path), body, {
-    headers: githubHeaders()
-  });
-
+  const response = await axios.put(githubPathUrl(path), body, { headers: githubHeaders() });
   return response.data;
 }
 
@@ -183,24 +145,13 @@ async function githubPutFileText(path, content, message, sha) {
 
 async function readJsonFile(path, fallbackValue) {
   const existing = await githubGetFile(path);
-
-  if (!existing) {
-    return { value: fallbackValue, sha: null };
-  }
-
-  return {
-    value: JSON.parse(decodeBase64(existing.content)),
-    sha: existing.sha
-  };
+  if (!existing) return { value: fallbackValue, sha: null };
+  return { value: JSON.parse(decodeBase64(existing.content)), sha: existing.sha };
 }
 
 async function readTemplateHtml() {
   const templateFile = await githubGetFile("managed-experiences/_template/index.html");
-
-  if (!templateFile || !templateFile.content) {
-    return FALLBACK_TEMPLATE_HTML;
-  }
-
+  if (!templateFile || !templateFile.content) return FALLBACK_TEMPLATE_HTML;
   return decodeBase64(templateFile.content);
 }
 
@@ -210,41 +161,17 @@ function normalizeExperiencePayload(body) {
   const name = body.name || body.title;
   const notes = body.notes || "";
   const slug = slugify(body.slug || name);
-
   const targetFile = body.targetFile || "targets.mind";
   const sharedImage = body.sharedImage || "shared.jpg";
   const contentFile = body.contentFile || "content-1.mp4";
   const options = body.options || {};
-
   const targetImages = Array.isArray(body.targetImages) ? body.targetImages : [];
-
   const contents = Array.isArray(body.contents) && body.contents.length > 0
     ? body.contents
-    : [
-        {
-          id: 0,
-          label: "Contenuto 1",
-          targetId: 0,
-          file: contentFile
-        }
-      ];
-
+    : [{ id: 0, label: "Contenuto 1", targetId: 0, file: contentFile, kind: "video" }];
   const files = Array.isArray(body.files) ? body.files : [];
 
-  return {
-    sector,
-    type,
-    name,
-    notes,
-    slug,
-    targetFile,
-    sharedImage,
-    contentFile,
-    options,
-    targetImages,
-    contents,
-    files
-  };
+  return { sector, type, name, notes, slug, targetFile, sharedImage, contentFile, options, targetImages, contents, files };
 }
 
 function validateExperience(data) {
@@ -252,26 +179,18 @@ function validateExperience(data) {
   if (!data.slug || !isValidPathSegment(data.slug)) return "Slug esperienza non valido.";
   if (!ALLOWED_SECTORS.includes(data.sector)) return "Settore non valido.";
   if (!ALLOWED_TYPES.includes(data.type)) return "Tipo esperienza non valido.";
-  if (!isValidPathSegment(data.targetFile)) return "Nome file target non valido.";
-  if (!isValidPathSegment(data.sharedImage)) return "Nome file shared non valido.";
-  if (!isValidPathSegment(data.contentFile)) return "Nome file contenuto principale non valido.";
+  if (!isValidAssetReference(data.targetFile)) return "File target non valido.";
+  if (!isValidAssetReference(data.sharedImage)) return "File shared non valido.";
+  if (!isValidAssetReference(data.contentFile)) return "File contenuto principale non valido.";
   if (!Array.isArray(data.contents) || data.contents.length === 0) return "Aggiungi almeno un contenuto.";
 
   for (const content of data.contents) {
-    if (!isValidPathSegment(content.file)) {
-      return `Nome file contenuto non valido: ${content.file}`;
-    }
+    if (!isValidAssetReference(content.file)) return `File contenuto non valido: ${content.file}`;
   }
 
   for (const target of data.targetImages) {
-    if (target.file && target.file !== "-" && !isValidPathSegment(target.file)) {
-      return `Nome file immagine target non valido: ${target.file}`;
-    }
-  }
-
-  for (const file of data.files) {
-    if (!isValidFilePayload(file)) {
-      return "Payload file non valido.";
+    if (target.file && target.file !== "-" && !isValidAssetReference(target.file)) {
+      return `File immagine target non valido: ${target.file}`;
     }
   }
 
@@ -279,10 +198,7 @@ function validateExperience(data) {
 }
 
 function buildConfig(data, folder, publicUrl) {
-  const firstContent = data.contents[0] || {
-    file: data.contentFile,
-    targetId: 0
-  };
+  const firstContent = data.contents[0] || { file: data.contentFile, targetId: 0, kind: "video" };
 
   return {
     title: data.name,
@@ -296,10 +212,7 @@ function buildConfig(data, folder, publicUrl) {
     stopOnTargetLost: data.options.stopOnTargetLost !== false,
     transparentBg: data.options.transparentBg !== false,
     lensUi: data.options.lensUi !== false,
-    multiTarget:
-      data.type === "multi-target" ||
-      data.contents.length > 1 ||
-      data.targetImages.length > 1,
+    multiTarget: data.type === "multi-target" || data.contents.length > 1 || data.targetImages.length > 1,
     targetImages: data.targetImages.map((target, index) => ({
       id: Number.isInteger(target.id) ? target.id : index,
       label: target.label || `Target ${index + 1}`,
@@ -311,11 +224,13 @@ function buildConfig(data, folder, publicUrl) {
       label: content.label || `Contenuto ${index + 1}`,
       targetId: Number.isInteger(content.targetId) ? content.targetId : 0,
       file: content.file,
+      kind: content.kind || "video",
       originalFile: content.originalFile || "-"
     })),
     targets: data.contents.map((content, index) => ({
       id: Number.isInteger(content.targetId) ? content.targetId : 0,
       content: content.file,
+      kind: content.kind || "video",
       label: content.label || `Contenuto ${index + 1}`
     })),
     meta: {
@@ -358,44 +273,24 @@ async function updateExperiencesIndex(record) {
 
   if (existingIndex >= 0) {
     const previous = list[existingIndex];
-
-    list[existingIndex] = {
-      ...previous,
-      ...record,
-      createdAt: previous.createdAt || record.createdAt,
-      updatedAt: record.updatedAt
-    };
+    list[existingIndex] = { ...previous, ...record, createdAt: previous.createdAt || record.createdAt, updatedAt: record.updatedAt };
   } else {
     list.push(record);
   }
 
-  await githubPutFileText(
-    indexPath,
-    JSON.stringify(list, null, 2) + "\n",
-    `Update managed experiences index: ${record.name}`,
-    sha
-  );
-
+  await githubPutFileText(indexPath, JSON.stringify(list, null, 2) + "\n", `Update managed experiences index: ${record.name}`, sha);
   return list;
 }
 
 async function writeUploadedFiles(folder, files, experienceName) {
   const writtenFiles = [];
-
   for (const file of files) {
+    if (!file || !isValidPathSegment(file.path) || !file.content) continue;
     const path = `${folder}${file.path}`;
     const existing = await githubGetFile(path);
-
-    await githubPutFileBase64(
-      path,
-      file.content,
-      `Upload file for managed experience ${experienceName}: ${file.path}`,
-      existing ? existing.sha : undefined
-    );
-
+    await githubPutFileBase64(path, file.content, `Upload file for managed experience ${experienceName}: ${file.path}`, existing ? existing.sha : undefined);
     writtenFiles.push(path);
   }
-
   return writtenFiles;
 }
 
@@ -403,7 +298,7 @@ app.get("/", (req, res) => {
   res.status(200).json({
     ok: true,
     service: "MaraSense Experience Manager",
-    version: "3.1.0",
+    version: "4.0.0-storage",
     githubRepo: `${GITHUB_OWNER}/${GITHUB_REPO}`,
     branch: GITHUB_BRANCH
   });
@@ -412,53 +307,28 @@ app.get("/", (req, res) => {
 app.post("/createManagedExperience", async (req, res) => {
   try {
     requireGithubToken();
-
     const data = normalizeExperiencePayload(req.body || {});
     const validationError = validateExperience(data);
-
-    if (validationError) {
-      return res.status(400).json({ ok: false, error: validationError });
-    }
+    if (validationError) return res.status(400).json({ ok: false, error: validationError });
 
     const folder = `managed-experiences/${data.sector}/${data.slug}/`;
     const publicUrl = `${BASE_URL}/${folder}`;
     const config = buildConfig(data, folder, publicUrl);
     const record = buildIndexRecord(config, folder, publicUrl);
+    const templateHtml = await readTemplateHtml();
 
     const htmlPath = `${folder}index.html`;
     const configPath = `${folder}config.json`;
-
-    const templateHtml = await readTemplateHtml();
     const existingHtml = await githubGetFile(htmlPath);
     const existingConfig = await githubGetFile(configPath);
 
-    await githubPutFileText(
-      htmlPath,
-      templateHtml,
-      `Create managed experience HTML: ${data.name}`,
-      existingHtml ? existingHtml.sha : undefined
-    );
-
-    await githubPutFileText(
-      configPath,
-      JSON.stringify(config, null, 2) + "\n",
-      `Create managed experience config: ${data.name}`,
-      existingConfig ? existingConfig.sha : undefined
-    );
+    await githubPutFileText(htmlPath, templateHtml, `Create managed experience HTML: ${data.name}`, existingHtml ? existingHtml.sha : undefined);
+    await githubPutFileText(configPath, JSON.stringify(config, null, 2) + "\n", `Create managed experience config: ${data.name}`, existingConfig ? existingConfig.sha : undefined);
 
     const writtenFiles = await writeUploadedFiles(folder, data.files, data.name);
     const updatedIndex = await updateExperiencesIndex(record);
 
-    return res.status(200).json({
-      ok: true,
-      message: "Esperienza creata/aggiornata su GitHub con file.",
-      folder,
-      publicUrl,
-      config,
-      record,
-      writtenFiles,
-      indexCount: updatedIndex.length
-    });
+    return res.status(200).json({ ok: true, message: "Esperienza creata/aggiornata su GitHub.", folder, publicUrl, config, record, writtenFiles, indexCount: updatedIndex.length });
   } catch (error) {
     console.error("Errore createManagedExperience:", {
       message: error.message,
@@ -469,19 +339,9 @@ app.post("/createManagedExperience", async (req, res) => {
     return res.status(error.statusCode || 500).json({
       ok: false,
       error: "Errore durante la scrittura su GitHub.",
-      detail: error.response && error.response.data
-        ? error.response.data.message || error.response.data
-        : error.message
+      detail: error.response && error.response.data ? error.response.data.message || error.response.data : error.message
     });
   }
 });
 
-exports.api = onRequest(
-  {
-    region: "europe-west1",
-    cors: ALLOWED_ORIGINS,
-    timeoutSeconds: 300,
-    memory: "1GiB"
-  },
-  app
-);
+exports.api = onRequest({ region: "europe-west1", cors: ALLOWED_ORIGINS, timeoutSeconds: 300, memory: "1GiB" }, app);
