@@ -1,0 +1,14 @@
+[
+  {
+    "origin": [
+      "https://marasenseexperiences-ar.web.app",
+      "https://marasenseexperiences-ar.firebaseapp.com"
+    ],
+    "method": ["GET", "POST", "PUT", "OPTIONS"],
+    "responseHeader": [
+      "Content-Type",
+      "x-goog-meta-firebasestoragedownloadtokens"
+    ],
+    "maxAgeSeconds": 3600
+  }
+]
