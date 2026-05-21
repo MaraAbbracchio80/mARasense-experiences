@@ -70,5 +70,46 @@
         "label": "video sposi"
       }
     ]
+  },
+  {
+    "id": "painting/animazione-quadro",
+    "name": "Animazione quadro",
+    "title": "Animazione quadro",
+    "sector": "painting",
+    "type": "ar-video",
+    "slug": "animazione-quadro",
+    "createdAt": "2026-05-21T15:04:16.462Z",
+    "updatedAt": "2026-05-21T15:04:16.462Z",
+    "folder": "managed-experiences/painting/animazione-quadro/",
+    "publicUrl": "https://marasenseexperiences-ar.web.app/managed-experiences/painting/animazione-quadro/",
+    "sharedImage": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Fpainting%2Fanimazione-quadro%2Fstorage%2Fshared.png?alt=media&token=9e63674c-b6fe-4cef-be2a-d38f05fe40e7",
+    "targetFile": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Fpainting%2Fanimazione-quadro%2Fstorage%2Ftargets.mind?alt=media&token=fdcd6b57-6588-4d9b-bb15-4815161216ab",
+    "contentFile": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Fpainting%2Fanimazione-quadro%2Fstorage%2Fcontent-1.mp4?alt=media&token=c46d38f8-7ce7-47f5-8eb6-bc810cbbdd2a",
+    "targetImages": [
+      {
+        "id": 0,
+        "label": "target1",
+        "file": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Fpainting%2Fanimazione-quadro%2Fstorage%2Ftarget-1.png?alt=media&token=450b8551-09d8-4498-a76a-590bfa5c9ec1",
+        "originalFile": "eleonora-di-toledo_bronzino.png"
+      }
+    ],
+    "contents": [
+      {
+        "id": 0,
+        "label": "video",
+        "targetId": 0,
+        "file": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Fpainting%2Fanimazione-quadro%2Fstorage%2Fcontent-1.mp4?alt=media&token=c46d38f8-7ce7-47f5-8eb6-bc810cbbdd2a",
+        "kind": "video",
+        "originalFile": "eleonora-di-toledo_bronzino.mp4"
+      }
+    ],
+    "targets": [
+      {
+        "id": 0,
+        "content": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Fpainting%2Fanimazione-quadro%2Fstorage%2Fcontent-1.mp4?alt=media&token=c46d38f8-7ce7-47f5-8eb6-bc810cbbdd2a",
+        "kind": "video",
+        "label": "video"
+      }
+    ]
   }
 ]
