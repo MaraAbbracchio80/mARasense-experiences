@@ -2,10 +2,7 @@
 <html lang="it">
 <head>
   <meta charset="UTF-8" />
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
-  />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 
   <title>MaraSense Experience</title>
 
@@ -13,9 +10,7 @@
   <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
 
   <style>
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     html,
     body {
@@ -27,10 +22,7 @@
       font-family: Arial, Helvetica, sans-serif;
     }
 
-    body {
-      position: fixed;
-      inset: 0;
-    }
+    body { position: fixed; inset: 0; }
 
     a-scene {
       width: 100vw !important;
@@ -38,21 +30,17 @@
       background: transparent !important;
     }
 
-    video {
-      display: none;
-    }
+    video, audio { display: none; }
 
     #lensOverlay {
       position: fixed;
       inset: 0;
       z-index: 20;
       pointer-events: none;
-
       display: flex;
       align-items: center;
       justify-content: center;
-
-      background: rgba(0, 0, 0, 0.08);
+      background: rgba(0, 0, 0, 0.03);
     }
 
     .lensBox {
@@ -70,37 +58,10 @@
       filter: drop-shadow(0 0 8px rgba(138, 43, 226, 0.85));
     }
 
-    .corner.tl {
-      top: 0;
-      left: 0;
-      border-top: 5px solid;
-      border-left: 5px solid;
-      border-radius: 28px 0 0 0;
-    }
-
-    .corner.tr {
-      top: 0;
-      right: 0;
-      border-top: 5px solid;
-      border-right: 5px solid;
-      border-radius: 0 28px 0 0;
-    }
-
-    .corner.bl {
-      bottom: 0;
-      left: 0;
-      border-bottom: 5px solid;
-      border-left: 5px solid;
-      border-radius: 0 0 0 28px;
-    }
-
-    .corner.br {
-      bottom: 0;
-      right: 0;
-      border-bottom: 5px solid;
-      border-right: 5px solid;
-      border-radius: 0 0 28px 0;
-    }
+    .corner.tl { top: 0; left: 0; border-top: 5px solid; border-left: 5px solid; border-radius: 28px 0 0 0; }
+    .corner.tr { top: 0; right: 0; border-top: 5px solid; border-right: 5px solid; border-radius: 0 28px 0 0; }
+    .corner.bl { bottom: 0; left: 0; border-bottom: 5px solid; border-left: 5px solid; border-radius: 0 0 0 28px; }
+    .corner.br { bottom: 0; right: 0; border-bottom: 5px solid; border-right: 5px solid; border-radius: 0 0 28px 0; }
 
     .scanLine {
       position: absolute;
@@ -115,20 +76,9 @@
     }
 
     @keyframes scanMove {
-      0% {
-        top: 18%;
-        opacity: 0.4;
-      }
-
-      50% {
-        top: 82%;
-        opacity: 1;
-      }
-
-      100% {
-        top: 18%;
-        opacity: 0.4;
-      }
+      0% { top: 18%; opacity: 0.4; }
+      50% { top: 82%; opacity: 1; }
+      100% { top: 18%; opacity: 0.4; }
     }
 
     #statusText {
@@ -137,20 +87,15 @@
       bottom: max(32px, env(safe-area-inset-bottom));
       transform: translateX(-50%);
       z-index: 25;
-
       width: min(88vw, 420px);
       text-align: center;
-
       color: white;
       font-size: 15px;
       line-height: 1.4;
-
       padding: 12px 16px;
       border-radius: 999px;
-
       background: rgba(0, 0, 0, 0.42);
       backdrop-filter: blur(12px);
-
       box-shadow: 0 0 18px rgba(0, 0, 0, 0.28);
     }
 
@@ -158,23 +103,20 @@
       position: fixed;
       inset: 0;
       z-index: 50;
-
       display: flex;
       align-items: center;
       justify-content: center;
       flex-direction: column;
-
       background:
         radial-gradient(circle at top left, rgba(138, 43, 226, 0.32), transparent 34%),
         radial-gradient(circle at bottom right, rgba(0, 234, 255, 0.24), transparent 34%),
         #050505;
-
       color: white;
       text-align: center;
       padding: 24px;
     }
 
-    #startScreen img {
+    #brandLogo {
       width: 110px;
       height: 110px;
       object-fit: contain;
@@ -183,27 +125,12 @@
     }
 
     @keyframes rotateLogo {
-      from {
-        transform: rotate(0deg);
-      }
-
-      to {
-        transform: rotate(360deg);
-      }
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
     }
 
-    #startScreen h1 {
-      margin: 0 0 10px;
-      font-size: 26px;
-    }
-
-    #startScreen p {
-      margin: 0 0 24px;
-      max-width: 420px;
-      color: #d7d7d7;
-      line-height: 1.5;
-      font-size: 15px;
-    }
+    #startScreen h1 { margin: 0 0 10px; font-size: 26px; }
+    #startScreen p { margin: 0 0 24px; max-width: 420px; color: #d7d7d7; line-height: 1.5; font-size: 15px; }
 
     #startButton {
       border: none;
@@ -213,30 +140,23 @@
       font-size: 16px;
       font-weight: 700;
       cursor: pointer;
-
       background: linear-gradient(135deg, #8a2be2, #00bcd4);
       box-shadow: 0 0 24px rgba(138, 43, 226, 0.38);
     }
 
     #errorBox {
       display: none;
-
       position: fixed;
       left: 50%;
       top: 50%;
       transform: translate(-50%, -50%);
-
       z-index: 80;
-
       width: min(88vw, 520px);
       padding: 18px;
-
       background: rgba(0, 0, 0, 0.78);
       color: white;
-
       border-radius: 18px;
       border: 1px solid rgba(255, 255, 255, 0.16);
-
       line-height: 1.5;
       text-align: center;
     }
@@ -244,23 +164,11 @@
 </head>
 
 <body>
-
   <div id="startScreen">
-    <img
-      src="shared.jpg"
-      onerror="this.src='https://ndaprove.newdigitalapp.it/docs/MARASENSELOGO.png'"
-      alt="MaraSense"
-    />
-
+    <img id="brandLogo" src="/MARASENSELOGO.png" onerror="this.src='https://ndaprove.newdigitalapp.it/docs/MARASENSELOGO.png'" alt="MaraSense" />
     <h1 id="experienceTitle">MaraSense Experience</h1>
-
-    <p>
-      Premi il pulsante e inquadra il target per avviare il contenuto in realtà aumentata.
-    </p>
-
-    <button id="startButton" onclick="startExperience()">
-      Avvia esperienza
-    </button>
+    <p>Premi il pulsante e inquadra il target per avviare il contenuto in realtà aumentata.</p>
+    <button id="startButton" onclick="startExperience()">Avvia esperienza</button>
   </div>
 
   <div id="lensOverlay">
@@ -273,27 +181,10 @@
     </div>
   </div>
 
-  <div id="statusText">
-    Inquadra il target
-  </div>
-
+  <div id="statusText">Inquadra il target</div>
   <div id="errorBox"></div>
 
-  <video
-    id="contentVideo"
-    src="content.mp4"
-    preload="auto"
-    playsinline
-    webkit-playsinline
-    crossorigin="anonymous"
-  ></video>
-
-  <audio
-    id="contentAudio"
-    src="content.mp3"
-    preload="auto"
-    crossorigin="anonymous"
-  ></audio>
+  <audio id="contentAudio" preload="auto" crossorigin="anonymous"></audio>
 
   <a-scene
     id="arScene"
@@ -306,47 +197,15 @@
     background="transparent: true"
   >
     <a-assets>
-      <video
-        id="arVideoAsset"
-        src="content.mp4"
-        preload="auto"
-        playsinline
-        webkit-playsinline
-        crossorigin="anonymous"
-      ></video>
-
-      <img
-        id="arImageAsset"
-        src="content.jpg"
-        crossorigin="anonymous"
-      />
+      <video id="arVideoAsset" preload="auto" playsinline webkit-playsinline crossorigin="anonymous"></video>
+      <img id="arImageAsset" crossorigin="anonymous" />
     </a-assets>
 
-    <a-camera
-      position="0 0 0"
-      look-controls="enabled: false"
-      cursor="rayOrigin: mouse"
-    ></a-camera>
+    <a-camera position="0 0 0" look-controls="enabled: false" cursor="rayOrigin: mouse"></a-camera>
 
     <a-entity id="target0" mindar-image-target="targetIndex: 0">
-      <a-video
-        id="videoPlane"
-        src="#arVideoAsset"
-        width="1.15"
-        height="0.65"
-        position="0 0 0"
-        rotation="0 0 0"
-      ></a-video>
-
-      <a-image
-        id="imagePlane"
-        src="#arImageAsset"
-        width="1.1"
-        height="0.75"
-        position="0 0 0"
-        rotation="0 0 0"
-        visible="false"
-      ></a-image>
+      <a-video id="videoPlane" src="#arVideoAsset" width="1.15" height="0.65" position="0 0 0" rotation="0 0 0" visible="false"></a-video>
+      <a-image id="imagePlane" src="#arImageAsset" width="1.1" height="0.75" position="0 0 0" rotation="0 0 0" visible="false"></a-image>
     </a-entity>
   </a-scene>
 
@@ -366,13 +225,9 @@
     };
 
     let config = { ...DEFAULT_CONFIG };
-
     let sceneEl = null;
-    let arSystem = null;
-
     let targetVisible = false;
     let contentPlaying = false;
-    let contentEnded = false;
     let experienceStarted = false;
 
     function showError(message) {
@@ -387,27 +242,34 @@
 
     function showLens(show) {
       const lens = document.getElementById("lensOverlay");
-
       if (!config.lensUi) {
         lens.style.display = "none";
         return;
       }
-
       lens.style.display = show ? "flex" : "none";
+    }
+
+    function isVideo(fileName) {
+      const lower = String(fileName || "").toLowerCase();
+      return lower.endsWith(".mp4") || lower.endsWith(".webm") || lower.endsWith(".mov") || lower.includes(".mp4?") || lower.includes(".webm?") || lower.includes(".mov?");
+    }
+
+    function isAudio(fileName) {
+      const lower = String(fileName || "").toLowerCase();
+      return lower.endsWith(".mp3") || lower.endsWith(".wav") || lower.endsWith(".m4a") || lower.includes(".mp3?") || lower.includes(".wav?") || lower.includes(".m4a?");
+    }
+
+    function isImage(fileName) {
+      const lower = String(fileName || "").toLowerCase();
+      return lower.endsWith(".jpg") || lower.endsWith(".jpeg") || lower.endsWith(".png") || lower.endsWith(".webp") || lower.includes(".jpg?") || lower.includes(".jpeg?") || lower.includes(".png?") || lower.includes(".webp?");
     }
 
     async function loadConfig() {
       try {
-        const response = await fetch("config.json", {
-          cache: "no-store"
-        });
-
+        const response = await fetch("config.json", { cache: "no-store" });
         if (response.ok) {
           const remoteConfig = await response.json();
-          config = {
-            ...DEFAULT_CONFIG,
-            ...remoteConfig
-          };
+          config = { ...DEFAULT_CONFIG, ...remoteConfig };
         }
       } catch (error) {
         console.warn("Config non trovato, uso valori default.", error);
@@ -415,165 +277,109 @@
 
       document.getElementById("experienceTitle").textContent = config.title || DEFAULT_CONFIG.title;
 
-      if (config.sharedImage) {
-        document.querySelector("#startScreen img").src = config.sharedImage;
-      }
-
-      if (config.contentFile) {
-        applyContentFile(config.contentFile);
-      }
-
+      applyTargetFile(config.targetFile || DEFAULT_CONFIG.targetFile);
+      applyContentFile(config.contentFile || DEFAULT_CONFIG.contentFile);
       showLens(true);
     }
 
+    function applyTargetFile(targetFile) {
+      const scene = document.getElementById("arScene");
+      scene.setAttribute(
+        "mindar-image",
+        "imageTargetSrc: " + targetFile + "; autoStart: false; filterMinCF: 0.0001; filterBeta: 0.001;"
+      );
+    }
+
     function applyContentFile(fileName) {
-      const video = document.getElementById("contentVideo");
+      const video = document.getElementById("arVideoAsset");
       const audio = document.getElementById("contentAudio");
-      const arVideoAsset = document.getElementById("arVideoAsset");
-      const arImageAsset = document.getElementById("arImageAsset");
+      const image = document.getElementById("arImageAsset");
+      const videoPlane = document.getElementById("videoPlane");
+      const imagePlane = document.getElementById("imagePlane");
 
-      const lower = fileName.toLowerCase();
+      videoPlane.setAttribute("visible", "false");
+      imagePlane.setAttribute("visible", "false");
 
-      if (lower.endsWith(".mp4") || lower.endsWith(".webm") || lower.endsWith(".mov")) {
+      if (isVideo(fileName)) {
         video.src = fileName;
-        arVideoAsset.src = fileName;
-        document.getElementById("videoPlane").setAttribute("visible", "true");
-        document.getElementById("imagePlane").setAttribute("visible", "false");
+        videoPlane.setAttribute("visible", "true");
+        return;
       }
 
-      if (lower.endsWith(".mp3") || lower.endsWith(".wav") || lower.endsWith(".m4a")) {
+      if (isAudio(fileName)) {
         audio.src = fileName;
-        document.getElementById("videoPlane").setAttribute("visible", "false");
-        document.getElementById("imagePlane").setAttribute("visible", "false");
+        return;
       }
 
-      if (
-        lower.endsWith(".jpg") ||
-        lower.endsWith(".jpeg") ||
-        lower.endsWith(".png") ||
-        lower.endsWith(".webp")
-      ) {
-        arImageAsset.src = fileName;
-        document.getElementById("videoPlane").setAttribute("visible", "false");
-        document.getElementById("imagePlane").setAttribute("visible", "true");
+      if (isImage(fileName)) {
+        image.src = fileName;
+        imagePlane.setAttribute("visible", "true");
       }
     }
 
     async function startExperience() {
       if (experienceStarted) return;
-
       experienceStarted = true;
-
       document.getElementById("startScreen").style.display = "none";
-
       sceneEl = document.querySelector("a-scene");
 
       try {
         await sceneEl.systems["mindar-image-system"].start();
-
-        arSystem = sceneEl.systems["mindar-image-system"];
-
         setStatus("Inquadra il target");
         showLens(true);
       } catch (error) {
         console.error(error);
-        showError(
-          "Non riesco ad avviare la fotocamera. Controlla i permessi del browser e ricarica la pagina."
-        );
+        showError("Non riesco ad avviare la fotocamera. Controlla i permessi del browser e ricarica la pagina.");
       }
     }
 
     function playContent() {
       if (contentPlaying) return;
 
-      const fileName = (config.contentFile || "").toLowerCase();
-
-      contentEnded = false;
+      const fileName = config.contentFile || "";
       contentPlaying = true;
-
       setStatus("Target trovato");
       showLens(false);
 
-      if (fileName.endsWith(".mp4") || fileName.endsWith(".webm") || fileName.endsWith(".mov")) {
+      if (isVideo(fileName)) {
         const video = document.getElementById("arVideoAsset");
-
-        try {
-          video.currentTime = 0;
-        } catch (e) {}
-
+        try { video.currentTime = 0; } catch (e) {}
         video.play()
-          .then(() => {
-            setStatus("Contenuto in riproduzione");
-          })
-          .catch((error) => {
-            console.warn("Autoplay video bloccato:", error);
-            setStatus("Tocca lo schermo per avviare il video");
-          });
-
+          .then(() => setStatus("Contenuto in riproduzione"))
+          .catch(() => setStatus("Tocca lo schermo per avviare il video"));
         video.onended = () => {
-          contentEnded = true;
           contentPlaying = false;
-
           setStatus("Contenuto terminato. Cerca un altro target.");
           showLens(true);
         };
-
         return;
       }
 
-      if (fileName.endsWith(".mp3") || fileName.endsWith(".wav") || fileName.endsWith(".m4a")) {
+      if (isAudio(fileName)) {
         const audio = document.getElementById("contentAudio");
-
-        try {
-          audio.currentTime = 0;
-        } catch (e) {}
-
+        try { audio.currentTime = 0; } catch (e) {}
         audio.play()
-          .then(() => {
-            setStatus("Audio in riproduzione");
-          })
-          .catch((error) => {
-            console.warn("Autoplay audio bloccato:", error);
-            setStatus("Tocca lo schermo per avviare l'audio");
-          });
-
+          .then(() => setStatus("Audio in riproduzione"))
+          .catch(() => setStatus("Tocca lo schermo per avviare l'audio"));
         audio.onended = () => {
-          contentEnded = true;
           contentPlaying = false;
-
           setStatus("Audio terminato. Cerca un altro target.");
           showLens(true);
         };
-
         return;
       }
 
-      if (
-        fileName.endsWith(".jpg") ||
-        fileName.endsWith(".jpeg") ||
-        fileName.endsWith(".png") ||
-        fileName.endsWith(".webp")
-      ) {
-        contentPlaying = true;
-        contentEnded = true;
+      if (isImage(fileName)) {
         setStatus("Immagine visualizzata");
+        contentPlaying = false;
       }
     }
 
     function stopContent() {
       const video = document.getElementById("arVideoAsset");
       const audio = document.getElementById("contentAudio");
-
-      try {
-        video.pause();
-        video.currentTime = 0;
-      } catch (e) {}
-
-      try {
-        audio.pause();
-        audio.currentTime = 0;
-      } catch (e) {}
-
+      try { video.pause(); video.currentTime = 0; } catch (e) {}
+      try { audio.pause(); audio.currentTime = 0; } catch (e) {}
       contentPlaying = false;
     }
 
@@ -582,43 +388,33 @@
 
       target0.addEventListener("targetFound", () => {
         targetVisible = true;
-
         if (!config.autoPlay) {
           setStatus("Target trovato. Tocca per avviare.");
           showLens(false);
           return;
         }
-
-        if (config.requireContentEnd && contentPlaying) {
-          return;
-        }
-
+        if (config.requireContentEnd && contentPlaying) return;
         playContent();
       });
 
       target0.addEventListener("targetLost", () => {
         targetVisible = false;
-
         if (config.requireContentEnd && contentPlaying) {
           setStatus("Contenuto in riproduzione");
           return;
         }
-
         if (config.stopOnTargetLost) {
           stopContent();
           setStatus("Target perso. Cerca di nuovo.");
           showLens(true);
           return;
         }
-
         setStatus("Target perso. Il contenuto continua.");
         showLens(true);
       });
 
       document.body.addEventListener("click", () => {
-        if (targetVisible && !contentPlaying) {
-          playContent();
-        }
+        if (targetVisible && !contentPlaying) playContent();
       });
     }
 
@@ -627,6 +423,5 @@
       setupTargetEvents();
     });
   </script>
-
 </body>
 </html>
