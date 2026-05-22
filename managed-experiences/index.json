@@ -79,17 +79,17 @@
     "type": "ar-video",
     "slug": "animazione-quadro",
     "createdAt": "2026-05-21T15:04:16.462Z",
-    "updatedAt": "2026-05-22T10:55:31.463Z",
+    "updatedAt": "2026-05-22T11:40:35.631Z",
     "folder": "managed-experiences/painting/animazione-quadro/",
     "publicUrl": "https://marasenseexperiences-ar.web.app/managed-experiences/painting/animazione-quadro/",
-    "sharedImage": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Fpainting%2Fanimazione-quadro%2Fstorage%2Fshared.png?alt=media&token=ad2b718f-0e55-44bb-81ef-0b876f4dc71e",
-    "targetFile": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Fpainting%2Fanimazione-quadro%2Fstorage%2Ftargets.mind?alt=media&token=abaf380e-0cc6-4e89-94d2-6c5f3245f2ff",
-    "contentFile": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Fpainting%2Fanimazione-quadro%2Fstorage%2Fcontent-1.mp4?alt=media&token=7e46b68a-d4af-43eb-91b6-b43455a13520",
+    "sharedImage": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Fpainting%2Fanimazione-quadro%2Fstorage%2Fshared.png?alt=media&token=68d3abf8-cdfd-4d9a-8cb5-ba0a9d79e0bf",
+    "targetFile": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Fpainting%2Fanimazione-quadro%2Fstorage%2Ftargets.mind?alt=media&token=74344756-8fc8-4deb-846f-1f4b17b78776",
+    "contentFile": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Fpainting%2Fanimazione-quadro%2Fstorage%2Fcontent-1.mp4?alt=media&token=d5c6d922-0a86-4a0b-a0a3-cda4a1c92c23",
     "targetImages": [
       {
         "id": 0,
         "label": "target1",
-        "file": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Fpainting%2Fanimazione-quadro%2Fstorage%2Ftarget-1.png?alt=media&token=ddb6099b-a496-41a8-b4dd-fd7862c6a9f7",
+        "file": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Fpainting%2Fanimazione-quadro%2Fstorage%2Ftarget-1.png?alt=media&token=e2fae26d-da0b-49ef-bf16-d47d8dab1954",
         "originalFile": "eleonora-di-toledo_bronzino.png"
       }
     ],
@@ -98,7 +98,7 @@
         "id": 0,
         "label": "video",
         "targetId": 0,
-        "file": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Fpainting%2Fanimazione-quadro%2Fstorage%2Fcontent-1.mp4?alt=media&token=7e46b68a-d4af-43eb-91b6-b43455a13520",
+        "file": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Fpainting%2Fanimazione-quadro%2Fstorage%2Fcontent-1.mp4?alt=media&token=d5c6d922-0a86-4a0b-a0a3-cda4a1c92c23",
         "kind": "video",
         "originalFile": "eleonora-di-toledo_bronzino.mp4"
       }
@@ -106,7 +106,7 @@
     "targets": [
       {
         "id": 0,
-        "content": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Fpainting%2Fanimazione-quadro%2Fstorage%2Fcontent-1.mp4?alt=media&token=7e46b68a-d4af-43eb-91b6-b43455a13520",
+        "content": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Fpainting%2Fanimazione-quadro%2Fstorage%2Fcontent-1.mp4?alt=media&token=d5c6d922-0a86-4a0b-a0a3-cda4a1c92c23",
         "kind": "video",
         "label": "video"
       }
