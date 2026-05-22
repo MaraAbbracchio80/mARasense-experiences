@@ -7,7 +7,7 @@
     "type": "ar-video",
     "slug": "salvatore-e-paola",
     "createdAt": "2026-05-19T11:39:20.324Z",
-    "updatedAt": "2026-05-19T11:39:20.324Z",
+    "updatedAt": "2026-05-22T13:37:41.838Z",
     "folder": "managed-experiences/matrimoni/salvatore-e-paola/",
     "publicUrl": "https://marasenseexperiences-ar.web.app/managed-experiences/matrimoni/salvatore-e-paola/",
     "targetImages": [
@@ -36,6 +36,7 @@
         "label": "proposta",
         "targetId": 0,
         "file": "content-1.mp4",
+        "kind": "video",
         "originalFile": "proposta.mp4"
       },
       {
@@ -43,6 +44,7 @@
         "label": "salvatore",
         "targetId": 1,
         "file": "content-2.mp4",
+        "kind": "video",
         "originalFile": "salvatore.mp4"
       },
       {
@@ -50,6 +52,7 @@
         "label": "video sposi",
         "targetId": 2,
         "file": "content-3.mp4",
+        "kind": "video",
         "originalFile": "videosposi.mp4"
       }
     ],
@@ -57,19 +60,25 @@
       {
         "id": 0,
         "content": "content-1.mp4",
+        "kind": "video",
         "label": "proposta"
       },
       {
         "id": 1,
         "content": "content-2.mp4",
+        "kind": "video",
         "label": "salvatore"
       },
       {
         "id": 2,
         "content": "content-3.mp4",
+        "kind": "video",
         "label": "video sposi"
       }
-    ]
+    ],
+    "sharedImage": "shared.png",
+    "targetFile": "targets.mind",
+    "contentFile": "content-1.mp4"
   },
   {
     "id": "painting/animazione-quadro",
