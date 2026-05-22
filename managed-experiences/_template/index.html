@@ -18,16 +18,22 @@
       width: 100%;
       height: 100%;
       overflow: hidden;
-      background: transparent;
+      background: transparent !important;
       font-family: Arial, Helvetica, sans-serif;
     }
 
     body { position: fixed; inset: 0; }
 
+    a-scene,
+    canvas,
+    .a-canvas,
+    .mindar-ui-overlay {
+      background: transparent !important;
+    }
+
     a-scene {
       width: 100vw !important;
       height: 100vh !important;
-      background: transparent !important;
     }
 
     video, audio { display: none; }
@@ -40,7 +46,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background: rgba(0, 0, 0, 0.03);
+      background: transparent !important;
     }
 
     .lensBox {
@@ -188,10 +194,10 @@
 
   <a-scene
     id="arScene"
-    mindar-image="imageTargetSrc: targets.mind; autoStart: false; filterMinCF: 0.0001; filterBeta: 0.001;"
+    mindar-image="imageTargetSrc: targets.mind; autoStart: false; filterMinCF: 0.0001; filterBeta: 0.01; warmupTolerance: 5; missTolerance: 10;"
     embedded
     color-space="sRGB"
-    renderer="colorManagement: true; physicallyCorrectLights: false; alpha: true; antialias: true;"
+    renderer="colorManagement: true; physicallyCorrectLights: false; alpha: true; antialias: true; logarithmicDepthBuffer: true;"
     vr-mode-ui="enabled: false"
     device-orientation-permission-ui="enabled: false"
     background="transparent: true"
@@ -204,8 +210,8 @@
     <a-camera position="0 0 0" look-controls="enabled: false" cursor="rayOrigin: mouse"></a-camera>
 
     <a-entity id="target0" mindar-image-target="targetIndex: 0">
-      <a-video id="videoPlane" src="#arVideoAsset" width="1.15" height="0.65" position="0 0 0" rotation="0 0 0" visible="false"></a-video>
-      <a-image id="imagePlane" src="#arImageAsset" width="1.1" height="0.75" position="0 0 0" rotation="0 0 0" visible="false"></a-image>
+      <a-video id="videoPlane" src="#arVideoAsset" width="1" height="1" position="0 0 0.01" rotation="0 0 0" visible="false"></a-video>
+      <a-image id="imagePlane" src="#arImageAsset" width="1" height="1" position="0 0 0.01" rotation="0 0 0" visible="false"></a-image>
     </a-entity>
   </a-scene>
 
@@ -221,7 +227,9 @@
       stopOnTargetLost: true,
       transparentBg: true,
       lensUi: true,
-      multiTarget: false
+      multiTarget: false,
+      planeMaxWidth: 1.15,
+      planeMaxHeight: 1.15
     };
 
     let config = { ...DEFAULT_CONFIG };
@@ -264,6 +272,29 @@
       return lower.endsWith(".jpg") || lower.endsWith(".jpeg") || lower.endsWith(".png") || lower.endsWith(".webp") || lower.includes(".jpg?") || lower.includes(".jpeg?") || lower.includes(".png?") || lower.includes(".webp?");
     }
 
+    function fitPlaneToRatio(plane, naturalWidth, naturalHeight) {
+      const maxW = Number(config.planeMaxWidth || 1.15);
+      const maxH = Number(config.planeMaxHeight || 1.15);
+
+      if (!naturalWidth || !naturalHeight) {
+        plane.setAttribute("width", maxW);
+        plane.setAttribute("height", maxW * 0.5625);
+        return;
+      }
+
+      const ratio = naturalWidth / naturalHeight;
+      let width = maxW;
+      let height = width / ratio;
+
+      if (height > maxH) {
+        height = maxH;
+        width = height * ratio;
+      }
+
+      plane.setAttribute("width", String(width));
+      plane.setAttribute("height", String(height));
+    }
+
     async function loadConfig() {
       try {
         const response = await fetch("config.json", { cache: "no-store" });
@@ -276,7 +307,6 @@
       }
 
       document.getElementById("experienceTitle").textContent = config.title || DEFAULT_CONFIG.title;
-
       applyTargetFile(config.targetFile || DEFAULT_CONFIG.targetFile);
       applyContentFile(config.contentFile || DEFAULT_CONFIG.contentFile);
       showLens(true);
@@ -286,7 +316,7 @@
       const scene = document.getElementById("arScene");
       scene.setAttribute(
         "mindar-image",
-        "imageTargetSrc: " + targetFile + "; autoStart: false; filterMinCF: 0.0001; filterBeta: 0.001;"
+        "imageTargetSrc: " + targetFile + "; autoStart: false; filterMinCF: 0.0001; filterBeta: 0.01; warmupTolerance: 5; missTolerance: 10;"
       );
     }
 
@@ -302,6 +332,9 @@
 
       if (isVideo(fileName)) {
         video.src = fileName;
+        video.addEventListener("loadedmetadata", () => {
+          fitPlaneToRatio(videoPlane, video.videoWidth, video.videoHeight);
+        }, { once: true });
         videoPlane.setAttribute("visible", "true");
         return;
       }
@@ -313,6 +346,9 @@
 
       if (isImage(fileName)) {
         image.src = fileName;
+        image.onload = () => {
+          fitPlaneToRatio(imagePlane, image.naturalWidth, image.naturalHeight);
+        };
         imagePlane.setAttribute("visible", "true");
       }
     }
@@ -321,6 +357,8 @@
       if (experienceStarted) return;
       experienceStarted = true;
       document.getElementById("startScreen").style.display = "none";
+      document.documentElement.style.background = "transparent";
+      document.body.style.background = "transparent";
       sceneEl = document.querySelector("a-scene");
 
       try {
