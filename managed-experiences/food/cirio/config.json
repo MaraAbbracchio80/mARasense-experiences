@@ -2,9 +2,9 @@
   "title": "Cirio",
   "type": "multi-target",
   "sector": "food",
-  "targetFile": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Ffood%2Fcirio%2Fstorage%2Ftargets.mind?alt=media&token=4b811232-0e61-4142-a42f-2f4a9d53afb4",
-  "sharedImage": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Ffood%2Fcirio%2Fstorage%2Fshared.png?alt=media&token=51f192ee-007d-4149-97d5-f30547553868",
-  "contentFile": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Ffood%2Fcirio%2Fstorage%2Fcontent-1.mp4?alt=media&token=292c9a7c-fbd1-4ff8-ba98-7795cf42340c",
+  "targetFile": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Ffood%2Fcirio%2Fstorage%2Ftargets.mind?alt=media&token=1cc9ab43-c707-4316-acea-c2ecb5f52fb9",
+  "sharedImage": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Ffood%2Fcirio%2Fstorage%2Fshared.png?alt=media&token=59ec8add-f320-4f40-863e-ddb13ff9b845",
+  "contentFile": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Ffood%2Fcirio%2Fstorage%2Fcontent-1.mp4?alt=media&token=fa0b78b0-182b-46de-a039-cf35a0bc1815",
   "autoPlay": true,
   "requireContentEnd": true,
   "stopOnTargetLost": true,
@@ -15,14 +15,26 @@
     {
       "id": 0,
       "label": "olio",
-      "file": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Ffood%2Fcirio%2Fstorage%2Ftarget-1.png?alt=media&token=3c6b8627-7b18-4598-a03b-5be3d418bf79",
+      "file": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Ffood%2Fcirio%2Fstorage%2Ftarget-1.png?alt=media&token=09921b59-03e3-4cc4-a407-31a389438769",
       "originalFile": "olio.png"
     },
     {
       "id": 1,
-      "label": "pizza",
-      "file": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Ffood%2Fcirio%2Fstorage%2Ftarget-2.png?alt=media&token=a61562bb-eb20-4bf6-a2c3-b795e37275f3",
+      "label": "pizza1",
+      "file": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Ffood%2Fcirio%2Fstorage%2Ftarget-2.png?alt=media&token=cb525c56-8c0e-446b-95fb-05a1614f818a",
       "originalFile": "pizza.png"
+    },
+    {
+      "id": 2,
+      "label": "pizza2",
+      "file": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Ffood%2Fcirio%2Fstorage%2Ftarget-3.png?alt=media&token=92d47abe-1a4a-4c30-8b35-29f897948ac7",
+      "originalFile": "pizza2.png"
+    },
+    {
+      "id": 3,
+      "label": "pizza3",
+      "file": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Ffood%2Fcirio%2Fstorage%2Ftarget-4.png?alt=media&token=e26064e5-6988-4ffe-a3b9-d72e6a2ce38a",
+      "originalFile": "pizza3.png"
     }
   ],
   "contents": [
@@ -30,15 +42,31 @@
       "id": 0,
       "label": "olio",
       "targetId": 0,
-      "file": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Ffood%2Fcirio%2Fstorage%2Fcontent-1.mp4?alt=media&token=292c9a7c-fbd1-4ff8-ba98-7795cf42340c",
+      "file": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Ffood%2Fcirio%2Fstorage%2Fcontent-1.mp4?alt=media&token=fa0b78b0-182b-46de-a039-cf35a0bc1815",
       "kind": "video",
       "originalFile": "videoolio.mp4"
     },
     {
       "id": 1,
-      "label": "pizza",
+      "label": "pizza1",
       "targetId": 1,
-      "file": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Ffood%2Fcirio%2Fstorage%2Fcontent-2.mp4?alt=media&token=19c4d065-f76b-4adf-aa20-467d94b7a7d5",
+      "file": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Ffood%2Fcirio%2Fstorage%2Fcontent-2.mp4?alt=media&token=927655c0-6773-41ca-be60-4e00cfafb73c",
+      "kind": "video",
+      "originalFile": "videopizza.mp4"
+    },
+    {
+      "id": 2,
+      "label": "pizza2",
+      "targetId": 2,
+      "file": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Ffood%2Fcirio%2Fstorage%2Fcontent-3.mp4?alt=media&token=cfb43d16-cc22-493c-87fd-e1f86b2ff81e",
+      "kind": "video",
+      "originalFile": "videopizza.mp4"
+    },
+    {
+      "id": 3,
+      "label": "pizza3",
+      "targetId": 3,
+      "file": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Ffood%2Fcirio%2Fstorage%2Fcontent-4.mp4?alt=media&token=564b1c3c-e02a-4181-b507-3e611b9e110a",
       "kind": "video",
       "originalFile": "videopizza.mp4"
     }
@@ -46,15 +74,27 @@
   "targets": [
     {
       "id": 0,
-      "content": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Ffood%2Fcirio%2Fstorage%2Fcontent-1.mp4?alt=media&token=292c9a7c-fbd1-4ff8-ba98-7795cf42340c",
+      "content": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Ffood%2Fcirio%2Fstorage%2Fcontent-1.mp4?alt=media&token=fa0b78b0-182b-46de-a039-cf35a0bc1815",
       "kind": "video",
       "label": "olio"
     },
     {
       "id": 1,
-      "content": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Ffood%2Fcirio%2Fstorage%2Fcontent-2.mp4?alt=media&token=19c4d065-f76b-4adf-aa20-467d94b7a7d5",
+      "content": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Ffood%2Fcirio%2Fstorage%2Fcontent-2.mp4?alt=media&token=927655c0-6773-41ca-be60-4e00cfafb73c",
       "kind": "video",
-      "label": "pizza"
+      "label": "pizza1"
+    },
+    {
+      "id": 2,
+      "content": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Ffood%2Fcirio%2Fstorage%2Fcontent-3.mp4?alt=media&token=cfb43d16-cc22-493c-87fd-e1f86b2ff81e",
+      "kind": "video",
+      "label": "pizza2"
+    },
+    {
+      "id": 3,
+      "content": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Ffood%2Fcirio%2Fstorage%2Fcontent-4.mp4?alt=media&token=564b1c3c-e02a-4181-b507-3e611b9e110a",
+      "kind": "video",
+      "label": "pizza3"
     }
   ],
   "meta": {
@@ -62,7 +102,7 @@
     "notes": "",
     "generatedFolder": "managed-experiences/food/cirio/",
     "publicUrl": "https://marasenseexperiences-ar.web.app/managed-experiences/food/cirio/",
-    "createdAt": "2026-05-26T09:47:20.582Z",
-    "updatedAt": "2026-05-26T09:47:20.582Z"
+    "createdAt": "2026-05-26T10:48:40.390Z",
+    "updatedAt": "2026-05-26T10:48:40.390Z"
   }
 }
