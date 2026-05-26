@@ -7,7 +7,7 @@
     "type": "ar-video",
     "slug": "salvatore-e-paola",
     "createdAt": "2026-05-19T11:39:20.324Z",
-    "updatedAt": "2026-05-19T11:39:20.324Z",
+    "updatedAt": "2026-05-22T13:37:41.838Z",
     "folder": "managed-experiences/matrimoni/salvatore-e-paola/",
     "publicUrl": "https://marasenseexperiences-ar.web.app/managed-experiences/matrimoni/salvatore-e-paola/",
     "targetImages": [
@@ -36,6 +36,7 @@
         "label": "proposta",
         "targetId": 0,
         "file": "content-1.mp4",
+        "kind": "video",
         "originalFile": "proposta.mp4"
       },
       {
@@ -43,6 +44,7 @@
         "label": "salvatore",
         "targetId": 1,
         "file": "content-2.mp4",
+        "kind": "video",
         "originalFile": "salvatore.mp4"
       },
       {
@@ -50,6 +52,7 @@
         "label": "video sposi",
         "targetId": 2,
         "file": "content-3.mp4",
+        "kind": "video",
         "originalFile": "videosposi.mp4"
       }
     ],
@@ -57,17 +60,286 @@
       {
         "id": 0,
         "content": "content-1.mp4",
+        "kind": "video",
         "label": "proposta"
       },
       {
         "id": 1,
         "content": "content-2.mp4",
+        "kind": "video",
         "label": "salvatore"
       },
       {
         "id": 2,
         "content": "content-3.mp4",
+        "kind": "video",
         "label": "video sposi"
+      }
+    ],
+    "sharedImage": "shared.png",
+    "targetFile": "targets.mind",
+    "contentFile": "content-1.mp4"
+  },
+  {
+    "id": "painting/animazione-quadro",
+    "name": "animazione quadro",
+    "title": "animazione quadro",
+    "sector": "painting",
+    "type": "ar-video",
+    "slug": "animazione-quadro",
+    "createdAt": "2026-05-21T15:04:16.462Z",
+    "updatedAt": "2026-05-22T13:33:50.572Z",
+    "folder": "managed-experiences/painting/animazione-quadro/",
+    "publicUrl": "https://marasenseexperiences-ar.web.app/managed-experiences/painting/animazione-quadro/",
+    "sharedImage": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Fpainting%2Fanimazione-quadro%2Fstorage%2Fshared.png?alt=media&token=68d3abf8-cdfd-4d9a-8cb5-ba0a9d79e0bf",
+    "targetFile": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Fpainting%2Fanimazione-quadro%2Fstorage%2Ftargets.mind?alt=media&token=74344756-8fc8-4deb-846f-1f4b17b78776",
+    "contentFile": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Fpainting%2Fanimazione-quadro%2Fstorage%2Fcontent-1.mp4?alt=media&token=d5c6d922-0a86-4a0b-a0a3-cda4a1c92c23",
+    "targetImages": [
+      {
+        "id": 0,
+        "label": "target1",
+        "file": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Fpainting%2Fanimazione-quadro%2Fstorage%2Ftarget-1.png?alt=media&token=e2fae26d-da0b-49ef-bf16-d47d8dab1954",
+        "originalFile": "eleonora-di-toledo_bronzino.png"
+      }
+    ],
+    "contents": [
+      {
+        "id": 0,
+        "label": "video",
+        "targetId": 0,
+        "file": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Fpainting%2Fanimazione-quadro%2Fstorage%2Fcontent-1.mp4?alt=media&token=d5c6d922-0a86-4a0b-a0a3-cda4a1c92c23",
+        "kind": "video",
+        "originalFile": "eleonora-di-toledo_bronzino.mp4"
+      }
+    ],
+    "targets": [
+      {
+        "id": 0,
+        "content": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Fpainting%2Fanimazione-quadro%2Fstorage%2Fcontent-1.mp4?alt=media&token=d5c6d922-0a86-4a0b-a0a3-cda4a1c92c23",
+        "kind": "video",
+        "label": "video"
+      }
+    ]
+  },
+  {
+    "id": "food/pietro-coricelli",
+    "name": "Pietro  Coricelli",
+    "title": "Pietro  Coricelli",
+    "sector": "food",
+    "type": "ar-video-audio",
+    "slug": "pietro-coricelli",
+    "createdAt": "2026-05-24T10:30:01.152Z",
+    "updatedAt": "2026-05-24T10:30:01.152Z",
+    "folder": "managed-experiences/food/pietro-coricelli/",
+    "publicUrl": "https://marasenseexperiences-ar.web.app/managed-experiences/food/pietro-coricelli/",
+    "sharedImage": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Ffood%2Fpietro-coricelli%2Fstorage%2Fshared.jpg?alt=media&token=40d44704-016e-42d3-bd3f-fbf52596b031",
+    "targetFile": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Ffood%2Fpietro-coricelli%2Fstorage%2Ftargets.mind?alt=media&token=84b7a51f-530a-48d1-bf60-8a91c0ddeaf7",
+    "contentFile": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Ffood%2Fpietro-coricelli%2Fstorage%2Fcontent-1.mp4?alt=media&token=62688045-ed1e-4e4f-8da3-85f8bb932487",
+    "targetImages": [
+      {
+        "id": 0,
+        "label": "Target 1",
+        "file": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Ffood%2Fpietro-coricelli%2Fstorage%2Ftarget-1.jpg?alt=media&token=c948d24d-985d-4295-875e-32046042dd8f",
+        "originalFile": "target1.jpeg"
+      },
+      {
+        "id": 1,
+        "label": "Target 2",
+        "file": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Ffood%2Fpietro-coricelli%2Fstorage%2Ftarget-2.jpg?alt=media&token=5b0c5c48-f3ef-4753-b5d2-d236409eeaf2",
+        "originalFile": "target2.jpeg"
+      },
+      {
+        "id": 2,
+        "label": "Target 3",
+        "file": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Ffood%2Fpietro-coricelli%2Fstorage%2Ftarget-3.jpg?alt=media&token=f1c4f1a7-95a5-4ab6-b877-43249f1b433f",
+        "originalFile": "target3.jpeg"
+      },
+      {
+        "id": 3,
+        "label": "Target 4",
+        "file": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Ffood%2Fpietro-coricelli%2Fstorage%2Ftarget-4.jpg?alt=media&token=99fce3b2-166c-4bbf-a4cb-851df6e3cdd3",
+        "originalFile": "target4.jpeg"
+      },
+      {
+        "id": 4,
+        "label": "Target 5",
+        "file": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Ffood%2Fpietro-coricelli%2Fstorage%2Ftarget-5.jpg?alt=media&token=dd36e845-31e2-4d8f-b1b9-fc82b23e7fb1",
+        "originalFile": "target5.jpeg"
+      }
+    ],
+    "contents": [
+      {
+        "id": 0,
+        "label": "video",
+        "targetId": 0,
+        "file": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Ffood%2Fpietro-coricelli%2Fstorage%2Fcontent-1.mp4?alt=media&token=62688045-ed1e-4e4f-8da3-85f8bb932487",
+        "kind": "video",
+        "originalFile": "video.mp4"
+      },
+      {
+        "id": 1,
+        "label": "video",
+        "targetId": 1,
+        "file": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Ffood%2Fpietro-coricelli%2Fstorage%2Fcontent-2.mp4?alt=media&token=f0083102-a1d2-4279-97ac-f395f930f130",
+        "kind": "video",
+        "originalFile": "video.mp4"
+      },
+      {
+        "id": 2,
+        "label": "video",
+        "targetId": 2,
+        "file": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Ffood%2Fpietro-coricelli%2Fstorage%2Fcontent-3.jpg?alt=media&token=28afaf3f-8c9f-4dfd-a58f-fcaef3944cb5",
+        "kind": "video",
+        "originalFile": "target3.jpeg"
+      },
+      {
+        "id": 3,
+        "label": "video",
+        "targetId": 3,
+        "file": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Ffood%2Fpietro-coricelli%2Fstorage%2Fcontent-4.mp4?alt=media&token=d2c01f55-f6b5-47bc-9081-8df3f58b92d3",
+        "kind": "video",
+        "originalFile": "video.mp4"
+      },
+      {
+        "id": 4,
+        "label": "video",
+        "targetId": 4,
+        "file": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Ffood%2Fpietro-coricelli%2Fstorage%2Fcontent-5.jpg?alt=media&token=d4953e3f-be08-4555-9d96-ea0a76fbe190",
+        "kind": "video",
+        "originalFile": "target5.jpeg"
+      }
+    ],
+    "targets": [
+      {
+        "id": 0,
+        "content": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Ffood%2Fpietro-coricelli%2Fstorage%2Fcontent-1.mp4?alt=media&token=62688045-ed1e-4e4f-8da3-85f8bb932487",
+        "kind": "video",
+        "label": "video"
+      },
+      {
+        "id": 1,
+        "content": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Ffood%2Fpietro-coricelli%2Fstorage%2Fcontent-2.mp4?alt=media&token=f0083102-a1d2-4279-97ac-f395f930f130",
+        "kind": "video",
+        "label": "video"
+      },
+      {
+        "id": 2,
+        "content": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Ffood%2Fpietro-coricelli%2Fstorage%2Fcontent-3.jpg?alt=media&token=28afaf3f-8c9f-4dfd-a58f-fcaef3944cb5",
+        "kind": "video",
+        "label": "video"
+      },
+      {
+        "id": 3,
+        "content": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Ffood%2Fpietro-coricelli%2Fstorage%2Fcontent-4.mp4?alt=media&token=d2c01f55-f6b5-47bc-9081-8df3f58b92d3",
+        "kind": "video",
+        "label": "video"
+      },
+      {
+        "id": 4,
+        "content": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Ffood%2Fpietro-coricelli%2Fstorage%2Fcontent-5.jpg?alt=media&token=d4953e3f-be08-4555-9d96-ea0a76fbe190",
+        "kind": "video",
+        "label": "video"
+      }
+    ]
+  },
+  {
+    "id": "food/cirio",
+    "name": "Cirio",
+    "title": "Cirio",
+    "sector": "food",
+    "type": "multi-target",
+    "slug": "cirio",
+    "createdAt": "2026-05-26T08:55:04.623Z",
+    "updatedAt": "2026-05-26T10:59:57.066Z",
+    "folder": "managed-experiences/food/cirio/",
+    "publicUrl": "https://marasenseexperiences-ar.web.app/managed-experiences/food/cirio/",
+    "sharedImage": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Ffood%2Fcirio%2Fstorage%2Fshared.png?alt=media&token=51f192ee-007d-4149-97d5-f30547553868",
+    "targetFile": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Ffood%2Fcirio%2Fstorage%2Ftargets.mind?alt=media&token=f044fd93-3098-41f6-b2f1-99b5d6ffcb1b",
+    "contentFile": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Ffood%2Fcirio%2Fstorage%2Fcontent-1.mp4?alt=media&token=464b3773-6da5-41c1-908f-221486ca772f",
+    "targetImages": [
+      {
+        "id": 0,
+        "label": "olio",
+        "file": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Ffood%2Fcirio%2Fstorage%2Ftarget-1.png?alt=media&token=f725cb70-a12a-4924-bbe5-0c4fd1a9cdd4",
+        "originalFile": "olio.png"
+      },
+      {
+        "id": 1,
+        "label": "pizza",
+        "file": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Ffood%2Fcirio%2Fstorage%2Ftarget-2.png?alt=media&token=3b42ae4e-bec9-4dfb-8fea-1645becd0c51",
+        "originalFile": "pizza1.png"
+      },
+      {
+        "id": 2,
+        "label": "pizza",
+        "file": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Ffood%2Fcirio%2Fstorage%2Ftarget-3.png?alt=media&token=65b9c835-281a-4e48-af53-01ef248877a2",
+        "originalFile": "pizza2.png"
+      },
+      {
+        "id": 3,
+        "label": "pizza",
+        "file": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Ffood%2Fcirio%2Fstorage%2Ftarget-4.png?alt=media&token=a217049b-277f-4beb-a4c6-703ea6e5618b",
+        "originalFile": "pizza3.png"
+      }
+    ],
+    "contents": [
+      {
+        "id": 0,
+        "label": "olio",
+        "targetId": 0,
+        "file": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Ffood%2Fcirio%2Fstorage%2Fcontent-1.mp4?alt=media&token=464b3773-6da5-41c1-908f-221486ca772f",
+        "kind": "video",
+        "originalFile": "videoolio.mp4"
+      },
+      {
+        "id": 1,
+        "label": "pizza",
+        "targetId": 1,
+        "file": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Ffood%2Fcirio%2Fstorage%2Fcontent-2.mp4?alt=media&token=19c4d065-f76b-4adf-aa20-467d94b7a7d5",
+        "kind": "video",
+        "originalFile": "riuso"
+      },
+      {
+        "id": 2,
+        "label": "pizza",
+        "targetId": 2,
+        "file": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Ffood%2Fcirio%2Fstorage%2Fcontent-2.mp4?alt=media&token=19c4d065-f76b-4adf-aa20-467d94b7a7d5",
+        "kind": "video",
+        "originalFile": "riuso"
+      },
+      {
+        "id": 3,
+        "label": "pizza",
+        "targetId": 3,
+        "file": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Ffood%2Fcirio%2Fstorage%2Fcontent-2.mp4?alt=media&token=19c4d065-f76b-4adf-aa20-467d94b7a7d5",
+        "kind": "video",
+        "originalFile": "riuso"
+      }
+    ],
+    "targets": [
+      {
+        "id": 0,
+        "content": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Ffood%2Fcirio%2Fstorage%2Fcontent-1.mp4?alt=media&token=464b3773-6da5-41c1-908f-221486ca772f",
+        "kind": "video",
+        "label": "olio"
+      },
+      {
+        "id": 1,
+        "content": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Ffood%2Fcirio%2Fstorage%2Fcontent-2.mp4?alt=media&token=19c4d065-f76b-4adf-aa20-467d94b7a7d5",
+        "kind": "video",
+        "label": "pizza"
+      },
+      {
+        "id": 2,
+        "content": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Ffood%2Fcirio%2Fstorage%2Fcontent-2.mp4?alt=media&token=19c4d065-f76b-4adf-aa20-467d94b7a7d5",
+        "kind": "video",
+        "label": "pizza"
+      },
+      {
+        "id": 3,
+        "content": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Ffood%2Fcirio%2Fstorage%2Fcontent-2.mp4?alt=media&token=19c4d065-f76b-4adf-aa20-467d94b7a7d5",
+        "kind": "video",
+        "label": "pizza"
       }
     ]
   }
