@@ -250,7 +250,7 @@
     "type": "multi-target",
     "slug": "cirio",
     "createdAt": "2026-05-26T08:55:04.623Z",
-    "updatedAt": "2026-05-26T10:59:24.049Z",
+    "updatedAt": "2026-05-26T10:59:57.066Z",
     "folder": "managed-experiences/food/cirio/",
     "publicUrl": "https://marasenseexperiences-ar.web.app/managed-experiences/food/cirio/",
     "sharedImage": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Ffood%2Fcirio%2Fstorage%2Fshared.png?alt=media&token=51f192ee-007d-4149-97d5-f30547553868",
@@ -289,7 +289,7 @@
         "targetId": 0,
         "file": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Ffood%2Fcirio%2Fstorage%2Fcontent-1.mp4?alt=media&token=464b3773-6da5-41c1-908f-221486ca772f",
         "kind": "video",
-        "originalFile": "riuso"
+        "originalFile": "videoolio.mp4"
       },
       {
         "id": 1,
