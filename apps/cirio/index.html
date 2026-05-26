@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+  />
+
+  <title>Cirio - mARasense</title>
+
+  <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+
+  <style>
+    html,
+    body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: transparent !important;
+      font-family: Arial, sans-serif;
+      touch-action: none;
+    }
+
+    body {
+      position: fixed;
+      inset: 0;
+    }
+
+    #startUI {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: rgba(0, 0, 0, 0.85);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      padding: 20px;
+    }
+
+    #startBtn {
+      border: 0;
+      padding: 18px 28px;
+      border-radius: 18px;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      color: white;
+      background: linear-gradient(135deg, #8a2be2, #00bcd4);
+    }
+
+    #hint {
+      color: white;
+      margin-top: 20px;
+      text-align: center;
+      line-height: 1.5;
+      max-width: 320px;
+    }
+
+    canvas {
+      background: transparent !important;
+    }
+
+    .mindar-ui-loading,
+    .mindar-ui-scanning,
+    .mindar-ui-error {
+      background: transparent !important;
+    }
+
+    video {
+      playsinline: true;
+      webkit-playsinline: true;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="startUI">
+    <button id="startBtn">
+      Avvia esperienza AR
+    </button>
+
+    <div id="hint">
+      Consenti accesso a fotocamera e audio.<br />
+      Inquadra olio o pizza Cirio.
+    </div>
+  </div>
+
+  <a-scene
+    mindar-image="
+      imageTargetSrc: ./targets.mind;
+      autoStart: false;
+      uiScanning: no;
+      uiLoading: no;
+      uiError: no;
+      filterMinCF: 0.0001;
+      filterBeta: 0.001;
+      missTolerance: 5;
+      warmupTolerance: 5;
+    "
+    embedded
+    color-space="sRGB"
+    renderer="
+      colorManagement: true;
+      physicallyCorrectLights: true;
+      alpha: true;
+      antialias: true;
+      precision: mediump;
+    "
+    vr-mode-ui="enabled: false"
+    device-orientation-permission-ui="enabled: false"
+  >
+
+    <a-assets>
+
+      <!-- VIDEO OLIO -->
+      <video
+        id="videoOlio"
+        src="./assets/video/videoolio.mp4"
+        preload="auto"
+        loop="false"
+        crossorigin="anonymous"
+        playsinline
+        webkit-playsinline
+      ></video>
+
+      <!-- VIDEO PIZZA -->
+      <video
+        id="videoPizza"
+        src="./assets/video/videopizza.mp4"
+        preload="auto"
+        loop="false"
+        crossorigin="anonymous"
+        playsinline
+        webkit-playsinline
+      ></video>
+
+    </a-assets>
+
+    <a-camera
+      position="0 0 0"
+      look-controls="enabled: false"
+    ></a-camera>
+
+    <!-- TARGET 0 = OLIO -->
+
+    <a-entity mindar-image-target="targetIndex: 0">
+
+      <a-video
+        id="planeOlio"
+        src="#videoOlio"
+        width="1"
+        height="1.777"
+        position="0 0 0"
+        rotation="0 0 0"
+        material="shader: flat; transparent: true;"
+      ></a-video>
+
+    </a-entity>
+
+    <!-- TARGET 1 = PIZZA -->
+
+    <a-entity mindar-image-target="targetIndex: 1">
+
+      <a-video
+        id="planePizza1"
+        src="#videoPizza"
+        width="1"
+        height="1.777"
+        position="0 0 0"
+        rotation="0 0 0"
+        material="shader: flat; transparent: true;"
+      ></a-video>
+
+    </a-entity>
+
+    <!-- TARGET 2 = PIZZA -->
+
+    <a-entity mindar-image-target="targetIndex: 2">
+
+      <a-video
+        id="planePizza2"
+        src="#videoPizza"
+        width="1"
+        height="1.777"
+        position="0 0 0"
+        rotation="0 0 0"
+        material="shader: flat; transparent: true;"
+      ></a-video>
+
+    </a-entity>
+
+    <!-- TARGET 3 = PIZZA -->
+
+    <a-entity mindar-image-target="targetIndex: 3">
+
+      <a-video
+        id="planePizza3"
+        src="#videoPizza"
+        width="1"
+        height="1.777"
+        position="0 0 0"
+        rotation="0 0 0"
+        material="shader: flat; transparent: true;"
+      ></a-video>
+
+    </a-entity>
+
+  </a-scene>
+
+  <script>
+
+    const startUI = document.getElementById("startUI");
+    const startBtn = document.getElementById("startBtn");
+
+    const scene = document.querySelector("a-scene");
+
+    const videoOlio = document.getElementById("videoOlio");
+    const videoPizza = document.getElementById("videoPizza");
+
+    const allTargets = document.querySelectorAll("[mindar-image-target]");
+
+    let activeVideo = null;
+    let lockTracking = false;
+
+    async function unlockMedia(video) {
+      try {
+        video.muted = false;
+        await video.play();
+        video.pause();
+        video.currentTime = 0;
+      } catch (e) {
+        console.log(e);
+      }
+    }
+
+    async function startAR() {
+
+      try {
+
+        await navigator.mediaDevices.getUserMedia({
+          video: true,
+          audio: true
+        });
+
+        await unlockMedia(videoOlio);
+        await unlockMedia(videoPizza);
+
+        startUI.style.display = "none";
+
+        await scene.systems["mindar-image-system"].start();
+
+      } catch (err) {
+
+        alert(
+          "Permessi fotocamera/audio negati o browser non compatibile."
+        );
+
+        console.error(err);
+      }
+    }
+
+    startBtn.addEventListener("click", startAR);
+
+    function stopAll() {
+
+      videoOlio.pause();
+      videoPizza.pause();
+
+      videoOlio.currentTime = 0;
+      videoPizza.currentTime = 0;
+
+      activeVideo = null;
+      lockTracking = false;
+    }
+
+    function playVideo(video) {
+
+      if (lockTracking) return;
+
+      lockTracking = true;
+
+      stopAll();
+
+      activeVideo = video;
+
+      video.play().catch(console.error);
+
+      video.onended = () => {
+
+        lockTracking = false;
+
+      };
+    }
+
+    // TARGET 0 OLIO
+
+    allTargets[0].addEventListener("targetFound", () => {
+
+      playVideo(videoOlio);
+
+    });
+
+    allTargets[0].addEventListener("targetLost", () => {
+
+      // continua video anche se perde target
+
+    });
+
+    // TARGET 1 PIZZA
+
+    allTargets[1].addEventListener("targetFound", () => {
+
+      playVideo(videoPizza);
+
+    });
+
+    // TARGET 2 PIZZA
+
+    allTargets[2].addEventListener("targetFound", () => {
+
+      playVideo(videoPizza);
+
+    });
+
+    // TARGET 3 PIZZA
+
+    allTargets[3].addEventListener("targetFound", () => {
+
+      playVideo(videoPizza);
+
+    });
+
+    // riduce traballio
+
+    AFRAME.registerComponent("stable-video", {
+      tick: function () {
+        this.el.object3D.position.lerp(
+          this.el.object3D.position,
+          0.15
+        );
+      }
+    });
+
+    document.querySelectorAll("a-video").forEach(v => {
+      v.setAttribute("stable-video", "");
+    });
+
+  </script>
+
+</body>
+</html>
