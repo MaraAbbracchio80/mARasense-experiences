@@ -1,1 +1,71 @@
-test
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MaraSense - Modifica esperienza</title>
+<link rel="icon" href="https://ndaprove.newdigitalapp.it/docs/MARASENSELOGO.png">
+<style>
+body{margin:0;background:#f5f7fb;color:#111;font-family:Arial,sans-serif}.page{max-width:1180px;margin:auto;padding:24px}.card{background:#fff;border:1px solid #e6e9f0;border-radius:22px;padding:22px;margin-bottom:18px;box-shadow:0 8px 24px #0001}.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}h1,h2,h3{margin-top:0}label{display:block;margin:12px 0 7px;font-weight:700;font-size:14px}input,select,textarea{width:100%;padding:12px;border:1px solid #ccd3df;border-radius:12px;box-sizing:border-box;font-size:15px}textarea{min-height:90px}.box{background:#f7f9fc;border:1px solid #e7ebf3;border-radius:16px;padding:14px;margin-bottom:12px}.row{display:grid;grid-template-columns:100px 1fr;gap:10px}.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}button,.btn{display:inline-block;border:0;border-radius:13px;padding:12px 16px;background:linear-gradient(135deg,#8a2be2,#00bcd4);color:#fff;font-weight:700;text-decoration:none;cursor:pointer}.secondary{background:#fff!important;color:#111!important;border:1px solid #ccd3df!important}.danger{background:#fff!important;color:#b91c1c!important;border:1px solid #fecaca!important}.small{font-size:12px;color:#666;word-break:break-word;line-height:1.45}.status{color:#0097aa;margin-top:12px;min-height:20px}.warn{background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;border-radius:14px;padding:12px;margin-top:12px;font-size:14px}pre{background:#111827;color:#d1fae5;border-radius:14px;padding:14px;overflow:auto;max-height:390px;white-space:pre-wrap;font-size:13px}@media(max-width:850px){.grid,.row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<main class="page">
+<section class="card">
+<h1>Modifica esperienza</h1>
+<p>Gestisci target e contenuti. Puoi collegare più target allo stesso video.</p>
+<div class="actions"><a class="btn secondary" href="./experiences.html">Elenco</a><a class="btn secondary" href="./index.html">Nuova</a></div>
+<div id="status" class="status">Caricamento...</div>
+</section>
+<section class="grid">
+<div class="card">
+<h2>Dati</h2>
+<label>Nome</label><input id="name">
+<label>Settore</label><select id="sector"><option value="food">Food</option><option value="painting">Painting</option><option value="sport">Sport</option><option value="eventi">Eventi</option><option value="matrimoni">Matrimoni</option><option value="museo">Museo</option><option value="retail">Retail</option><option value="custom">Custom</option></select>
+<label>Tipo</label><select id="type"><option value="ar-video">AR target + video</option><option value="ar-audio">AR target + audio</option><option value="ar-video-audio">AR video + audio</option><option value="multi-target">Multi-target</option></select>
+<label>Note</label><textarea id="notes"></textarea>
+<label><input id="autoPlay" type="checkbox"> Avvio automatico</label>
+<label><input id="requireEnd" type="checkbox"> Finisci tutto video prima di nuova ricerca</label>
+<label><input id="stopOnLost" type="checkbox"> Stop se perde target</label>
+<label><input id="lensUi" type="checkbox"> Mostra lens</label>
+</div>
+<div class="card">
+<h2>File principali</h2>
+<div class="box"><h3>.mind unico</h3><div id="mindNow" class="small"></div><label>Nuovo .mind opzionale</label><input id="mind" type="file" accept=".mind"></div>
+<div class="box"><h3>Shared</h3><div id="sharedNow" class="small"></div><label>Nuova shared opzionale</label><input id="shared" type="file" accept="image/*"></div>
+</div>
+</section>
+<section class="grid">
+<div class="card"><h2>Target nel .mind</h2><p class="small">Esempio: target 0 olio, target 1 pizza foto 1, target 2 pizza foto 2.</p><div id="targets"></div><button id="addTarget" class="secondary">+ Aggiungi target</button></div>
+<div class="card"><h2>Associazioni target-video</h2><p class="small">Per più foto pizza, crea più associazioni e seleziona lo stesso video pizza nel menu Riusa file.</p><div id="contents"></div><button id="addContent" class="secondary">+ Aggiungi associazione</button></div>
+</section>
+<section class="card"><h2>Salva</h2><div class="actions"><button id="save">Salva modifiche</button><button id="open" class="secondary">Apri link</button><button id="copy" class="secondary">Copia link</button></div><div class="warn">Non serve ricaricare lo stesso video più volte. Puoi riusare il file di un contenuto esistente per più target.</div><div id="saveStatus" class="status"></div></section>
+<section class="card"><h2>Config corrente</h2><pre id="preview">{}</pre></section>
+</main>
+<script>
+const IDX='../managed-experiences/index.json';
+const API='https://europe-west1-marasenseexperiences-ar.cloudfunctions.net/api/createManagedExperience';
+const UP='https://europe-west1-marasenseexperiences-ar.cloudfunctions.net/api/getUploadUrl';
+let rec=null,cfg=null;
+const el=id=>document.getElementById(id);
+function slugify(t){return String(t||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'')}
+function getFolder(r){return r.folder||(r.meta&&r.meta.generatedFolder)||`managed-experiences/${r.sector}/${r.slug}/`}
+function getPublicUrl(r){return r.publicUrl||(r.meta&&r.meta.publicUrl)||`https://marasenseexperiences-ar.web.app/${getFolder(r)}`}
+function escapeHtml(v){return String(v||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+function fileExt(name,fallback){const clean=String(name||'').split('?')[0];const dot=clean.lastIndexOf('.');return dot>=0?clean.slice(dot):fallback}
+function ensure(){cfg.targetImages=Array.isArray(cfg.targetImages)?cfg.targetImages:[];cfg.contents=Array.isArray(cfg.contents)?cfg.contents:[];cfg.targets=Array.isArray(cfg.targets)?cfg.targets:[]}
+async function uploadFile(file,path){const r=await fetch(UP,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({path,contentType:file.type||'application/octet-stream'})});const j=await r.json();if(!r.ok||!j.ok)throw new Error(j.error||'Errore URL upload');const u=await fetch(j.uploadUrl,{method:'PUT',headers:{'Content-Type':file.type||'application/octet-stream','x-goog-meta-firebasestoragedownloadtokens':j.token},body:file});if(!u.ok)throw new Error('Errore upload Storage');return j.downloadUrl}
+async function load(){try{const id=decodeURIComponent(new URLSearchParams(location.search).get('id')||'');const list=await(await fetch(IDX,{cache:'no-store'})).json();rec=list.find(x=>x.id===id||getFolder(x).replace(/^managed-experiences\//,'').replace(/\/$/,'')===id);if(!rec)throw new Error('Esperienza non trovata');cfg=await(await fetch('../'+getFolder(rec)+'config.json',{cache:'no-store'})).json();ensure();fill();el('status').textContent='Esperienza caricata'}catch(e){console.error(e);el('status').textContent='Errore: '+e.message}}
+function fill(){el('name').value=cfg.title||rec.name||'';el('sector').value=cfg.sector||rec.sector||'custom';el('type').value=cfg.type||rec.type||'multi-target';el('notes').value=(cfg.meta&&cfg.meta.notes)||'';el('autoPlay').checked=cfg.autoPlay!==false;el('requireEnd').checked=cfg.requireContentEnd===true;el('stopOnLost').checked=cfg.stopOnTargetLost!==false;el('lensUi').checked=cfg.lensUi!==false;el('mindNow').textContent=cfg.targetFile||'-';el('sharedNow').textContent=cfg.sharedImage||'-';renderTargets();renderContents();preview()}
+function renderTargets(){el('targets').innerHTML=cfg.targetImages.map((t,i)=>`<div class="box target" data-i="${i}"><h3>Target ${escapeHtml(t.id)}</h3><div class="row"><div><label>ID</label><input class="tid" type="number" min="0" value="${t.id??i}"></div><div><label>Nome</label><input class="tlabel" value="${escapeHtml(t.label||'')}"></div></div><div class="small">File: ${escapeHtml(t.file||'-')}</div><label>Nuova immagine target opzionale</label><input class="tfile" type="file" accept="image/*"><div class="actions"><button class="danger removeT" data-i="${i}">Rimuovi</button></div></div>`).join('');document.querySelectorAll('.removeT').forEach(b=>b.onclick=()=>{cfg.targetImages.splice(+b.dataset.i,1);renderTargets();preview()})}
+function contentOptions(){return cfg.contents.map((c,i)=>`<option value="${i}">${i+1}. ${escapeHtml(c.label||'Contenuto')}</option>`).join('')}
+function renderContents(){el('contents').innerHTML=cfg.contents.map((c,i)=>`<div class="box content" data-i="${i}"><h3>Associazione ${i+1}</h3><div class="row"><div><label>Target ID</label><input class="ctarget" type="number" min="0" value="${c.targetId??0}"></div><div><label>Nome</label><input class="clabel" value="${escapeHtml(c.label||'')}"></div></div><label>Riusa file di</label><select class="reuse"><option value="self">Questo contenuto</option>${contentOptions()}</select><div class="small">File: ${escapeHtml(c.file||'-')}</div><label>Nuovo contenuto opzionale</label><input class="cfile" type="file" accept="video/*,audio/*,image/*"><div class="actions"><button class="danger removeC" data-i="${i}">Rimuovi</button></div></div>`).join('');document.querySelectorAll('.removeC').forEach(b=>b.onclick=()=>{cfg.contents.splice(+b.dataset.i,1);cfg.contents.forEach((c,i)=>c.id=i);renderContents();preview()})}
+function addTarget(){const id=cfg.targetImages.length?Math.max(...cfg.targetImages.map(t=>Number(t.id)||0))+1:0;cfg.targetImages.push({id,label:'Nuovo target',file:'-',originalFile:'-'});renderTargets();preview()}
+function addContent(){const next=cfg.contents.length?Math.max(...cfg.contents.map(c=>Number(c.targetId)||0))+1:0;const f=cfg.contents[0]?cfg.contents[0].file:'-';cfg.contents.push({id:cfg.contents.length,label:'Nuova associazione',targetId:next,file:f,kind:'video',originalFile:'riuso'});renderContents();preview()}
+function collect(){document.querySelectorAll('.target').forEach((row,i)=>{const t=cfg.targetImages[i];t.id=parseInt(row.querySelector('.tid').value||i,10);t.label=row.querySelector('.tlabel').value.trim()||`Target ${t.id}`});document.querySelectorAll('.content').forEach((row,i)=>{const c=cfg.contents[i];c.id=i;c.targetId=parseInt(row.querySelector('.ctarget').value||0,10);c.label=row.querySelector('.clabel').value.trim()||`Contenuto ${i+1}`;const reuse=row.querySelector('.reuse').value;if(reuse!=='self'&&cfg.contents[Number(reuse)]){c.file=cfg.contents[Number(reuse)].file;c.kind=cfg.contents[Number(reuse)].kind||'video';c.originalFile='riuso'}});cfg.targets=cfg.contents.map(c=>({id:c.targetId,content:c.file,kind:c.kind||'video',label:c.label}))}
+function preview(){if(!cfg)return;collect();el('preview').textContent=JSON.stringify(cfg,null,2)}
+async function save(){const s=el('saveStatus');try{s.textContent='Salvataggio...';collect();const folder=getFolder(rec);const sf=folder+'storage/';const mind=el('mind').files[0];if(mind){s.textContent='Upload .mind...';cfg.targetFile=await uploadFile(mind,sf+'targets.mind')}const shared=el('shared').files[0];if(shared){s.textContent='Upload shared...';cfg.sharedImage=await uploadFile(shared,sf+'shared'+fileExt(shared.name,'.png'))}for(const row of document.querySelectorAll('.target')){const i=Number(row.dataset.i);const input=row.querySelector('.tfile');if(input.files[0]){s.textContent=`Upload target ${i+1}...`;cfg.targetImages[i].file=await uploadFile(input.files[0],sf+`target-${i+1}${fileExt(input.files[0].name,'.png')}`);cfg.targetImages[i].originalFile=input.files[0].name}}for(const row of document.querySelectorAll('.content')){const i=Number(row.dataset.i);const input=row.querySelector('.cfile');if(input.files[0]){const file=input.files[0];s.textContent=`Upload contenuto ${i+1}...`;cfg.contents[i].file=await uploadFile(file,sf+`content-${i+1}${fileExt(file.name,'.mp4')}`);cfg.contents[i].originalFile=file.name;cfg.contents[i].kind=file.type.startsWith('audio/')?'audio':file.type.startsWith('image/')?'image':'video'}}collect();cfg.title=el('name').value.trim()||cfg.title;cfg.sector=el('sector').value;cfg.type=el('type').value;cfg.autoPlay=el('autoPlay').checked;cfg.requireContentEnd=el('requireEnd').checked;cfg.stopOnTargetLost=el('stopOnLost').checked;cfg.lensUi=el('lensUi').checked;cfg.meta=cfg.meta||{};cfg.meta.notes=el('notes').value.trim();cfg.contentFile=cfg.contents[0]?cfg.contents[0].file:cfg.contentFile;cfg.multiTarget=cfg.type==='multi-target'||cfg.contents.length>1||cfg.targetImages.length>1;const slug=(cfg.meta&&cfg.meta.slug)||rec.slug||slugify(cfg.title);const payload={name:cfg.title,title:cfg.title,sector:cfg.sector,type:cfg.type,slug,targetFile:cfg.targetFile,sharedImage:cfg.sharedImage,contentFile:cfg.contentFile,notes:cfg.meta.notes||'',options:{autoPlay:cfg.autoPlay,requireContentEnd:cfg.requireContentEnd,stopOnTargetLost:cfg.stopOnTargetLost,transparentBg:true,lensUi:cfg.lensUi},targetImages:cfg.targetImages,contents:cfg.contents,files:[]};s.textContent='Aggiornamento GitHub...';const r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});const j=await r.json();if(!r.ok||!j.ok)throw new Error(j.error||j.detail||'Errore GitHub');cfg=j.config;rec=j.record;ensure();fill();s.textContent='Esperienza aggiornata. Attendi il deploy automatico.'}catch(e){console.error(e);s.textContent='Errore: '+e.message}}
+el('addTarget').onclick=addTarget;el('addContent').onclick=addContent;el('save').onclick=save;el('open').onclick=()=>rec&&window.open(getPublicUrl(rec),'_blank');el('copy').onclick=()=>{if(rec)navigator.clipboard.writeText(getPublicUrl(rec));el('saveStatus').textContent='Link copiato'};window.addEventListener('load',load);
+</script>
+</body>
+</html>
