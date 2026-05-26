@@ -10,6 +10,7 @@
   <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
 
   <style>
+
     html,
     body {
       margin: 0;
@@ -29,71 +30,102 @@
     #startScreen {
       position: fixed;
       inset: 0;
-      background: radial-gradient(circle at center, #161616 0%, #000 75%);
+      background: radial-gradient(circle at center, #111 0%, #000 75%);
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      z-index: 10000;
+      z-index: 99999;
       color: #fff;
       text-align: center;
       padding: 24px;
     }
 
-    #startScreen h1 {
-      margin: 0 0 12px 0;
-      font-size: 28px;
-    }
-
-    #startScreen p {
-      margin: 0 0 20px 0;
-      font-size: 15px;
-      max-width: 340px;
-      line-height: 1.5;
-      color: #ddd;
-    }
-
     #startButton {
       background: #8A2BE2;
-      color: #fff;
       border: none;
-      border-radius: 12px;
-      padding: 14px 22px;
+      color: white;
+      border-radius: 14px;
+      padding: 14px 24px;
       font-size: 16px;
       cursor: pointer;
-      box-shadow: 0 0 24px rgba(138, 43, 226, 0.35);
+      margin-top: 20px;
     }
 
-    #debugBox {
+    #debug {
       position: fixed;
       top: 14px;
       left: 50%;
       transform: translateX(-50%);
       z-index: 9999;
-      background: rgba(0,0,0,0.68);
-      color: #fff;
+      background: rgba(0,0,0,0.6);
+      color: white;
       padding: 10px 14px;
-      border-radius: 10px;
+      border-radius: 12px;
       font-size: 14px;
-      text-align: center;
-      max-width: 92vw;
-      line-height: 1.4;
       backdrop-filter: blur(4px);
+    }
+
+    /* LENS */
+
+    #lens {
+      position: fixed;
+      inset: 0;
+      z-index: 9998;
+      pointer-events: none;
+      display: none;
+    }
+
+    #lens::before {
+
+      content: "";
+
+      position: absolute;
+
+      width: 260px;
+      height: 260px;
+
+      border: 4px solid rgba(255,255,255,0.92);
+      border-radius: 24px;
+
+      top: 50%;
+      left: 50%;
+
+      transform: translate(-50%, -50%);
+
+      box-shadow:
+        0 0 0 9999px rgba(0,0,0,0.08),
+        0 0 30px rgba(255,255,255,0.25);
+
+      animation: pulse 1.8s infinite;
+    }
+
+    @keyframes pulse {
+
+      0% {
+        transform: translate(-50%, -50%) scale(1);
+      }
+
+      50% {
+        transform: translate(-50%, -50%) scale(1.03);
+      }
+
+      100% {
+        transform: translate(-50%, -50%) scale(1);
+      }
     }
 
     #scanText {
       position: fixed;
-      left: 50%;
       bottom: 36px;
+      left: 50%;
       transform: translateX(-50%);
-      z-index: 9998;
-      color: #fff;
+      z-index: 9999;
+      color: white;
+      background: rgba(0,0,0,0.55);
+      padding: 10px 16px;
+      border-radius: 12px;
       font-size: 14px;
-      background: rgba(0,0,0,0.60);
-      padding: 10px 14px;
-      border-radius: 10px;
-      white-space: nowrap;
-      backdrop-filter: blur(4px);
       display: none;
     }
 
@@ -102,83 +134,86 @@
       inset: 0 !important;
       width: 100vw !important;
       height: 100vh !important;
-      overflow: hidden !important;
-      z-index: 10;
       background: transparent !important;
     }
 
     video,
     canvas,
     .a-canvas {
+
       position: fixed !important;
       inset: 0 !important;
+
       width: 100vw !important;
       height: 100vh !important;
-      min-width: 100vw !important;
-      min-height: 100vh !important;
-      object-fit: cover !important;
-      background: transparent !important;
-    }
 
-    video {
-      z-index: 1 !important;
-      transform: scale(1.04);
-      transform-origin: center center;
+      object-fit: cover !important;
+
+      background: transparent !important;
     }
 
     canvas,
     .a-canvas {
       z-index: 2 !important;
     }
+
   </style>
 </head>
 
 <body>
 
   <div id="startScreen">
+
     <h1>Cirio</h1>
 
     <p>
-      Premi Avvia esperienza e inquadra i prodotti Cirio.
-      Quando il target viene riconosciuto partirà il contenuto con audio.
+      Premi Avvia esperienza e inquadra il prodotto.
     </p>
 
     <button id="startButton">
       Avvia esperienza
     </button>
+
   </div>
 
-  <div id="debugBox">
-    Stato: attesa avvio
+  <div id="debug">
+    Stato: attesa
   </div>
+
+  <div id="lens"></div>
 
   <div id="scanText">
-    Inquadra bene il prodotto
+    Inquadra il prodotto
   </div>
 
   <a-scene
-    id="arScene"
+
+    id="scene"
+
     vr-mode-ui="enabled: false"
+
     device-orientation-permission-ui="enabled: false"
+
     loading-screen="enabled: false"
-    renderer="colorManagement: true; physicallyCorrectLights: true; alpha: true"
+
+    renderer="
+      colorManagement: true;
+      physicallyCorrectLights: true;
+      alpha: true;
+    "
+
     color-space="sRGB"
+
     mindar-image="
       imageTargetSrc: ./targets.mind;
-      uiLoading: no;
       uiScanning: no;
+      uiLoading: no;
       uiError: no;
       autoStart: false;
-      filterMinCF: 0.0001;
-      filterBeta: 0.001;
-      missTolerance: 5;
-      warmupTolerance: 5;
     "
   >
 
     <a-assets>
-
-      <!-- VIDEO OLIO -->
 
       <video
         id="videoOlio"
@@ -188,8 +223,6 @@
         webkit-playsinline
         crossorigin="anonymous"
       ></video>
-
-      <!-- VIDEO PIZZA -->
 
       <video
         id="videoPizza"
@@ -207,216 +240,168 @@
       look-controls="enabled: false"
     ></a-camera>
 
-    <!-- TARGET 0 = OLIO -->
+    <!-- TARGET 0 -->
 
     <a-entity
       id="target0"
       mindar-image-target="targetIndex: 0"
     >
-      <a-entity class="smoothWrapper">
 
-        <a-plane
-          class="videoPlane"
-          position="0 0 0"
-          width="1"
-          height="1.45"
-          material="shader: flat; transparent: true; opacity: 1"
-          visible="false"
-        ></a-plane>
+      <a-plane
+        id="videoPlane"
+        position="0 0 0"
+        width="1"
+        height="1.45"
+        visible="false"
+        material="
+          shader: flat;
+          transparent: true;
+          opacity: 1;
+        "
+      ></a-plane>
 
-      </a-entity>
     </a-entity>
 
-    <!-- TARGET 1 = PIZZA -->
+    <!-- TARGET 1 -->
 
     <a-entity
       id="target1"
       mindar-image-target="targetIndex: 1"
-    >
-      <a-entity class="smoothWrapper">
+    ></a-entity>
 
-        <a-plane
-          class="videoPlane"
-          position="0 0 0"
-          width="1"
-          height="1.45"
-          material="shader: flat; transparent: true; opacity: 1"
-          visible="false"
-        ></a-plane>
-
-      </a-entity>
-    </a-entity>
-
-    <!-- TARGET 2 = PIZZA -->
+    <!-- TARGET 2 -->
 
     <a-entity
       id="target2"
       mindar-image-target="targetIndex: 2"
-    >
-      <a-entity class="smoothWrapper">
+    ></a-entity>
 
-        <a-plane
-          class="videoPlane"
-          position="0 0 0"
-          width="1"
-          height="1.45"
-          material="shader: flat; transparent: true; opacity: 1"
-          visible="false"
-        ></a-plane>
-
-      </a-entity>
-    </a-entity>
-
-    <!-- TARGET 3 = PIZZA -->
+    <!-- TARGET 3 -->
 
     <a-entity
       id="target3"
       mindar-image-target="targetIndex: 3"
-    >
-      <a-entity class="smoothWrapper">
-
-        <a-plane
-          class="videoPlane"
-          position="0 0 0"
-          width="1"
-          height="1.45"
-          material="shader: flat; transparent: true; opacity: 1"
-          visible="false"
-        ></a-plane>
-
-      </a-entity>
-    </a-entity>
+    ></a-entity>
 
   </a-scene>
 
   <script>
 
-    const startScreen = document.getElementById("startScreen");
     const startButton = document.getElementById("startButton");
-    const debugBox = document.getElementById("debugBox");
+    const startScreen = document.getElementById("startScreen");
+
+    const debug = document.getElementById("debug");
+
+    const lens = document.getElementById("lens");
+
     const scanText = document.getElementById("scanText");
 
-    const sceneEl = document.getElementById("arScene");
+    const scene = document.getElementById("scene");
+
+    const videoPlane = document.getElementById("videoPlane");
 
     const videoOlio = document.getElementById("videoOlio");
     const videoPizza = document.getElementById("videoPizza");
 
-    const targets = [
-      document.getElementById("target0"),
-      document.getElementById("target1"),
-      document.getElementById("target2"),
-      document.getElementById("target3")
-    ];
+    const target0 = document.getElementById("target0");
+    const target1 = document.getElementById("target1");
+    const target2 = document.getElementById("target2");
+    const target3 = document.getElementById("target3");
 
-    let activeVideo = null;
-    let activePlane = null;
-    let targetVisible = false;
-    let videoFinished = false;
+    let currentVideo = null;
 
     function setDebug(text) {
-      debugBox.textContent = "Stato: " + text;
+
+      debug.innerHTML = "Stato: " + text;
+
       console.log(text);
     }
 
-    function showHint(text = "Inquadra bene il prodotto") {
-      scanText.textContent = text;
+    function showLens() {
+
+      lens.style.display = "block";
+
       scanText.style.display = "block";
     }
 
-    function hideHint() {
+    function hideLens() {
+
+      lens.style.display = "none";
+
       scanText.style.display = "none";
     }
 
     function stopAllVideos() {
 
-      videoOlio.pause();
-      videoPizza.pause();
+      [videoOlio, videoPizza].forEach(v => {
 
-      videoOlio.currentTime = 0;
-      videoPizza.currentTime = 0;
-    }
+        v.pause();
 
-    function hideAllPlanes() {
-
-      document.querySelectorAll(".videoPlane").forEach(plane => {
-
-        plane.setAttribute("visible", false);
-        plane.object3D.visible = false;
+        v.currentTime = 0;
       });
     }
 
-    async function unlockAudio(video) {
+    async function unlockVideo(video) {
 
       try {
 
         video.muted = false;
+
         video.volume = 1;
-        video.currentTime = 0;
 
         await video.play();
 
         video.pause();
+
         video.currentTime = 0;
 
-      } catch (e) {
+      } catch(e) {
 
-        console.warn("unlock audio:", e);
+        console.warn(e);
       }
     }
 
-    async function playVideo(video, plane) {
+    async function playVideo(video) {
 
       stopAllVideos();
-      hideAllPlanes();
 
-      activeVideo = video;
-      activePlane = plane;
+      currentVideo = video;
 
-      plane.setAttribute("src", "#" + video.id);
+      videoPlane.setAttribute(
+        "src",
+        "#" + video.id
+      );
 
-      plane.setAttribute("visible", true);
-      plane.object3D.visible = true;
-
-      video.currentTime = 0;
-      video.muted = false;
-      video.volume = 1;
+      videoPlane.setAttribute(
+        "visible",
+        true
+      );
 
       try {
 
+        video.muted = false;
+
+        video.volume = 1;
+
         await video.play();
 
-      } catch (e) {
+      } catch(err) {
 
-        console.warn(e);
-
-        setDebug("tocca schermo per audio");
-
-        document.body.addEventListener("click", async () => {
-
-          try {
-
-            await video.play();
-
-          } catch (err) {
-
-            console.warn(err);
-          }
-
-        }, { once: true });
+        console.warn(err);
       }
 
       video.onended = () => {
 
         video.pause();
+
         video.currentTime = 0;
 
-        plane.setAttribute("visible", false);
-
-        videoFinished = true;
-
-        showHint(
-          "Video terminato. Riinquadra il target."
+        videoPlane.setAttribute(
+          "visible",
+          false
         );
+
+        showLens();
 
         setDebug("video terminato");
       };
@@ -431,187 +416,82 @@
           audio: true
         });
 
-        await unlockAudio(videoOlio);
-        await unlockAudio(videoPizza);
+        await unlockVideo(videoOlio);
+        await unlockVideo(videoPizza);
 
-        const startMindAR = async () => {
+        const system =
+          scene.systems["mindar-image-system"];
 
-          const system = sceneEl.systems["mindar-image-system"];
+        await system.start();
 
-          await system.start();
+        startScreen.style.display = "none";
 
-          startScreen.style.display = "none";
+        showLens();
 
-          showHint();
+        setDebug("AR avviata");
 
-          setDebug("AR avviata");
-        };
-
-        if (sceneEl.hasLoaded) {
-
-          await startMindAR();
-
-        } else {
-
-          sceneEl.addEventListener(
-            "loaded",
-            startMindAR,
-            { once: true }
-          );
-        }
-
-      } catch (err) {
+      } catch(err) {
 
         console.error(err);
 
         alert(
           "Permessi fotocamera/audio negati."
         );
-
-        setDebug("errore permessi");
       }
     }
 
-    startButton.addEventListener("click", startAR);
+    startButton.addEventListener(
+      "click",
+      startAR
+    );
 
-    function setupTarget(targetEl, video) {
+    function setupTarget(target, video) {
 
-      const wrapper =
-        targetEl.querySelector(".smoothWrapper");
+      target.addEventListener(
+        "targetFound",
+        async () => {
 
-      const plane =
-        targetEl.querySelector(".videoPlane");
+          hideLens();
 
-      const smoothed = {
-        position: new THREE.Vector3(),
-        quaternion: new THREE.Quaternion(),
-        scale: new THREE.Vector3(1,1,1)
-      };
+          setDebug("target trovato");
 
-      let smoothingInitialized = false;
+          await playVideo(video);
+        }
+      );
 
-      targetEl.addEventListener("targetFound", async () => {
+      target.addEventListener(
+        "targetLost",
+        () => {
 
-        targetVisible = true;
-        videoFinished = false;
+          stopAllVideos();
 
-        hideHint();
-
-        const targetObj = targetEl.object3D;
-        const wrapperObj = wrapper.object3D;
-
-        smoothed.position.copy(targetObj.position);
-        smoothed.quaternion.copy(targetObj.quaternion);
-        smoothed.scale.copy(targetObj.scale);
-
-        wrapperObj.position.copy(smoothed.position);
-        wrapperObj.quaternion.copy(smoothed.quaternion);
-        wrapperObj.scale.copy(smoothed.scale);
-
-        smoothingInitialized = true;
-
-        await playVideo(video, plane);
-
-        setDebug("target trovato");
-      });
-
-      targetEl.addEventListener("targetLost", () => {
-
-        targetVisible = false;
-
-        hideAllPlanes();
-
-        stopAllVideos();
-
-        showHint("Target perso. Riinquadra.");
-
-        setDebug("target perso");
-
-        smoothingInitialized = false;
-      });
-
-      sceneEl.addEventListener("renderstart", () => {
-
-        const renderer = sceneEl.renderer;
-
-        renderer.setAnimationLoop(() => {
-
-          renderer.render(
-            sceneEl.object3D,
-            sceneEl.camera
+          videoPlane.setAttribute(
+            "visible",
+            false
           );
 
-          if (
-            !targetVisible ||
-            !smoothingInitialized
-          ) return;
+          showLens();
 
-          const targetObj = targetEl.object3D;
-          const wrapperObj = wrapper.object3D;
-
-          smoothed.position.lerp(
-            targetObj.position,
-            0.12
-          );
-
-          smoothed.quaternion.slerp(
-            targetObj.quaternion,
-            0.10
-          );
-
-          smoothed.scale.lerp(
-            targetObj.scale,
-            0.12
-          );
-
-          wrapperObj.position.copy(
-            smoothed.position
-          );
-
-          wrapperObj.quaternion.copy(
-            smoothed.quaternion
-          );
-
-          wrapperObj.scale.copy(
-            smoothed.scale
-          );
-        });
-      });
+          setDebug("target perso");
+        }
+      );
     }
 
-    // TARGET 0 = OLIO
+    setupTarget(target0, videoOlio);
 
-    setupTarget(
-      document.getElementById("target0"),
-      videoOlio
-    );
+    setupTarget(target1, videoPizza);
 
-    // TARGET 1 = PIZZA
+    setupTarget(target2, videoPizza);
 
-    setupTarget(
-      document.getElementById("target1"),
-      videoPizza
-    );
+    setupTarget(target3, videoPizza);
 
-    // TARGET 2 = PIZZA
+    scene.addEventListener("arReady", () => {
 
-    setupTarget(
-      document.getElementById("target2"),
-      videoPizza
-    );
-
-    // TARGET 3 = PIZZA
-
-    setupTarget(
-      document.getElementById("target3"),
-      videoPizza
-    );
-
-    sceneEl.addEventListener("arReady", () => {
       setDebug("MindAR pronto");
     });
 
-    sceneEl.addEventListener("arError", () => {
+    scene.addEventListener("arError", () => {
+
       setDebug("errore MindAR");
     });
 
