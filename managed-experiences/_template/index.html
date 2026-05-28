@@ -23,8 +23,11 @@
     a-scene, canvas, .a-canvas, .mindar-ui-overlay, .mindar-ui-scanning, .mindar-ui-loading, .mindar-ui-error {
       background: transparent !important;
     }
-    a-scene { width: 100vw !important; height: 100vh !important; background: transparent !important; }
-    .arContentAsset, #contentAudio { display: none; }
+    a-scene {
+      width: 100vw !important;
+      height: 100vh !important;
+      background: transparent !important;
+    }
     #lensOverlay {
       position: fixed;
       inset: 0;
@@ -35,14 +38,39 @@
       justify-content: center;
       background: transparent !important;
     }
-    .lensBox { width: min(72vw, 330px); aspect-ratio: 1 / 1; border-radius: 32px; position: relative; }
-    .corner { position: absolute; width: 58px; height: 58px; border-color: rgba(255,255,255,.95); filter: drop-shadow(0 0 8px rgba(138,43,226,.85)); }
+    .lensBox {
+      width: min(72vw, 330px);
+      aspect-ratio: 1 / 1;
+      border-radius: 32px;
+      position: relative;
+    }
+    .corner {
+      position: absolute;
+      width: 58px;
+      height: 58px;
+      border-color: rgba(255,255,255,.95);
+      filter: drop-shadow(0 0 8px rgba(138,43,226,.85));
+    }
     .corner.tl { top: 0; left: 0; border-top: 5px solid; border-left: 5px solid; border-radius: 28px 0 0 0; }
     .corner.tr { top: 0; right: 0; border-top: 5px solid; border-right: 5px solid; border-radius: 0 28px 0 0; }
     .corner.bl { bottom: 0; left: 0; border-bottom: 5px solid; border-left: 5px solid; border-radius: 0 0 0 28px; }
     .corner.br { bottom: 0; right: 0; border-bottom: 5px solid; border-right: 5px solid; border-radius: 0 0 28px 0; }
-    .scanLine { position: absolute; left: 10%; right: 10%; height: 3px; top: 18%; border-radius: 999px; background: linear-gradient(90deg, transparent, #00eaff, #8a2be2, transparent); box-shadow: 0 0 18px rgba(0,234,255,.9); animation: scanMove 2.2s ease-in-out infinite; }
-    @keyframes scanMove { 0% { top: 18%; opacity: .4; } 50% { top: 82%; opacity: 1; } 100% { top: 18%; opacity: .4; } }
+    .scanLine {
+      position: absolute;
+      left: 10%;
+      right: 10%;
+      height: 3px;
+      top: 18%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, transparent, #00eaff, #8a2be2, transparent);
+      box-shadow: 0 0 18px rgba(0,234,255,.9);
+      animation: scanMove 2.2s ease-in-out infinite;
+    }
+    @keyframes scanMove {
+      0% { top: 18%; opacity: .4; }
+      50% { top: 82%; opacity: 1; }
+      100% { top: 18%; opacity: .4; }
+    }
     #statusText {
       position: fixed;
       left: 50%;
@@ -74,7 +102,13 @@
       text-align: center;
       padding: 24px;
     }
-    #brandLogo { width: 110px; height: 110px; object-fit: contain; margin-bottom: 22px; animation: rotateLogo 8s linear infinite; }
+    #brandLogo {
+      width: 110px;
+      height: 110px;
+      object-fit: contain;
+      margin-bottom: 22px;
+      animation: rotateLogo 8s linear infinite;
+    }
     @keyframes rotateLogo { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
     #startScreen h1 { margin: 0 0 10px; font-size: 26px; }
     #startScreen p { margin: 0 0 24px; max-width: 420px; color: #d7d7d7; line-height: 1.5; font-size: 15px; }
@@ -90,6 +124,38 @@
       box-shadow: 0 0 24px rgba(138,43,226,.38);
     }
     #startButton:disabled { opacity: .6; cursor: wait; }
+    #contentStage {
+      position: fixed;
+      inset: 0;
+      z-index: 30;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: max(18px, env(safe-area-inset-top)) 18px max(18px, env(safe-area-inset-bottom)) 18px;
+      pointer-events: none;
+      background: transparent;
+    }
+    #contentFrame {
+      width: min(92vw, 640px);
+      max-height: min(76vh, 640px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 28px;
+      overflow: hidden;
+      background: rgba(0,0,0,.16);
+      backdrop-filter: blur(2px);
+      box-shadow: 0 24px 64px rgba(0,0,0,.26);
+    }
+    #contentFrame video,
+    #contentFrame img {
+      width: 100%;
+      height: 100%;
+      max-height: min(76vh, 640px);
+      object-fit: contain;
+      display: block;
+      background: transparent;
+    }
     #errorBox {
       display: none;
       position: fixed;
@@ -119,13 +185,17 @@
 
   <div id="lensOverlay">
     <div class="lensBox">
-      <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div><div class="scanLine"></div>
+      <div class="corner tl"></div>
+      <div class="corner tr"></div>
+      <div class="corner bl"></div>
+      <div class="corner br"></div>
+      <div class="scanLine"></div>
     </div>
   </div>
 
   <div id="statusText">Inquadra il target</div>
+  <div id="contentStage"><div id="contentFrame"></div></div>
   <div id="errorBox"></div>
-  <audio id="contentAudio" preload="auto" crossorigin="anonymous"></audio>
 
   <a-scene
     id="arScene"
@@ -137,7 +207,6 @@
     device-orientation-permission-ui="enabled: false"
     background="transparent: true"
   >
-    <a-assets id="arAssets"></a-assets>
     <a-camera position="0 0 0" look-controls="enabled: false" cursor="rayOrigin: mouse"></a-camera>
     <a-entity id="targetsRoot"></a-entity>
   </a-scene>
@@ -155,19 +224,17 @@
       transparentBg: true,
       lensUi: true,
       multiTarget: false,
-      planeMaxWidth: 1.15,
-      planeMaxHeight: 1.15,
       contents: []
     };
 
     let config = { ...DEFAULT_CONFIG };
     let sceneEl = null;
-    let targetVisible = false;
-    let activeTargetIndex = null;
-    let contentPlaying = false;
-    let contentLockedUntilEnd = false;
     let experienceStarted = false;
-    let currentMedia = null;
+    let visibleTargets = new Set();
+    let activeContent = null;
+    let activePlayback = null;
+    let pendingContent = null;
+    const contentCache = new Map();
 
     function showError(message) {
       const box = document.getElementById("errorBox");
@@ -199,6 +266,14 @@
       lens.style.display = show ? "flex" : "none";
     }
 
+    function forceTransparentRuntime() {
+      document.documentElement.style.background = "transparent";
+      document.body.style.background = "transparent";
+      document.querySelectorAll("canvas, .a-canvas, a-scene, .mindar-ui-overlay, .mindar-ui-scanning, .mindar-ui-loading").forEach((element) => {
+        element.style.background = "transparent";
+      });
+    }
+
     function isVideo(fileName) {
       const lower = String(fileName || "").toLowerCase();
       return lower.endsWith(".mp4") || lower.endsWith(".webm") || lower.endsWith(".mov") || lower.includes(".mp4?") || lower.includes(".webm?") || lower.includes(".mov?");
@@ -214,36 +289,320 @@
       return lower.endsWith(".jpg") || lower.endsWith(".jpeg") || lower.endsWith(".png") || lower.endsWith(".webp") || lower.includes(".jpg?") || lower.includes(".jpeg?") || lower.includes(".png?") || lower.includes(".webp?");
     }
 
-    function fitPlaneToRatio(plane, naturalWidth, naturalHeight) {
-      const maxW = Number(config.planeMaxWidth || 1.15);
-      const maxH = Number(config.planeMaxHeight || 1.15);
-      if (!naturalWidth || !naturalHeight) {
-        plane.setAttribute("width", String(maxW));
-        plane.setAttribute("height", String(maxW * 0.5625));
-        return;
+    function normalizeTargetIds(rawTargetIds, fallbackId) {
+      const rawList = Array.isArray(rawTargetIds)
+        ? rawTargetIds
+        : rawTargetIds === undefined || rawTargetIds === null
+          ? [fallbackId]
+          : [rawTargetIds];
+
+      const uniqueIds = [];
+      rawList.forEach((value) => {
+        const parsed = Number.parseInt(String(value), 10);
+        if (Number.isInteger(parsed) && parsed >= 0 && !uniqueIds.includes(parsed)) {
+          uniqueIds.push(parsed);
+        }
+      });
+
+      if (uniqueIds.length > 0) {
+        return uniqueIds;
       }
-      const ratio = naturalWidth / naturalHeight;
-      let width = maxW;
-      let height = width / ratio;
-      if (height > maxH) {
-        height = maxH;
-        width = height * ratio;
+
+      if (Number.isInteger(fallbackId) && fallbackId >= 0) {
+        return [fallbackId];
       }
-      plane.setAttribute("width", String(width));
-      plane.setAttribute("height", String(height));
+
+      return [0];
     }
 
     function getContents() {
       if (Array.isArray(config.contents) && config.contents.length > 0) {
-        return config.contents.map((item, index) => ({
-          id: Number.isInteger(item.id) ? item.id : index,
-          targetId: Number.isInteger(item.targetId) ? item.targetId : index,
-          file: item.file || config.contentFile,
-          label: item.label || `Contenuto ${index + 1}`,
-          kind: item.kind || "video"
-        })).filter(item => item.file);
+        return config.contents.map((item, index) => {
+          const targetIds = normalizeTargetIds(item.targetIds, item.targetId ?? index);
+          const file = item.file || config.contentFile;
+          const inferredKind = item.kind || (isAudio(file) ? "audio" : isImage(file) ? "image" : "video");
+          return {
+            id: Number.isInteger(item.id) ? item.id : index,
+            label: item.label || `Contenuto ${index + 1}`,
+            targetIds,
+            targetId: targetIds[0],
+            file,
+            kind: inferredKind,
+            originalFile: item.originalFile || "",
+            audioFile: item.audioFile || "",
+            audioOriginalFile: item.audioOriginalFile || ""
+          };
+        }).filter((item) => item.file);
       }
-      return [{ id: 0, targetId: 0, file: config.contentFile, label: "Contenuto 1", kind: "video" }].filter(item => item.file);
+
+      return [{
+        id: 0,
+        label: "Contenuto 1",
+        targetIds: [0],
+        targetId: 0,
+        file: config.contentFile,
+        kind: isAudio(config.contentFile) ? "audio" : "video",
+        audioFile: ""
+      }].filter((item) => item.file);
+    }
+
+    function getUniqueTargetIds(contents) {
+      return [...new Set(contents.flatMap((content) => content.targetIds))].sort((a, b) => a - b);
+    }
+
+    function applyTargetFile(targetFile) {
+      const scene = document.getElementById("arScene");
+      scene.setAttribute(
+        "mindar-image",
+        "imageTargetSrc: " + targetFile + "; autoStart: false; filterMinCF: 0.0001; filterBeta: 0.01; warmupTolerance: 5; missTolerance: 10;"
+      );
+    }
+
+    function buildTargets() {
+      const root = document.getElementById("targetsRoot");
+      root.innerHTML = "";
+      const contents = getContents();
+
+      getUniqueTargetIds(contents).forEach((targetId) => {
+        const target = document.createElement("a-entity");
+        target.id = `target-${targetId}`;
+        target.setAttribute("mindar-image-target", `targetIndex: ${targetId}`);
+        target.addEventListener("targetFound", () => handleTargetFound(targetId));
+        target.addEventListener("targetLost", () => handleTargetLost(targetId));
+        root.appendChild(target);
+      });
+    }
+
+    function getContentForTarget(targetId) {
+      return getContents().find((content) => content.targetIds.includes(targetId)) || null;
+    }
+
+    function buildPlaybackBundle(content) {
+      if (contentCache.has(content.id)) {
+        return contentCache.get(content.id);
+      }
+
+      const bundle = {
+        content,
+        visual: null,
+        audio: null,
+        frameElement: null
+      };
+
+      if (content.kind === "image") {
+        const image = document.createElement("img");
+        image.src = content.file;
+        image.alt = content.label || "MaraSense content";
+        image.crossOrigin = "anonymous";
+        bundle.visual = image;
+        bundle.frameElement = image;
+      } else if (content.kind === "audio") {
+        const audio = new Audio(content.file);
+        audio.preload = "auto";
+        audio.crossOrigin = "anonymous";
+        bundle.audio = audio;
+      } else {
+        const video = document.createElement("video");
+        video.src = content.file;
+        video.preload = "auto";
+        video.crossOrigin = "anonymous";
+        video.setAttribute("playsinline", "");
+        video.setAttribute("webkit-playsinline", "");
+        video.playsInline = true;
+        video.controls = false;
+        video.disablePictureInPicture = true;
+        bundle.visual = video;
+        bundle.frameElement = video;
+
+        if (content.audioFile) {
+          const audio = new Audio(content.audioFile);
+          audio.preload = "auto";
+          audio.crossOrigin = "anonymous";
+          bundle.audio = audio;
+          video.muted = true;
+          video.defaultMuted = true;
+        }
+      }
+
+      contentCache.set(content.id, bundle);
+      return bundle;
+    }
+
+    function mountBundle(bundle) {
+      const stage = document.getElementById("contentStage");
+      const frame = document.getElementById("contentFrame");
+      frame.innerHTML = "";
+
+      if (bundle.frameElement) {
+        frame.appendChild(bundle.frameElement);
+      }
+
+      stage.style.display = bundle.frameElement ? "flex" : "none";
+    }
+
+    function resetBundle(bundle) {
+      if (!bundle) return;
+      [bundle.visual, bundle.audio].forEach((media) => {
+        if (!media) return;
+        try {
+          media.pause();
+          media.currentTime = 0;
+        } catch (error) {
+          console.warn("Reset media non riuscito", error);
+        }
+      });
+    }
+
+    function clearStage() {
+      const stage = document.getElementById("contentStage");
+      const frame = document.getElementById("contentFrame");
+      frame.innerHTML = "";
+      stage.style.display = "none";
+    }
+
+    function stopActivePlayback(clearVisual = true) {
+      if (activePlayback) {
+        resetBundle(activePlayback);
+      }
+      if (clearVisual) {
+        clearStage();
+      }
+      activePlayback = null;
+      activeContent = null;
+    }
+
+    function finishPlayback() {
+      stopActivePlayback(true);
+      pendingContent = null;
+      if (visibleTargets.size > 0) {
+        setStatus("Target ancora inquadrato. Puoi cambiare target oppure ripetere.");
+      } else {
+        setStatus("Contenuto terminato. Inquadra di nuovo il target.");
+      }
+      showLens(true);
+    }
+
+    async function playBundle(bundle) {
+      mountBundle(bundle);
+      const playTasks = [];
+
+      if (bundle.visual && typeof bundle.visual.play === "function") {
+        bundle.visual.currentTime = 0;
+        playTasks.push(bundle.visual.play());
+        bundle.visual.onended = () => {
+          if (!bundle.audio) {
+            finishPlayback();
+          }
+        };
+      }
+
+      if (bundle.audio) {
+        bundle.audio.currentTime = 0;
+        playTasks.push(bundle.audio.play());
+        bundle.audio.onended = () => {
+          if (bundle.content.kind === "audio" || !bundle.visual) {
+            finishPlayback();
+          }
+        };
+      }
+
+      if (bundle.visual && bundle.audio && bundle.visual.duration && bundle.audio.duration) {
+        bundle.audio.currentTime = bundle.visual.currentTime;
+      }
+
+      const results = await Promise.allSettled(playTasks);
+      const blocked = results.some((result) => result.status === "rejected");
+
+      if (blocked) {
+        pendingContent = bundle.content;
+        setStatus("Tocca lo schermo per avviare il contenuto.");
+        return;
+      }
+
+      pendingContent = null;
+      setStatus("Contenuto in riproduzione");
+    }
+
+    async function activateContent(content) {
+      const sameContent = activeContent && activeContent.id === content.id;
+      if (sameContent) {
+        return;
+      }
+
+      stopActivePlayback(false);
+      const bundle = buildPlaybackBundle(content);
+      activeContent = content;
+      activePlayback = bundle;
+      showLens(false);
+      setStatus(content.label || "Target trovato");
+      await playBundle(bundle);
+    }
+
+    function handleTargetFound(targetId) {
+      visibleTargets.add(targetId);
+      const content = getContentForTarget(targetId);
+      if (!content) {
+        return;
+      }
+
+      if (!config.autoPlay) {
+        pendingContent = content;
+        showLens(false);
+        setStatus("Target trovato. Tocca lo schermo per avviare.");
+        return;
+      }
+
+      if (config.requireContentEnd && activePlayback) {
+        return;
+      }
+
+      activateContent(content);
+    }
+
+    function handleTargetLost(targetId) {
+      visibleTargets.delete(targetId);
+
+      if (!activeContent) {
+        if (visibleTargets.size === 0) {
+          setStatus("Inquadra il target");
+          showLens(true);
+        }
+        return;
+      }
+
+      const stillVisible = activeContent.targetIds.some((id) => visibleTargets.has(id));
+      if (stillVisible) {
+        return;
+      }
+
+      if (config.requireContentEnd && activePlayback) {
+        setStatus("Contenuto in riproduzione");
+        return;
+      }
+
+      if (config.stopOnTargetLost) {
+        stopActivePlayback(true);
+      }
+
+      setStatus("Inquadra il target");
+      showLens(true);
+    }
+
+    async function requestCameraPermission() {
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        throw new Error("Questo browser non supporta l'accesso diretto alla fotocamera.");
+      }
+
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: {
+          facingMode: { ideal: "environment" },
+          width: { ideal: 1280 },
+          height: { ideal: 720 }
+        },
+        audio: false
+      });
+
+      stream.getTracks().forEach((track) => track.stop());
     }
 
     async function loadConfig() {
@@ -256,106 +615,10 @@
       } catch (error) {
         console.warn("Config non trovato, uso valori default.", error);
       }
+
       document.getElementById("experienceTitle").textContent = config.title || DEFAULT_CONFIG.title;
       applyTargetFile(config.targetFile || DEFAULT_CONFIG.targetFile);
       buildTargets();
-    }
-
-    function applyTargetFile(targetFile) {
-      const scene = document.getElementById("arScene");
-      scene.setAttribute("mindar-image", "imageTargetSrc: " + targetFile + "; autoStart: false; filterMinCF: 0.0001; filterBeta: 0.01; warmupTolerance: 5; missTolerance: 10;");
-    }
-
-    function buildTargets() {
-      const assets = document.getElementById("arAssets");
-      const root = document.getElementById("targetsRoot");
-      assets.innerHTML = "";
-      root.innerHTML = "";
-
-      const contents = getContents();
-      contents.forEach((content, index) => {
-        const fileName = content.file;
-        const targetIndex = Number.isInteger(content.targetId) ? content.targetId : index;
-        const assetId = `asset-${index}`;
-        const planeId = `plane-${index}`;
-
-        let asset;
-        let plane;
-
-        if (isVideo(fileName)) {
-          asset = document.createElement("video");
-          asset.id = assetId;
-          asset.className = "arContentAsset";
-          asset.src = fileName;
-          asset.preload = "auto";
-          asset.crossOrigin = "anonymous";
-          asset.playsInline = true;
-          asset.setAttribute("playsinline", "");
-          asset.setAttribute("webkit-playsinline", "");
-          asset.addEventListener("loadedmetadata", () => fitPlaneToRatio(plane, asset.videoWidth, asset.videoHeight), { once: true });
-
-          plane = document.createElement("a-video");
-          plane.setAttribute("src", `#${assetId}`);
-        } else if (isImage(fileName)) {
-          asset = document.createElement("img");
-          asset.id = assetId;
-          asset.className = "arContentAsset";
-          asset.src = fileName;
-          asset.crossOrigin = "anonymous";
-          asset.onload = () => fitPlaneToRatio(plane, asset.naturalWidth, asset.naturalHeight);
-
-          plane = document.createElement("a-image");
-          plane.setAttribute("src", `#${assetId}`);
-        } else if (isAudio(fileName)) {
-          asset = document.createElement("audio");
-          asset.id = assetId;
-          asset.className = "arContentAsset";
-          asset.src = fileName;
-          asset.preload = "auto";
-          asset.crossOrigin = "anonymous";
-
-          plane = document.createElement("a-entity");
-        } else {
-          return;
-        }
-
-        assets.appendChild(asset);
-
-        const target = document.createElement("a-entity");
-        target.id = `target-${targetIndex}`;
-        target.setAttribute("mindar-image-target", `targetIndex: ${targetIndex}`);
-
-        plane.id = planeId;
-        plane.setAttribute("width", "1");
-        plane.setAttribute("height", "1");
-        plane.setAttribute("position", "0 0 0.01");
-        plane.setAttribute("rotation", "0 0 0");
-        plane.setAttribute("visible", isAudio(fileName) ? "false" : "true");
-        target.appendChild(plane);
-        root.appendChild(target);
-
-        target.addEventListener("targetFound", () => handleTargetFound(content, asset, targetIndex));
-        target.addEventListener("targetLost", () => handleTargetLost(targetIndex));
-      });
-    }
-
-    async function requestCameraPermission() {
-      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-        throw new Error("Questo browser non supporta l'accesso diretto alla fotocamera.");
-      }
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: { ideal: "environment" }, width: { ideal: 1280 }, height: { ideal: 720 } },
-        audio: false
-      });
-      stream.getTracks().forEach(track => track.stop());
-    }
-
-    function forceTransparentRuntime() {
-      document.documentElement.style.background = "transparent";
-      document.body.style.background = "transparent";
-      document.querySelectorAll("canvas, .a-canvas, a-scene, .mindar-ui-overlay, .mindar-ui-scanning, .mindar-ui-loading").forEach(el => {
-        el.style.background = "transparent";
-      });
     }
 
     async function startExperience() {
@@ -364,6 +627,7 @@
       button.disabled = true;
       button.textContent = "Avvio fotocamera...";
       clearError();
+
       try {
         await requestCameraPermission();
         experienceStarted = true;
@@ -379,7 +643,7 @@
         experienceStarted = false;
         button.disabled = false;
         button.textContent = "Avvia esperienza";
-        showError("Non riesco ad accedere alla fotocamera. Controlla che il sito abbia il permesso Camera nel browser, poi ricarica e premi di nuovo Avvia esperienza.");
+        showError("Non riesco ad accedere alla fotocamera. Controlla il permesso Camera del browser e riprova.");
       }
     }
 
@@ -388,77 +652,19 @@
       document.getElementById("startScreen").style.display = "flex";
       document.getElementById("startButton").disabled = false;
       document.getElementById("startButton").textContent = "Avvia esperienza";
-    }
-
-    function handleTargetFound(content, media, targetIndex) {
-      targetVisible = true;
-      activeTargetIndex = targetIndex;
-      if (!config.autoPlay) {
-        setStatus("Target trovato. Tocca per avviare.");
-        showLens(false);
-        return;
-      }
-      if (contentLockedUntilEnd) return;
-      playContent(content, media);
-    }
-
-    function handleTargetLost(targetIndex) {
-      if (activeTargetIndex !== targetIndex) return;
-      targetVisible = false;
-      activeTargetIndex = null;
-      if (contentLockedUntilEnd) {
-        setStatus("Contenuto in riproduzione");
-        return;
-      }
-      if (config.stopOnTargetLost) stopContent();
-      setStatus("Inquadra il target");
-      showLens(true);
-    }
-
-    function playContent(content, media) {
-      if (contentPlaying && currentMedia === media) return;
-      stopContent();
-      currentMedia = media;
-      contentPlaying = true;
-      contentLockedUntilEnd = config.requireContentEnd === true;
-      setStatus(content.label || "Target trovato");
+      stopActivePlayback(true);
+      pendingContent = null;
+      visibleTargets = new Set();
       showLens(false);
+    }
 
-      if (media && typeof media.play === "function") {
-        try { media.currentTime = 0; } catch (e) {}
-        media.play()
-          .then(() => setStatus("Contenuto in riproduzione"))
-          .catch(() => setStatus("Tocca lo schermo per avviare il contenuto"));
-        media.onended = () => {
-          contentPlaying = false;
-          contentLockedUntilEnd = false;
-          currentMedia = null;
-          setStatus("Contenuto terminato. Inquadra il target.");
-          showLens(true);
-        };
+    document.body.addEventListener("click", async () => {
+      if (!pendingContent) {
         return;
       }
-
-      contentPlaying = false;
-      contentLockedUntilEnd = false;
-    }
-
-    function stopContent() {
-      document.querySelectorAll("video.arContentAsset, audio.arContentAsset").forEach(media => {
-        try { media.pause(); media.currentTime = 0; } catch (e) {}
-      });
-      contentPlaying = false;
-      contentLockedUntilEnd = false;
-      currentMedia = null;
-    }
-
-    document.body.addEventListener("click", () => {
-      if (!targetVisible || contentPlaying || activeTargetIndex === null) return;
-      const contents = getContents();
-      const content = contents.find(item => item.targetId === activeTargetIndex);
-      const index = contents.indexOf(content);
-      const media = document.getElementById(`asset-${index}`);
-      if (content && media) playContent(content, media);
+      const content = pendingContent;
+      pendingContent = null;
+      await activateContent(content);
     });
 
     window.addEventListener("load", async () => {
