@@ -250,12 +250,12 @@
     "type": "multi-target",
     "slug": "cirio",
     "createdAt": "2026-05-26T08:55:04.623Z",
-    "updatedAt": "2026-05-28T15:22:00.000Z",
+    "updatedAt": "2026-05-28T16:12:00.000Z",
     "folder": "managed-experiences/food/cirio/",
     "publicUrl": "https://marasenseexperiences-ar.web.app/managed-experiences/food/cirio/",
     "sharedImage": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Ffood%2Fcirio%2Fstorage%2Fshared.png?alt=media&token=793c003c-f2d5-4138-bf80-d11a218e9c83",
-    "targetFile": "https://raw.githubusercontent.com/MaraAbbracchio80/mARasense-experiences/main/apps/cirio/targets.mind",
-    "contentFile": "https://raw.githubusercontent.com/MaraAbbracchio80/mARasense-experiences/main/apps/cirio/assets/video/videoolio.mp4",
+    "targetFile": "/apps/cirio/targets.mind",
+    "contentFile": "/apps/cirio/assets/video/videoolio.mp4",
     "targetImages": [
       {
         "id": 0,
@@ -288,7 +288,7 @@
         "label": "videoolio",
         "targetId": 0,
         "targetIds": [0],
-        "file": "https://raw.githubusercontent.com/MaraAbbracchio80/mARasense-experiences/main/apps/cirio/assets/video/videoolio.mp4",
+        "file": "/apps/cirio/assets/video/videoolio.mp4",
         "kind": "video",
         "originalFile": "videoolio.mp4",
         "audioFile": "",
@@ -299,7 +299,7 @@
         "label": "videopizza",
         "targetId": 1,
         "targetIds": [1, 2, 3],
-        "file": "https://raw.githubusercontent.com/MaraAbbracchio80/mARasense-experiences/main/apps/cirio/assets/video/videopizza.mp4",
+        "file": "/apps/cirio/assets/video/videopizza.mp4",
         "kind": "video",
         "originalFile": "videopizza.mp4",
         "audioFile": "",
@@ -310,7 +310,7 @@
       {
         "id": 0,
         "contentId": 0,
-        "content": "https://raw.githubusercontent.com/MaraAbbracchio80/mARasense-experiences/main/apps/cirio/assets/video/videoolio.mp4",
+        "content": "/apps/cirio/assets/video/videoolio.mp4",
         "audioFile": "",
         "kind": "video",
         "label": "videoolio"
@@ -318,7 +318,7 @@
       {
         "id": 1,
         "contentId": 1,
-        "content": "https://raw.githubusercontent.com/MaraAbbracchio80/mARasense-experiences/main/apps/cirio/assets/video/videopizza.mp4",
+        "content": "/apps/cirio/assets/video/videopizza.mp4",
         "audioFile": "",
         "kind": "video",
         "label": "videopizza"
@@ -326,7 +326,7 @@
       {
         "id": 2,
         "contentId": 1,
-        "content": "https://raw.githubusercontent.com/MaraAbbracchio80/mARasense-experiences/main/apps/cirio/assets/video/videopizza.mp4",
+        "content": "/apps/cirio/assets/video/videopizza.mp4",
         "audioFile": "",
         "kind": "video",
         "label": "videopizza"
@@ -334,7 +334,7 @@
       {
         "id": 3,
         "contentId": 1,
-        "content": "https://raw.githubusercontent.com/MaraAbbracchio80/mARasense-experiences/main/apps/cirio/assets/video/videopizza.mp4",
+        "content": "/apps/cirio/assets/video/videopizza.mp4",
         "audioFile": "",
         "kind": "video",
         "label": "videopizza"
