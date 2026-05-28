@@ -3,16 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
   <title>MaraSense Experience Manager</title>
-
   <link rel="icon" href="https://ndaprove.newdigitalapp.it/docs/MARASENSELOGO.png" />
-
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.4/build/qrcode.min.js"></script>
   <style>
-    * {
-      box-sizing: border-box;
-    }
-
+    * { box-sizing: border-box; }
     body {
       margin: 0;
       min-height: 100vh;
@@ -23,14 +18,7 @@
       color: #111;
       font-family: Arial, Helvetica, sans-serif;
     }
-
-    .page {
-      width: 100%;
-      max-width: 1300px;
-      margin: 0 auto;
-      padding: 28px 18px 50px;
-    }
-
+    .page { width: 100%; max-width: 1300px; margin: 0 auto; padding: 28px 18px 50px; }
     .header {
       display: flex;
       align-items: center;
@@ -42,38 +30,16 @@
       border-radius: 24px;
       box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
     }
-
     .header img {
       width: 74px;
       height: 74px;
       object-fit: contain;
       animation: rotateLogo 8s linear infinite;
     }
-
-    @keyframes rotateLogo {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
-
-    .header h1 {
-      margin: 0;
-      font-size: 30px;
-      color: #111;
-    }
-
-    .header p {
-      margin: 8px 0 0;
-      color: #666;
-      font-size: 15px;
-      line-height: 1.5;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: 1.05fr 0.95fr;
-      gap: 22px;
-    }
-
+    @keyframes rotateLogo { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    .header h1 { margin: 0; font-size: 30px; color: #111; }
+    .header p { margin: 8px 0 0; color: #666; font-size: 15px; line-height: 1.5; }
+    .grid { display: grid; grid-template-columns: 1.08fr 0.92fr; gap: 22px; }
     .card {
       background: rgba(255, 255, 255, 0.96);
       border: 1px solid rgba(0, 0, 0, 0.06);
@@ -81,28 +47,10 @@
       padding: 24px;
       box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
     }
-
-    .card h2 {
-      margin: 0 0 20px;
-      font-size: 23px;
-      color: #111;
-    }
-
-    .field {
-      margin-bottom: 18px;
-    }
-
-    label {
-      display: block;
-      margin-bottom: 8px;
-      font-size: 14px;
-      color: #444;
-      font-weight: 600;
-    }
-
-    input,
-    select,
-    textarea {
+    .card h2 { margin: 0 0 20px; font-size: 23px; color: #111; }
+    .field { margin-bottom: 18px; }
+    label { display: block; margin-bottom: 8px; font-size: 14px; color: #444; font-weight: 600; }
+    input, select, textarea {
       width: 100%;
       border: 1px solid #d8dde7;
       border-radius: 14px;
@@ -113,30 +61,13 @@
       outline: none;
       transition: 0.2s;
     }
-
-    input:focus,
-    select:focus,
-    textarea:focus {
+    input:focus, select:focus, textarea:focus {
       border-color: #8a2be2;
       box-shadow: 0 0 0 4px rgba(138, 43, 226, 0.12);
     }
-
-    input[type="file"] {
-      cursor: pointer;
-      background: #fafafa;
-    }
-
-    textarea {
-      min-height: 90px;
-      resize: vertical;
-    }
-
-    .options {
-      display: grid;
-      gap: 12px;
-      margin-top: 10px;
-    }
-
+    input[type="file"] { cursor: pointer; background: #fafafa; }
+    textarea { min-height: 90px; resize: vertical; }
+    .options { display: grid; gap: 12px; margin-top: 10px; }
     .check-row {
       display: flex;
       align-items: center;
@@ -146,18 +77,8 @@
       border-radius: 14px;
       border: 1px solid #e7ebf3;
     }
-
-    .check-row input {
-      width: auto;
-      transform: scale(1.15);
-    }
-
-    .check-row span {
-      font-size: 14px;
-      color: #333;
-      line-height: 1.4;
-    }
-
+    .check-row input { width: auto; transform: scale(1.15); }
+    .check-row span { font-size: 14px; color: #333; line-height: 1.4; }
     .block {
       margin-bottom: 18px;
       padding: 16px;
@@ -165,7 +86,6 @@
       background: #f7f9fc;
       border-radius: 18px;
     }
-
     .block-title {
       display: flex;
       justify-content: space-between;
@@ -175,28 +95,9 @@
       font-weight: 700;
       color: #111;
     }
-
-    .small-button {
-      padding: 9px 12px;
-      border-radius: 12px;
-      font-size: 13px;
-      box-shadow: none;
-    }
-
-    .danger {
-      background: #ffffff;
-      color: #b91c1c;
-      border: 1px solid #fecaca;
-      box-shadow: none;
-    }
-
-    .actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 24px;
-    }
-
+    .small-button { padding: 9px 12px; border-radius: 12px; font-size: 13px; box-shadow: none; }
+    .danger { background: #ffffff; color: #b91c1c; border: 1px solid #fecaca; box-shadow: none; }
+    .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
     button {
       border: none;
       border-radius: 15px;
@@ -209,19 +110,8 @@
       box-shadow: 0 8px 24px rgba(138, 43, 226, 0.22);
       transition: 0.2s;
     }
-
-    button:hover {
-      transform: translateY(-1px);
-      opacity: 0.96;
-    }
-
-    button.secondary {
-      background: #ffffff;
-      color: #111;
-      border: 1px solid #d7dde7;
-      box-shadow: none;
-    }
-
+    button:hover { transform: translateY(-1px); opacity: 0.96; }
+    button.secondary { background: #ffffff; color: #111; border: 1px solid #d7dde7; box-shadow: none; }
     .preview-box {
       background: #f7f9fc;
       border-radius: 18px;
@@ -229,19 +119,8 @@
       border: 1px solid #e7ebf3;
       margin-bottom: 18px;
     }
-
-    .preview-line {
-      margin: 10px 0;
-      color: #333;
-      font-size: 14px;
-      word-break: break-word;
-      line-height: 1.5;
-    }
-
-    .preview-line strong {
-      color: #111;
-    }
-
+    .preview-line { margin: 10px 0; color: #333; font-size: 14px; word-break: break-word; line-height: 1.5; }
+    .preview-line strong { color: #111; }
     .result {
       display: none;
       margin-top: 18px;
@@ -250,18 +129,8 @@
       background: rgba(0, 188, 212, 0.06);
       border: 1px solid rgba(0, 188, 212, 0.24);
     }
-
-    .result a {
-      color: #0097aa;
-      text-decoration: none;
-      word-break: break-word;
-    }
-
-    .config-box {
-      display: none;
-      margin-top: 18px;
-    }
-
+    .result a { color: #0097aa; text-decoration: none; word-break: break-word; }
+    .config-box { display: none; margin-top: 18px; }
     pre {
       max-height: 420px;
       overflow: auto;
@@ -274,43 +143,59 @@
       white-space: pre-wrap;
       word-break: break-word;
     }
-
-    .note {
-      margin-top: 14px;
+    .note { margin-top: 14px; font-size: 13px; line-height: 1.6; color: #666; }
+    .status { margin-top: 14px; color: #00a6bc; font-size: 14px; min-height: 20px; }
+    .target-choice {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: #fff;
+      border: 1px solid #e7ebf3;
+      margin-bottom: 8px;
+    }
+    .target-choice input { width: auto; }
+    .target-choice span { font-size: 13px; line-height: 1.4; color: #333; }
+    .empty-hint {
+      padding: 12px 14px;
+      border: 1px dashed #cbd5e1;
+      border-radius: 14px;
+      color: #64748b;
+      background: #fff;
       font-size: 13px;
-      line-height: 1.6;
-      color: #666;
     }
-
-    .status {
-      margin-top: 14px;
-      color: #00a6bc;
-      font-size: 14px;
-      min-height: 20px;
+    .qr-box {
+      display: none;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+      padding: 16px;
+      border: 1px solid #d9eef2;
+      background: #fff;
+      border-radius: 18px;
     }
-
+    .qr-box canvas {
+      width: 144px !important;
+      height: 144px !important;
+      border-radius: 16px;
+      background: #fff;
+      padding: 10px;
+      border: 1px solid #e7ebf3;
+    }
+    .qr-meta { flex: 1; min-width: 220px; }
     @media (max-width: 950px) {
-      .grid {
-        grid-template-columns: 1fr;
-      }
-
-      .header {
-        align-items: flex-start;
-      }
-
-      .header h1 {
-        font-size: 25px;
-      }
+      .grid { grid-template-columns: 1fr; }
+      .header { align-items: flex-start; }
+      .header h1 { font-size: 25px; }
     }
   </style>
 </head>
-
 <body>
   <main class="page">
-
     <section class="header">
       <img src="https://ndaprove.newdigitalapp.it/docs/MARASENSELOGO.png" alt="MaraSense Logo" />
-
       <div>
         <h1>MaraSense Experience Manager</h1>
         <p>
@@ -321,9 +206,7 @@
     </section>
 
     <section class="grid">
-
       <div class="card">
-
         <h2>Nuova esperienza</h2>
 
         <div class="field">
@@ -342,916 +225,682 @@
 
         <div class="field">
           <label for="experienceName">Nome esperienza</label>
-          <input id="experienceName" type="text" placeholder="Esempio: vino rosso demo" />
+          <input id="experienceName" type="text" placeholder="Esempio: bottiglie e tovaglioli" />
         </div>
 
         <div class="field">
           <label for="experienceType">Tipo esperienza</label>
           <select id="experienceType">
+            <option value="multi-target">Multi-target</option>
             <option value="ar-video">AR target + video</option>
             <option value="ar-audio">AR target + audio</option>
-            <option value="ar-video-audio">AR target + video con audio</option>
-            <option value="multi-target">Multi-target</option>
+            <option value="ar-video-audio">AR target + video con mp3 separato</option>
           </select>
         </div>
 
         <div class="field">
-          <label for="mindFile">Carica file MindAR (.mind)</label>
+          <label for="mindFile">1. Carica file MindAR (.mind)</label>
           <input id="mindFile" type="file" accept=".mind" />
         </div>
 
         <div class="field">
-          <label>Immagini target di riferimento</label>
+          <label>2. Immagini target usate nel .mind</label>
           <p class="note">
-            Queste immagini servono come memoria interna per sapere quali immagini sono state usate come target.
-            Non sono l’anteprima pubblica.
+            Registra qui tutte le immagini inserite nel file MindAR, nell’ordine reale del target index.
           </p>
-
           <div id="targetImagesContainer"></div>
-
-          <button type="button" class="secondary" onclick="addTargetImageBlock()">
-            + Aggiungi immagine target
-          </button>
+          <button type="button" class="secondary" onclick="addTargetImageBlock()">+ Aggiungi immagine target</button>
         </div>
 
         <div class="field">
-          <label for="sharedImage">Carica immagine shared / anteprima pubblica</label>
+          <label for="sharedImage">Anteprima pubblica / shared</label>
           <input id="sharedImage" type="file" accept="image/*" />
         </div>
 
         <div class="field">
-          <label>Contenuti esperienza</label>
+          <label>3. Contenuti collegati ai target</label>
           <p class="note">
-            Puoi aggiungere più contenuti. Per ogni contenuto scegli a quale target è collegato.
+            Ogni contenuto può essere assegnato a una o più immagini target. Usa questa parte per casi come 2 bottiglie = stesso video, 3 tovaglioli = altro contenuto.
           </p>
-
           <div id="contentsContainer"></div>
-
-          <button type="button" class="secondary" onclick="addContentBlock()">
-            + Aggiungi contenuto
-          </button>
+          <button type="button" class="secondary" onclick="addContentBlock()">+ Aggiungi contenuto</button>
         </div>
 
         <div class="field">
           <label for="notes">Note interne</label>
-          <textarea
-            id="notes"
-            placeholder="Annotazioni, istruzioni o dettagli dell’esperienza..."
-          ></textarea>
+          <textarea id="notes" placeholder="Annotazioni, istruzioni o dettagli dell’esperienza..."></textarea>
         </div>
 
         <div class="field">
-          <label>Opzioni comportamento AR</label>
-
+          <label>Comportamento esperienza</label>
           <div class="options">
-
             <label class="check-row">
               <input id="autoPlay" type="checkbox" checked />
-              <span>Avvia contenuto automaticamente quando trova il target</span>
+              <span>Avvia subito il contenuto quando trova il target</span>
             </label>
-
             <label class="check-row">
               <input id="requireEnd" type="checkbox" />
-              <span>Il contenuto deve terminare prima della ricerca di un altro target</span>
+              <span>Finisci il contenuto prima di permettere un nuovo retarget</span>
             </label>
-
             <label class="check-row">
               <input id="stopOnLost" type="checkbox" checked />
-              <span>Se il target viene perso, interrompi il contenuto</span>
+              <span>Se il target viene perso e il contenuto non è bloccato fino alla fine, fermalo</span>
             </label>
-
             <label class="check-row">
               <input id="transparentBg" type="checkbox" checked />
-              <span>Sfondo trasparente senza barra laterale</span>
+              <span>Fotocamera a pieno schermo con sfondo trasparente</span>
             </label>
-
             <label class="check-row">
               <input id="lensUi" type="checkbox" checked />
-              <span>Mostra interfaccia tipo lens durante la ricerca target</span>
+              <span>Mostra scanner tipo lens durante la ricerca</span>
             </label>
-
           </div>
         </div>
 
-<div class="actions">
-  <button onclick="generatePreview()">Procedi</button>
-  <button onclick="createExperienceOnGitHub()">Crea esperienza su GitHub</button>
-  <button class="secondary" onclick="resetForm()">Pulisci</button>
-</div>
+        <div class="actions">
+          <button onclick="generatePreview()">Procedi</button>
+          <button onclick="createExperienceOnGitHub()">Crea esperienza su GitHub</button>
+          <button class="secondary" onclick="resetForm()">Pulisci</button>
+        </div>
 
         <div class="status" id="status"></div>
-
       </div>
 
       <aside class="card">
-
         <h2>Anteprima generazione</h2>
 
         <div class="preview-box">
-
-          <div class="preview-line">
-            <strong>Settore:</strong>
-            <span id="pSector">-</span>
-          </div>
-
-          <div class="preview-line">
-            <strong>Nome:</strong>
-            <span id="pName">-</span>
-          </div>
-
-          <div class="preview-line">
-            <strong>Slug:</strong>
-            <span id="pSlug">-</span>
-          </div>
-
-          <div class="preview-line">
-            <strong>Tipo:</strong>
-            <span id="pType">-</span>
-          </div>
-
-          <div class="preview-line">
-            <strong>Target .mind:</strong>
-            <span id="pMind">-</span>
-          </div>
-
-          <div class="preview-line">
-            <strong>Immagini target:</strong>
-            <span id="pTargetImages">-</span>
-          </div>
-
-          <div class="preview-line">
-            <strong>Shared:</strong>
-            <span id="pShared">-</span>
-          </div>
-
-          <div class="preview-line">
-            <strong>Contenuti:</strong>
-            <span id="pContents">-</span>
-          </div>
-
+          <div class="preview-line"><strong>Settore:</strong> <span id="pSector">-</span></div>
+          <div class="preview-line"><strong>Nome:</strong> <span id="pName">-</span></div>
+          <div class="preview-line"><strong>Slug:</strong> <span id="pSlug">-</span></div>
+          <div class="preview-line"><strong>Tipo:</strong> <span id="pType">-</span></div>
+          <div class="preview-line"><strong>Target .mind:</strong> <span id="pMind">-</span></div>
+          <div class="preview-line"><strong>Immagini target:</strong> <span id="pTargetImages">-</span></div>
+          <div class="preview-line"><strong>Shared:</strong> <span id="pShared">-</span></div>
+          <div class="preview-line"><strong>Contenuti:</strong> <span id="pContents">-</span></div>
         </div>
 
         <div class="preview-box">
-          <div class="preview-line">
-            <strong>Cartella prevista:</strong>
-          </div>
-
-          <div class="preview-line" id="pFolder">
-            managed-experiences/-/-/
-          </div>
+          <div class="preview-line"><strong>Cartella prevista:</strong></div>
+          <div class="preview-line" id="pFolder">managed-experiences/-/-/</div>
         </div>
 
         <div class="result" id="resultBox">
-          <strong>Esperienza pronta per la generazione</strong>
-
+          <strong>Esperienza pronta</strong>
           <div class="preview-line" style="margin-top:12px;">
             Link previsto:
             <br />
             <a id="finalLink" href="#" target="_blank">-</a>
           </div>
-
           <div class="actions">
             <button onclick="openExperience()">Apri link</button>
             <button class="secondary" onclick="copyLink()">Copia link</button>
+            <button class="secondary" onclick="openDemoPage()">Apri demo</button>
+          </div>
+          <div class="qr-box" id="qrBox">
+            <canvas id="qrCanvas"></canvas>
+            <div class="qr-meta">
+              <div class="preview-line"><strong>QR test telefono</strong></div>
+              <div class="note">Usa questa anteprima per aprire subito la prova dal telefono.</div>
+            </div>
           </div>
         </div>
 
         <div class="config-box" id="configBox">
-
           <h2 style="margin-top: 24px;">Config generato</h2>
-
           <pre id="configPreview">{}</pre>
-
           <div class="actions">
             <button onclick="copyConfig()">Copia config.json</button>
           </div>
-
           <p class="note">
-            Questo config è già predisposto per più immagini target e più contenuti.
+            Questo config supporta più target sullo stesso contenuto e un mp3 separato sincronizzato al video quando serve.
           </p>
-
         </div>
-
-        <p class="note">
-          Prossimo step: pagina elenco esperienze e file
-          <strong>managed-experiences/index.json</strong>.
-        </p>
-
       </aside>
-
     </section>
-
   </main>
 
-<script>
-  const BASE_URL = "https://marasenseexperiences-ar.web.app";
+  <script>
+    const BASE_URL = "https://marasenseexperiences-ar.web.app";
+    const API_CREATE_EXPERIENCE = "https://europe-west1-marasenseexperiences-ar.cloudfunctions.net/api/createManagedExperience";
+    const API_GET_UPLOAD_URL = "https://europe-west1-marasenseexperiences-ar.cloudfunctions.net/api/getUploadUrl";
 
-  const API_CREATE_EXPERIENCE =
-    "https://europe-west1-marasenseexperiences-ar.cloudfunctions.net/api/createManagedExperience";
+    let lastGeneratedConfig = null;
+    let lastGeneratedId = "";
+    let targetImageCounter = 0;
+    let contentCounter = 0;
 
-  const API_GET_UPLOAD_URL =
-    "https://europe-west1-marasenseexperiences-ar.cloudfunctions.net/api/getUploadUrl";
-
-  let lastGeneratedConfig = null;
-  let targetImageCounter = 0;
-  let contentCounter = 0;
-
-  function slugify(text) {
-    return text
-      .toString()
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .toLowerCase()
-      .trim()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/^-+|-+$/g, "");
-  }
-
-  function getFileNameFromInput(input) {
-    if (!input.files || input.files.length === 0) {
-      return "-";
+    function slugify(text) {
+      return text
+        .toString()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase()
+        .trim()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "");
     }
 
-    return input.files[0].name;
-  }
-
-  function normalizeExtension(fileName, fallbackBaseName) {
-    if (!fileName || fileName === "-") {
-      return fallbackBaseName + ".jpg";
+    function getFileNameFromInput(input) {
+      if (!input.files || input.files.length === 0) return "-";
+      return input.files[0].name;
     }
 
-    const lower = fileName.toLowerCase();
+    function normalizeExtension(fileName, fallbackBaseName) {
+      if (!fileName || fileName === "-") return fallbackBaseName;
+      const lower = fileName.toLowerCase();
+      if (lower.endsWith(".jpg") || lower.endsWith(".jpeg")) return `${fallbackBaseName}.jpg`;
+      if (lower.endsWith(".png")) return `${fallbackBaseName}.png`;
+      if (lower.endsWith(".webp")) return `${fallbackBaseName}.webp`;
+      if (lower.endsWith(".mp4")) return `${fallbackBaseName}.mp4`;
+      if (lower.endsWith(".webm")) return `${fallbackBaseName}.webm`;
+      if (lower.endsWith(".mov")) return `${fallbackBaseName}.mov`;
+      if (lower.endsWith(".mp3")) return `${fallbackBaseName}.mp3`;
+      if (lower.endsWith(".wav")) return `${fallbackBaseName}.wav`;
+      if (lower.endsWith(".m4a")) return `${fallbackBaseName}.m4a`;
+      return fallbackBaseName;
+    }
 
-    if (lower.endsWith(".jpg") || lower.endsWith(".jpeg")) return fallbackBaseName + ".jpg";
-    if (lower.endsWith(".png")) return fallbackBaseName + ".png";
-    if (lower.endsWith(".webp")) return fallbackBaseName + ".webp";
-
-    if (lower.endsWith(".mp4")) return fallbackBaseName + ".mp4";
-    if (lower.endsWith(".webm")) return fallbackBaseName + ".webm";
-    if (lower.endsWith(".mov")) return fallbackBaseName + ".mov";
-
-    if (lower.endsWith(".mp3")) return fallbackBaseName + ".mp3";
-    if (lower.endsWith(".wav")) return fallbackBaseName + ".wav";
-    if (lower.endsWith(".m4a")) return fallbackBaseName + ".m4a";
-
-    return fallbackBaseName;
-  }
-
-  function normalizeSharedName(fileName) {
-    if (!fileName || fileName === "-") {
+    function normalizeSharedName(fileName) {
+      if (!fileName || fileName === "-") return "shared.jpg";
+      const lower = fileName.toLowerCase();
+      if (lower.endsWith(".jpg") || lower.endsWith(".jpeg")) return "shared.jpg";
+      if (lower.endsWith(".png")) return "shared.png";
+      if (lower.endsWith(".webp")) return "shared.webp";
       return "shared.jpg";
     }
 
-    const lower = fileName.toLowerCase();
-
-    if (lower.endsWith(".jpg") || lower.endsWith(".jpeg")) return "shared.jpg";
-    if (lower.endsWith(".png")) return "shared.png";
-    if (lower.endsWith(".webp")) return "shared.webp";
-
-    return "shared.jpg";
-  }
-
-  async function fileToBase64(file) {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-
-      reader.onload = () => {
-        const result = String(reader.result || "");
-        const base64 = result.includes(",") ? result.split(",")[1] : result;
-        resolve(base64);
-      };
-
-      reader.onerror = reject;
-
-      reader.readAsDataURL(file);
-    });
-  }
-
-  function addTargetImageBlock() {
-    targetImageCounter++;
-
-    const container = document.getElementById("targetImagesContainer");
-
-    const block = document.createElement("div");
-    block.className = "block target-image-block";
-    block.dataset.targetId = String(targetImageCounter - 1);
-
-    block.innerHTML = `
-      <div class="block-title">
-        <span>Target immagine ${targetImageCounter}</span>
-        <button type="button" class="small-button danger" onclick="removeBlock(this)">
-          Rimuovi
-        </button>
-      </div>
-
-      <div class="field">
-        <label>Nome target / descrizione</label>
-        <input class="target-label" type="text" placeholder="Esempio: etichetta frontale" />
-      </div>
-
-      <div class="field">
-        <label>Immagine target</label>
-        <input class="target-file" type="file" accept="image/*" />
-      </div>
-    `;
-
-    container.appendChild(block);
-    refreshTargetOptions();
-  }
-
-  function addContentBlock() {
-    contentCounter++;
-
-    const container = document.getElementById("contentsContainer");
-
-    const block = document.createElement("div");
-    block.className = "block content-block";
-    block.dataset.contentId = String(contentCounter - 1);
-
-    block.innerHTML = `
-      <div class="block-title">
-        <span>Contenuto ${contentCounter}</span>
-        <button type="button" class="small-button danger" onclick="removeBlock(this)">
-          Rimuovi
-        </button>
-      </div>
-
-      <div class="field">
-        <label>Nome contenuto / descrizione</label>
-        <input class="content-label" type="text" placeholder="Esempio: video introduzione" />
-      </div>
-
-      <div class="field">
-        <label>File contenuto</label>
-        <input class="content-file" type="file" accept="video/*,audio/*,image/*" />
-      </div>
-
-      <div class="field">
-        <label>Target collegato</label>
-        <select class="linked-target"></select>
-      </div>
-    `;
-
-    container.appendChild(block);
-    refreshTargetOptions();
-  }
-
-  function removeBlock(button) {
-    const block = button.closest(".block");
-
-    if (block) {
-      block.remove();
+    function inferKind(fileName) {
+      const lower = String(fileName || "").toLowerCase();
+      if (lower.endsWith(".mp3") || lower.endsWith(".wav") || lower.endsWith(".m4a")) return "audio";
+      if (lower.endsWith(".jpg") || lower.endsWith(".jpeg") || lower.endsWith(".png") || lower.endsWith(".webp")) return "image";
+      return "video";
     }
 
-    refreshTargetOptions();
-  }
-
-  function refreshTargetOptions() {
-    const targetBlocks = Array.from(document.querySelectorAll(".target-image-block"));
-
-    const targetOptions = targetBlocks.map((block, index) => {
-      const labelInput = block.querySelector(".target-label");
-
-      const label =
-        labelInput && labelInput.value.trim()
-          ? labelInput.value.trim()
-          : `Target ${index + 1}`;
-
-      return {
-        id: index,
-        label
-      };
-    });
-
-    const selects = document.querySelectorAll(".linked-target");
-
-    selects.forEach((select) => {
-      const currentValue = select.value;
-
-      select.innerHTML = "";
-
-      if (targetOptions.length === 0) {
-        const option = document.createElement("option");
-        option.value = "0";
-        option.textContent = "Target 1";
-        select.appendChild(option);
-        return;
-      }
-
-      targetOptions.forEach((target) => {
-        const option = document.createElement("option");
-        option.value = String(target.id);
-        option.textContent = target.label;
-        select.appendChild(option);
-      });
-
-      if (currentValue) {
-        select.value = currentValue;
-      }
-    });
-  }
-
-  function getTargetImages() {
-    const blocks = Array.from(document.querySelectorAll(".target-image-block"));
-
-    return blocks.map((block, index) => {
-      const label =
-        block.querySelector(".target-label").value.trim() || `Target ${index + 1}`;
-
-      const fileInput = block.querySelector(".target-file");
-      const originalFile = getFileNameFromInput(fileInput);
-
-      return {
-        id: index,
-        label,
-        originalFile,
-        file:
-          originalFile === "-"
-            ? "-"
-            : normalizeExtension(originalFile, `target-${index + 1}`)
-      };
-    });
-  }
-
-  function getContents() {
-    const blocks = Array.from(document.querySelectorAll(".content-block"));
-
-    return blocks.map((block, index) => {
-      const label =
-        block.querySelector(".content-label").value.trim() || `Contenuto ${index + 1}`;
-
-      const fileInput = block.querySelector(".content-file");
-
-      const linkedTarget = parseInt(
-        block.querySelector(".linked-target").value || "0",
-        10
-      );
-
-      const originalFile = getFileNameFromInput(fileInput);
-
-      return {
-        id: index,
-        label,
-        targetId: linkedTarget,
-        originalFile,
-        file:
-          originalFile === "-"
-            ? "-"
-            : normalizeExtension(originalFile, `content-${index + 1}`)
-      };
-    });
-  }
-
-  function getExperienceData() {
-    refreshTargetOptions();
-
-    const sector = document.getElementById("sector").value;
-
-    const name = document
-      .getElementById("experienceName")
-      .value
-      .trim();
-
-    const type = document.getElementById("experienceType").value;
-
-    const slug = slugify(name);
-
-    const mindInput = document.getElementById("mindFile");
-    const originalMindFile = getFileNameFromInput(mindInput);
-
-    const sharedInput = document.getElementById("sharedImage");
-    const originalSharedImage = getFileNameFromInput(sharedInput);
-
-    const targetImages = getTargetImages();
-    const contents = getContents();
-
-    return {
-      sector,
-      name,
-      type,
-      slug,
-
-      originalMindFile,
-      targetFile: originalMindFile === "-" ? "-" : "targets.mind",
-
-      originalSharedImage,
-      sharedImage: normalizeSharedName(originalSharedImage),
-
-      targetImages,
-      contents,
-
-      notes: document.getElementById("notes").value.trim(),
-
-      options: {
-        autoPlay: document.getElementById("autoPlay").checked,
-        requireContentEnd: document.getElementById("requireEnd").checked,
-        stopOnTargetLost: document.getElementById("stopOnLost").checked,
-        transparentBg: document.getElementById("transparentBg").checked,
-        lensUi: document.getElementById("lensUi").checked
-      }
-    };
-  }
-
-  function buildConfig(data) {
-    const firstContent = data.contents[0] || {
-      file: "content-1.mp4",
-      targetId: 0
-    };
-
-    return {
-      title: data.name,
-      type: data.type,
-      sector: data.sector,
-
-      targetFile: data.targetFile,
-      sharedImage: data.sharedImage,
-      contentFile: firstContent.file,
-
-      autoPlay: data.options.autoPlay,
-      requireContentEnd: data.options.requireContentEnd,
-      stopOnTargetLost: data.options.stopOnTargetLost,
-      transparentBg: data.options.transparentBg,
-      lensUi: data.options.lensUi,
-
-      multiTarget:
-        data.type === "multi-target" ||
-        data.contents.length > 1 ||
-        data.targetImages.length > 1,
-
-      targetImages: data.targetImages.map((target) => ({
-        id: target.id,
-        label: target.label,
-        file: target.file,
-        originalFile: target.originalFile
-      })),
-
-      contents: data.contents.map((content) => ({
-        id: content.id,
-        label: content.label,
-        targetId: content.targetId,
-        file: content.file,
-        originalFile: content.originalFile
-      })),
-
-      targets: data.contents.map((content) => ({
-        id: content.targetId,
-        content: content.file,
-        label: content.label
-      })),
-
-      meta: {
-        slug: data.slug,
-        notes: data.notes,
-        generatedFolder: `managed-experiences/${data.sector}/${data.slug}/`,
-        createdAt: new Date().toISOString()
-      }
-    };
-  }
-
-  function validateData(data) {
-    if (!data.name) return "Inserisci il nome esperienza.";
-    if (!data.slug) return "Nome esperienza non valido.";
-    if (data.originalMindFile === "-") return "Carica il file .mind.";
-    if (data.contents.length === 0) return "Aggiungi almeno un contenuto.";
-
-    const emptyContent = data.contents.find((content) => content.originalFile === "-");
-
-    if (emptyContent) {
-      return "Ogni contenuto aggiunto deve avere un file.";
-    }
-
-    return "";
-  }
-
-  function generatePreview() {
-    const data = getExperienceData();
-    const status = document.getElementById("status");
-
-    const error = validateData(data);
-
-    if (error) {
-      status.textContent = error;
-      return;
-    }
-
-    const folder = `managed-experiences/${data.sector}/${data.slug}/`;
-    const link = `${BASE_URL}/${folder}`;
-
-    document.getElementById("pSector").textContent = data.sector;
-    document.getElementById("pName").textContent = data.name;
-    document.getElementById("pSlug").textContent = data.slug;
-    document.getElementById("pType").textContent = data.type;
-
-    document.getElementById("pMind").textContent =
-      `${data.originalMindFile} → ${data.targetFile}`;
-
-    document.getElementById("pTargetImages").textContent =
-      data.targetImages.length === 0
-        ? "-"
-        : data.targetImages
-            .map((target) => `${target.originalFile} → ${target.file}`)
-            .join(" | ");
-
-    document.getElementById("pShared").textContent =
-      data.originalSharedImage === "-"
-        ? "-"
-        : `${data.originalSharedImage} → ${data.sharedImage}`;
-
-    document.getElementById("pContents").textContent =
-      data.contents
-        .map(
-          (content) =>
-            `${content.originalFile} → ${content.file} / target ${content.targetId}`
-        )
-        .join(" | ");
-
-    document.getElementById("pFolder").textContent = folder;
-
-    const finalLink = document.getElementById("finalLink");
-    finalLink.textContent = link;
-    finalLink.href = link;
-
-    document.getElementById("resultBox").style.display = "block";
-
-    lastGeneratedConfig = buildConfig(data);
-
-    document.getElementById("configPreview").textContent =
-      JSON.stringify(lastGeneratedConfig, null, 2);
-
-    document.getElementById("configBox").style.display = "block";
-
-    status.textContent =
-      "Anteprima e config.json multi-contenuto generati correttamente.";
-  }
-
-  async function uploadFileToStorage(file, storagePath) {
-  const response = await fetch(API_GET_UPLOAD_URL, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      path: storagePath,
-      contentType: file.type || "application/octet-stream"
-    })
-  });
-
-  const result = await response.json();
-
-  if (!response.ok || !result.ok) {
-  console.error("Errore getUploadUrl:", result);
-  throw new Error(
-    (result.error || "Errore creazione upload URL") +
-    " - " +
-    (result.detail || JSON.stringify(result))
-  );
-}
-
-  const uploadResponse = await fetch(result.uploadUrl, {
-    method: "PUT",
-    headers: {
-      "Content-Type": file.type || "application/octet-stream",
-      "x-goog-meta-firebasestoragedownloadtokens": result.token
-    },
-    body: file
-  });
-
-  if (!uploadResponse.ok) {
-    throw new Error("Errore upload Firebase Storage");
-  }
-
-  return result.downloadUrl;
-}
-
-async function collectUploadedFiles(config, data) {
-  const folder = `managed-experiences/${data.sector}/${data.slug}/storage/`;
-
-  const mindFileInput = document.getElementById("mindFile");
-  const sharedInput = document.getElementById("sharedImage");
-
-  if (mindFileInput.files[0]) {
-    config.targetFile = await uploadFileToStorage(
-      mindFileInput.files[0],
-      folder + "targets.mind"
-    );
-  }
-
-  if (sharedInput.files[0]) {
-    config.sharedImage = await uploadFileToStorage(
-      sharedInput.files[0],
-      folder + config.sharedImage
-    );
-  }
-
-  const targetBlocks = document.querySelectorAll(".target-image-block");
-
-  for (let i = 0; i < targetBlocks.length; i++) {
-    const fileInput = targetBlocks[i].querySelector(".target-file");
-
-    if (fileInput.files[0] && config.targetImages[i]) {
-      config.targetImages[i].file = await uploadFileToStorage(
-        fileInput.files[0],
-        folder + config.targetImages[i].file
-      );
-    }
-  }
-
-  const contentBlocks = document.querySelectorAll(".content-block");
-
-  for (let i = 0; i < contentBlocks.length; i++) {
-    const fileInput = contentBlocks[i].querySelector(".content-file");
-
-    if (fileInput.files[0] && config.contents[i]) {
-      config.contents[i].file = await uploadFileToStorage(
-        fileInput.files[0],
-        folder + config.contents[i].file
-      );
-    }
-  }
-
-  config.contentFile = config.contents[0].file;
-
-  return [];
-}
-
-  async function createExperienceOnGitHub() {
-    const status = document.getElementById("status");
-
-    const data = getExperienceData();
-    const error = validateData(data);
-
-    if (error) {
-      status.textContent = error;
-      return;
-    }
-
-    const config = buildConfig(data);
-
-    status.textContent =
-      "Caricamento file su Firebase Storage in corso...";
-
-    const uploadedFiles =
-      await collectUploadedFiles(config, data);
-
-    const payload = {
-      name: data.name,
-      title: data.name,
-      sector: data.sector,
-      type: data.type,
-      slug: data.slug,
-      notes: data.notes,
-
-      targetFile: config.targetFile,
-      sharedImage: config.sharedImage,
-      contentFile: config.contentFile,
-
-      options: {
-        autoPlay: config.autoPlay,
-        requireContentEnd: config.requireContentEnd,
-        stopOnTargetLost: config.stopOnTargetLost,
-        transparentBg: config.transparentBg,
-        lensUi: config.lensUi
-      },
-
-      targetImages: config.targetImages,
-      contents: config.contents,
-      files: uploadedFiles
-    };
-
-    status.textContent =
-      "Creazione esperienza su GitHub in corso...";
-
-    try {
-      const response = await fetch(API_CREATE_EXPERIENCE, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(payload)
-      });
-
-      const result = await response.json();
-
-      if (!response.ok || !result.ok) {
-        console.error(result);
-        status.textContent =
-          "Errore creazione esperienza: " +
-          (result.error || result.detail || "errore sconosciuto");
-        return;
-      }
-
-      const finalLink = document.getElementById("finalLink");
-
-      finalLink.textContent = result.publicUrl;
-      finalLink.href = result.publicUrl;
-
-      document.getElementById("resultBox").style.display = "block";
-
-      status.textContent =
-        "Esperienza creata su GitHub con file. Attendi il deploy automatico e poi apri il link.";
-
-      console.log("Esperienza creata:", result);
-    } catch (error) {
-      console.error(error);
-
-      status.textContent =
-        "Errore di connessione alla Function. Controlla console o deploy.";
-    }
-  }
-
-  function copyLink() {
-    const link = document.getElementById("finalLink").textContent;
-
-    if (!link || link === "-") return;
-
-    navigator.clipboard.writeText(link)
-      .then(() => {
-        document.getElementById("status").textContent = "Link copiato.";
-      })
-      .catch(() => {
-        document.getElementById("status").textContent = "Copia manualmente il link.";
-      });
-  }
-
-  function copyConfig() {
-    if (!lastGeneratedConfig) {
-      document.getElementById("status").textContent = "Genera prima la configurazione.";
-      return;
-    }
-
-    const configText = JSON.stringify(lastGeneratedConfig, null, 2);
-
-    navigator.clipboard.writeText(configText)
-      .then(() => {
-        document.getElementById("status").textContent = "Config.json copiato.";
-      })
-      .catch(() => {
-        document.getElementById("status").textContent =
-          "Non riesco a copiare automaticamente. Copia il config manualmente.";
-      });
-  }
-
-  function openExperience() {
-    const href = document.getElementById("finalLink").href;
-
-    if (href && href !== "#") {
-      window.open(href, "_blank");
-    }
-  }
-
-  function resetForm() {
-    lastGeneratedConfig = null;
-    targetImageCounter = 0;
-    contentCounter = 0;
-
-    document.getElementById("experienceName").value = "";
-    document.getElementById("experienceType").value = "ar-video";
-    document.getElementById("sector").value = "food";
-    document.getElementById("mindFile").value = "";
-    document.getElementById("sharedImage").value = "";
-    document.getElementById("notes").value = "";
-
-    document.getElementById("targetImagesContainer").innerHTML = "";
-    document.getElementById("contentsContainer").innerHTML = "";
-
-    document.getElementById("autoPlay").checked = true;
-    document.getElementById("requireEnd").checked = false;
-    document.getElementById("stopOnLost").checked = true;
-    document.getElementById("transparentBg").checked = true;
-    document.getElementById("lensUi").checked = true;
-
-    document.getElementById("pSector").textContent = "-";
-    document.getElementById("pName").textContent = "-";
-    document.getElementById("pSlug").textContent = "-";
-    document.getElementById("pType").textContent = "-";
-    document.getElementById("pMind").textContent = "-";
-    document.getElementById("pTargetImages").textContent = "-";
-    document.getElementById("pShared").textContent = "-";
-    document.getElementById("pContents").textContent = "-";
-    document.getElementById("pFolder").textContent = "managed-experiences/-/-/";
-
-    document.getElementById("finalLink").textContent = "-";
-    document.getElementById("finalLink").href = "#";
-
-    document.getElementById("resultBox").style.display = "none";
-    document.getElementById("configBox").style.display = "none";
-    document.getElementById("configPreview").textContent = "{}";
-    document.getElementById("status").textContent = "";
-
-    addTargetImageBlock();
-    addContentBlock();
-  }
-
-  document.addEventListener("input", function(event) {
-    if (event.target.classList.contains("target-label")) {
+    function addTargetImageBlock() {
+      targetImageCounter += 1;
+      const container = document.getElementById("targetImagesContainer");
+      const block = document.createElement("div");
+      block.className = "block target-image-block";
+      block.dataset.blockId = String(targetImageCounter);
+      block.innerHTML = `
+        <div class="block-title">
+          <span>Target ${targetImageCounter}</span>
+          <button type="button" class="small-button danger" onclick="removeBlock(this)">Rimuovi</button>
+        </div>
+        <div class="field">
+          <label>Nome target / descrizione</label>
+          <input class="target-label" type="text" placeholder="Esempio: bottiglia olio fronte" />
+        </div>
+        <div class="field">
+          <label>Immagine target</label>
+          <input class="target-file" type="file" accept="image/*" />
+        </div>
+      `;
+      container.appendChild(block);
       refreshTargetOptions();
     }
-  });
 
-  window.addEventListener("load", function() {
-    addTargetImageBlock();
-    addContentBlock();
-  });
-</script>
+    function addContentBlock() {
+      contentCounter += 1;
+      const container = document.getElementById("contentsContainer");
+      const block = document.createElement("div");
+      block.className = "block content-block";
+      block.dataset.blockId = String(contentCounter);
+      block.innerHTML = `
+        <div class="block-title">
+          <span>Contenuto ${contentCounter}</span>
+          <button type="button" class="small-button danger" onclick="removeBlock(this)">Rimuovi</button>
+        </div>
+        <div class="field">
+          <label>Nome contenuto / descrizione</label>
+          <input class="content-label" type="text" placeholder="Esempio: video bottiglie olio" />
+        </div>
+        <div class="field">
+          <label>File contenuto principale</label>
+          <input class="content-file" type="file" accept="video/*,audio/*,image/*" />
+        </div>
+        <div class="field">
+          <label>Mp3 separato opzionale</label>
+          <input class="content-audio-file" type="file" accept="audio/*" />
+        </div>
+        <div class="field">
+          <label>Target collegati</label>
+          <div class="linked-targets"></div>
+        </div>
+      `;
+      container.appendChild(block);
+      refreshTargetOptions();
+    }
+
+    function removeBlock(button) {
+      const block = button.closest(".block");
+      if (block) block.remove();
+      refreshTargetOptions();
+    }
+
+    function getTargetImages() {
+      return Array.from(document.querySelectorAll(".target-image-block")).map((block, index) => {
+        const label = block.querySelector(".target-label").value.trim() || `Target ${index + 1}`;
+        const originalFile = getFileNameFromInput(block.querySelector(".target-file"));
+        return {
+          id: index,
+          label,
+          originalFile,
+          file: originalFile === "-" ? "-" : normalizeExtension(originalFile, `target-${index + 1}`)
+        };
+      });
+    }
+
+    function renderTargetChoices(container, selectedIds) {
+      const targets = getTargetImages();
+      if (targets.length === 0) {
+        container.innerHTML = '<div class="empty-hint">Aggiungi prima almeno un’immagine target.</div>';
+        return;
+      }
+      container.innerHTML = targets.map((target) => `
+        <label class="target-choice">
+          <input type="checkbox" class="linked-target-checkbox" value="${target.id}" ${selectedIds.includes(target.id) ? "checked" : ""} />
+          <span>Target ${target.id} · ${target.label}</span>
+        </label>
+      `).join("");
+    }
+
+    function refreshTargetOptions() {
+      const targets = getTargetImages();
+      document.querySelectorAll(".content-block .linked-targets").forEach((container) => {
+        const selectedIds = Array.from(container.querySelectorAll(".linked-target-checkbox:checked"))
+          .map((input) => Number.parseInt(input.value, 10))
+          .filter((value) => Number.isInteger(value));
+        const normalizedSelectedIds = selectedIds.filter((value) => value < targets.length);
+        renderTargetChoices(container, normalizedSelectedIds);
+      });
+    }
+
+    function getContents() {
+      return Array.from(document.querySelectorAll(".content-block")).map((block, index) => {
+        const label = block.querySelector(".content-label").value.trim() || `Contenuto ${index + 1}`;
+        const contentInput = block.querySelector(".content-file");
+        const audioInput = block.querySelector(".content-audio-file");
+        const originalFile = getFileNameFromInput(contentInput);
+        const audioOriginalFile = getFileNameFromInput(audioInput);
+        const targetIds = Array.from(block.querySelectorAll(".linked-target-checkbox:checked"))
+          .map((input) => Number.parseInt(input.value, 10))
+          .filter((value) => Number.isInteger(value));
+        const kind = inferKind(originalFile);
+
+        return {
+          id: index,
+          label,
+          targetIds,
+          targetId: targetIds[0] ?? 0,
+          originalFile,
+          file: originalFile === "-" ? "-" : normalizeExtension(originalFile, `content-${index + 1}`),
+          kind,
+          audioOriginalFile,
+          audioFile: audioOriginalFile === "-" ? "" : normalizeExtension(audioOriginalFile, `content-${index + 1}-audio`)
+        };
+      });
+    }
+
+    function getExperienceData() {
+      refreshTargetOptions();
+      const sector = document.getElementById("sector").value;
+      const name = document.getElementById("experienceName").value.trim();
+      const type = document.getElementById("experienceType").value;
+      const slug = slugify(name);
+      const originalMindFile = getFileNameFromInput(document.getElementById("mindFile"));
+      const originalSharedImage = getFileNameFromInput(document.getElementById("sharedImage"));
+      const targetImages = getTargetImages();
+      const contents = getContents();
+
+      return {
+        sector,
+        name,
+        type,
+        slug,
+        originalMindFile,
+        targetFile: originalMindFile === "-" ? "-" : "targets.mind",
+        originalSharedImage,
+        sharedImage: normalizeSharedName(originalSharedImage),
+        targetImages,
+        contents,
+        notes: document.getElementById("notes").value.trim(),
+        options: {
+          autoPlay: document.getElementById("autoPlay").checked,
+          requireContentEnd: document.getElementById("requireEnd").checked,
+          stopOnTargetLost: document.getElementById("stopOnLost").checked,
+          transparentBg: document.getElementById("transparentBg").checked,
+          lensUi: document.getElementById("lensUi").checked
+        }
+      };
+    }
+
+    function buildConfig(data) {
+      const normalizedContents = data.contents.map((content, index) => ({
+        id: content.id,
+        label: content.label,
+        targetIds: content.targetIds,
+        targetId: content.targetIds[0] ?? 0,
+        file: content.file,
+        originalFile: content.originalFile,
+        kind: content.kind,
+        audioFile: content.audioFile,
+        audioOriginalFile: content.audioOriginalFile
+      }));
+
+      return {
+        title: data.name,
+        type: data.type,
+        sector: data.sector,
+        targetFile: data.targetFile,
+        sharedImage: data.sharedImage,
+        contentFile: normalizedContents[0] ? normalizedContents[0].file : "content-1.mp4",
+        autoPlay: data.options.autoPlay,
+        requireContentEnd: data.options.requireContentEnd,
+        stopOnTargetLost: data.options.stopOnTargetLost,
+        transparentBg: data.options.transparentBg,
+        lensUi: data.options.lensUi,
+        multiTarget:
+          data.type === "multi-target" ||
+          normalizedContents.length > 1 ||
+          data.targetImages.length > 1 ||
+          normalizedContents.some((content) => content.targetIds.length > 1),
+        targetImages: data.targetImages,
+        contents: normalizedContents,
+        targets: normalizedContents.flatMap((content) =>
+          content.targetIds.map((targetId) => ({
+            id: targetId,
+            contentId: content.id,
+            content: content.file,
+            audioFile: content.audioFile || "",
+            kind: content.kind,
+            label: content.label
+          }))
+        ),
+        meta: {
+          slug: data.slug,
+          notes: data.notes,
+          generatedFolder: `managed-experiences/${data.sector}/${data.slug}/`,
+          publicUrl: `${BASE_URL}/managed-experiences/${data.sector}/${data.slug}/`,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
+        }
+      };
+    }
+
+    function validateData(data) {
+      if (!data.name) return "Inserisci il nome esperienza.";
+      if (!data.slug) return "Nome esperienza non valido.";
+      if (data.originalMindFile === "-") return "Carica il file .mind.";
+      if (data.targetImages.length === 0) return "Aggiungi almeno un’immagine target.";
+      if (data.targetImages.some((target) => target.originalFile === "-")) return "Ogni target deve avere la sua immagine.";
+      if (data.contents.length === 0) return "Aggiungi almeno un contenuto.";
+      if (data.contents.some((content) => content.originalFile === "-")) return "Ogni contenuto deve avere un file principale.";
+      if (data.contents.some((content) => content.targetIds.length === 0)) return "Ogni contenuto deve essere collegato ad almeno un target.";
+      return "";
+    }
+
+    function updatePreview(data, config) {
+      const folder = `managed-experiences/${data.sector}/${data.slug}/`;
+      const link = `${BASE_URL}/${folder}`;
+      const id = `${data.sector}/${data.slug}`;
+
+      document.getElementById("pSector").textContent = data.sector;
+      document.getElementById("pName").textContent = data.name;
+      document.getElementById("pSlug").textContent = data.slug;
+      document.getElementById("pType").textContent = data.type;
+      document.getElementById("pMind").textContent = `${data.originalMindFile} → ${data.targetFile}`;
+      document.getElementById("pTargetImages").textContent = data.targetImages.map((target) => `${target.id}: ${target.originalFile} → ${target.file}`).join(" | ");
+      document.getElementById("pShared").textContent = data.originalSharedImage === "-" ? "-" : `${data.originalSharedImage} → ${data.sharedImage}`;
+      document.getElementById("pContents").textContent = data.contents.map((content) => {
+        const audioText = content.audioFile ? ` + audio ${content.audioFile}` : "";
+        return `${content.label} → target ${content.targetIds.join(", ")} → ${content.file}${audioText}`;
+      }).join(" | ");
+      document.getElementById("pFolder").textContent = folder;
+
+      const finalLink = document.getElementById("finalLink");
+      finalLink.textContent = link;
+      finalLink.href = link;
+
+      document.getElementById("resultBox").style.display = "block";
+      document.getElementById("configBox").style.display = "block";
+      document.getElementById("configPreview").textContent = JSON.stringify(config, null, 2);
+      document.getElementById("qrBox").style.display = "flex";
+      QRCode.toCanvas(document.getElementById("qrCanvas"), link, { width: 220, margin: 1 });
+
+      lastGeneratedConfig = config;
+      lastGeneratedId = id;
+    }
+
+    function generatePreview() {
+      const data = getExperienceData();
+      const status = document.getElementById("status");
+      const error = validateData(data);
+      if (error) {
+        status.textContent = error;
+        return;
+      }
+      const config = buildConfig(data);
+      updatePreview(data, config);
+      status.textContent = "Anteprima, JSON e QR generati correttamente.";
+    }
+
+    async function uploadFileToStorage(file, storagePath) {
+      const response = await fetch(API_GET_UPLOAD_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          path: storagePath,
+          contentType: file.type || "application/octet-stream"
+        })
+      });
+      const result = await response.json();
+      if (!response.ok || !result.ok) {
+        throw new Error((result.error || "Errore creazione upload URL") + " - " + (result.detail || JSON.stringify(result)));
+      }
+      const uploadResponse = await fetch(result.uploadUrl, {
+        method: "PUT",
+        headers: {
+          "Content-Type": file.type || "application/octet-stream",
+          "x-goog-meta-firebasestoragedownloadtokens": result.token
+        },
+        body: file
+      });
+      if (!uploadResponse.ok) {
+        throw new Error("Errore upload Firebase Storage");
+      }
+      return result.downloadUrl;
+    }
+
+    async function collectUploadedFiles(config, data) {
+      const folder = `managed-experiences/${data.sector}/${data.slug}/storage/`;
+      const mindFile = document.getElementById("mindFile").files[0];
+      const sharedFile = document.getElementById("sharedImage").files[0];
+
+      if (mindFile) {
+        config.targetFile = await uploadFileToStorage(mindFile, folder + "targets.mind");
+      }
+      if (sharedFile) {
+        config.sharedImage = await uploadFileToStorage(sharedFile, folder + config.sharedImage);
+      }
+
+      const targetBlocks = Array.from(document.querySelectorAll(".target-image-block"));
+      for (let index = 0; index < targetBlocks.length; index += 1) {
+        const fileInput = targetBlocks[index].querySelector(".target-file");
+        if (fileInput.files[0] && config.targetImages[index]) {
+          config.targetImages[index].file = await uploadFileToStorage(fileInput.files[0], folder + config.targetImages[index].file);
+        }
+      }
+
+      const contentBlocks = Array.from(document.querySelectorAll(".content-block"));
+      for (let index = 0; index < contentBlocks.length; index += 1) {
+        const fileInput = contentBlocks[index].querySelector(".content-file");
+        const audioInput = contentBlocks[index].querySelector(".content-audio-file");
+        if (fileInput.files[0] && config.contents[index]) {
+          config.contents[index].file = await uploadFileToStorage(fileInput.files[0], folder + config.contents[index].file);
+        }
+        if (audioInput.files[0] && config.contents[index] && config.contents[index].audioFile) {
+          config.contents[index].audioFile = await uploadFileToStorage(audioInput.files[0], folder + config.contents[index].audioFile);
+        }
+      }
+
+      config.contentFile = config.contents[0] ? config.contents[0].file : config.contentFile;
+      config.targets = config.contents.flatMap((content) =>
+        content.targetIds.map((targetId) => ({
+          id: targetId,
+          contentId: content.id,
+          content: content.file,
+          audioFile: content.audioFile || "",
+          kind: content.kind,
+          label: content.label
+        }))
+      );
+
+      return [];
+    }
+
+    async function createExperienceOnGitHub() {
+      const status = document.getElementById("status");
+      const data = getExperienceData();
+      const error = validateData(data);
+      if (error) {
+        status.textContent = error;
+        return;
+      }
+
+      try {
+        const config = buildConfig(data);
+        updatePreview(data, config);
+        status.textContent = "Caricamento file su Firebase Storage in corso...";
+        await collectUploadedFiles(config, data);
+
+        const payload = {
+          name: data.name,
+          title: data.name,
+          sector: data.sector,
+          type: data.type,
+          slug: data.slug,
+          notes: data.notes,
+          targetFile: config.targetFile,
+          sharedImage: config.sharedImage,
+          contentFile: config.contentFile,
+          options: {
+            autoPlay: config.autoPlay,
+            requireContentEnd: config.requireContentEnd,
+            stopOnTargetLost: config.stopOnTargetLost,
+            transparentBg: config.transparentBg,
+            lensUi: config.lensUi
+          },
+          targetImages: config.targetImages,
+          contents: config.contents,
+          files: []
+        };
+
+        status.textContent = "Creazione esperienza su GitHub in corso...";
+        const response = await fetch(API_CREATE_EXPERIENCE, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+        const result = await response.json();
+        if (!response.ok || !result.ok) {
+          status.textContent = "Errore creazione esperienza: " + (result.error || result.detail || "errore sconosciuto");
+          return;
+        }
+
+        const finalLink = document.getElementById("finalLink");
+        finalLink.textContent = result.publicUrl;
+        finalLink.href = result.publicUrl;
+        document.getElementById("resultBox").style.display = "block";
+        document.getElementById("qrBox").style.display = "flex";
+        QRCode.toCanvas(document.getElementById("qrCanvas"), result.publicUrl, { width: 220, margin: 1 });
+        lastGeneratedConfig = result.config;
+        lastGeneratedId = result.record && result.record.id ? result.record.id : `${data.sector}/${data.slug}`;
+        document.getElementById("configPreview").textContent = JSON.stringify(result.config, null, 2);
+        status.textContent = "Esperienza creata su GitHub con commit remoto. Attendi il deploy automatico e poi apri il link.";
+      } catch (requestError) {
+        console.error(requestError);
+        status.textContent = "Errore di connessione alla Function. Controlla console o deploy.";
+      }
+    }
+
+    function copyLink() {
+      const link = document.getElementById("finalLink").textContent;
+      if (!link || link === "-") return;
+      navigator.clipboard.writeText(link)
+        .then(() => { document.getElementById("status").textContent = "Link copiato."; })
+        .catch(() => { document.getElementById("status").textContent = "Copia manualmente il link."; });
+    }
+
+    function copyConfig() {
+      if (!lastGeneratedConfig) {
+        document.getElementById("status").textContent = "Genera prima la configurazione.";
+        return;
+      }
+      navigator.clipboard.writeText(JSON.stringify(lastGeneratedConfig, null, 2))
+        .then(() => { document.getElementById("status").textContent = "Config.json copiato."; })
+        .catch(() => { document.getElementById("status").textContent = "Copia il config manualmente."; });
+    }
+
+    function openExperience() {
+      const href = document.getElementById("finalLink").href;
+      if (href && href !== "#") window.open(href, "_blank");
+    }
+
+    function openDemoPage() {
+      if (!lastGeneratedId) return;
+      window.open(`./demo.html?id=${encodeURIComponent(lastGeneratedId)}`, "_blank");
+    }
+
+    function resetForm() {
+      lastGeneratedConfig = null;
+      lastGeneratedId = "";
+      targetImageCounter = 0;
+      contentCounter = 0;
+      document.getElementById("experienceName").value = "";
+      document.getElementById("experienceType").value = "multi-target";
+      document.getElementById("sector").value = "food";
+      document.getElementById("mindFile").value = "";
+      document.getElementById("sharedImage").value = "";
+      document.getElementById("notes").value = "";
+      document.getElementById("targetImagesContainer").innerHTML = "";
+      document.getElementById("contentsContainer").innerHTML = "";
+      document.getElementById("autoPlay").checked = true;
+      document.getElementById("requireEnd").checked = false;
+      document.getElementById("stopOnLost").checked = true;
+      document.getElementById("transparentBg").checked = true;
+      document.getElementById("lensUi").checked = true;
+      document.getElementById("pSector").textContent = "-";
+      document.getElementById("pName").textContent = "-";
+      document.getElementById("pSlug").textContent = "-";
+      document.getElementById("pType").textContent = "-";
+      document.getElementById("pMind").textContent = "-";
+      document.getElementById("pTargetImages").textContent = "-";
+      document.getElementById("pShared").textContent = "-";
+      document.getElementById("pContents").textContent = "-";
+      document.getElementById("pFolder").textContent = "managed-experiences/-/-/";
+      document.getElementById("finalLink").textContent = "-";
+      document.getElementById("finalLink").href = "#";
+      document.getElementById("resultBox").style.display = "none";
+      document.getElementById("configBox").style.display = "none";
+      document.getElementById("configPreview").textContent = "{}";
+      document.getElementById("qrBox").style.display = "none";
+      document.getElementById("status").textContent = "";
+      addTargetImageBlock();
+      addContentBlock();
+    }
+
+    document.addEventListener("input", (event) => {
+      if (event.target.classList.contains("target-label")) {
+        refreshTargetOptions();
+      }
+    });
+
+    window.addEventListener("load", () => {
+      addTargetImageBlock();
+      addContentBlock();
+    });
+  </script>
 </body>
 </html>
