@@ -3,16 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
   <title>MaraSense Experiences</title>
-
   <link rel="icon" href="https://ndaprove.newdigitalapp.it/docs/MARASENSELOGO.png" />
-
   <style>
-    * {
-      box-sizing: border-box;
-    }
-
+    * { box-sizing: border-box; }
     body {
       margin: 0;
       min-height: 100vh;
@@ -23,14 +17,7 @@
       color: #111;
       font-family: Arial, Helvetica, sans-serif;
     }
-
-    .page {
-      width: 100%;
-      max-width: 1250px;
-      margin: 0 auto;
-      padding: 28px 18px 60px;
-    }
-
+    .page { width: 100%; max-width: 1250px; margin: 0 auto; padding: 28px 18px 60px; }
     .header {
       display: flex;
       align-items: center;
@@ -42,32 +29,10 @@
       border-radius: 24px;
       box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
     }
-
-    .header img {
-      width: 76px;
-      height: 76px;
-      object-fit: contain;
-      animation: rotateLogo 8s linear infinite;
-    }
-
-    @keyframes rotateLogo {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
-
-    .header h1 {
-      margin: 0;
-      font-size: 32px;
-      color: #111;
-    }
-
-    .header p {
-      margin: 8px 0 0;
-      color: #666;
-      font-size: 15px;
-      line-height: 1.5;
-    }
-
+    .header img { width: 76px; height: 76px; object-fit: contain; animation: rotateLogo 8s linear infinite; }
+    @keyframes rotateLogo { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    .header h1 { margin: 0; font-size: 32px; color: #111; }
+    .header p { margin: 8px 0 0; color: #666; font-size: 15px; line-height: 1.5; }
     .toolbar {
       display: grid;
       grid-template-columns: 1.2fr 0.8fr;
@@ -79,9 +44,7 @@
       border: 1px solid rgba(0,0,0,0.06);
       box-shadow: 0 8px 30px rgba(0,0,0,0.04);
     }
-
-    input,
-    select {
+    input, select {
       width: 100%;
       border: 1px solid #d8dde7;
       border-radius: 14px;
@@ -91,43 +54,12 @@
       font-size: 15px;
       outline: none;
     }
-
-    input:focus,
-    select:focus {
-      border-color: #8a2be2;
-      box-shadow: 0 0 0 4px rgba(138, 43, 226, 0.12);
-    }
-
-    .sector {
-      margin-bottom: 34px;
-    }
-
-    .sector-title {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 16px;
-    }
-
-    .sector-title h2 {
-      margin: 0;
-      font-size: 24px;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-    }
-
-    .sector-count {
-      color: #666;
-      font-size: 14px;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 18px;
-    }
-
+    input:focus, select:focus { border-color: #8a2be2; box-shadow: 0 0 0 4px rgba(138, 43, 226, 0.12); }
+    .sector { margin-bottom: 34px; }
+    .sector-title { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 16px; }
+    .sector-title h2 { margin: 0; font-size: 24px; text-transform: uppercase; letter-spacing: 0.04em; }
+    .sector-count { color: #666; font-size: 14px; }
+    .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
     .card {
       background: rgba(255,255,255,0.98);
       border: 1px solid rgba(0,0,0,0.06);
@@ -135,22 +67,8 @@
       overflow: hidden;
       box-shadow: 0 8px 30px rgba(0,0,0,0.05);
     }
-
-    .thumb {
-      width: 100%;
-      aspect-ratio: 16 / 10;
-      background: #e9eef7;
-      overflow: hidden;
-      position: relative;
-    }
-
-    .thumb img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-
+    .thumb { width: 100%; aspect-ratio: 16 / 10; background: #e9eef7; overflow: hidden; position: relative; }
+    .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
     .badge {
       position: absolute;
       left: 12px;
@@ -164,30 +82,10 @@
       font-weight: 800;
       backdrop-filter: blur(10px);
     }
-
-    .content {
-      padding: 18px;
-    }
-
-    .content h3 {
-      margin: 0 0 8px;
-      font-size: 19px;
-      color: #111;
-    }
-
-    .meta {
-      color: #666;
-      font-size: 13px;
-      line-height: 1.5;
-      margin-bottom: 14px;
-    }
-
-    .actions {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
+    .content { padding: 18px; }
+    .content h3 { margin: 0 0 8px; font-size: 19px; color: #111; }
+    .meta { color: #666; font-size: 13px; line-height: 1.5; margin-bottom: 14px; }
+    .actions { display: flex; gap: 10px; flex-wrap: wrap; }
     .button {
       display: inline-flex;
       align-items: center;
@@ -203,78 +101,25 @@
       background: linear-gradient(135deg, #8a2be2, #00bcd4);
       box-shadow: 0 8px 24px rgba(138,43,226,0.20);
     }
-
-    .button.secondary {
-      background: #ffffff;
-      color: #111;
-      border: 1px solid #d7dde7;
-      box-shadow: none;
-    }
-
-    .empty {
-      padding: 34px;
-      text-align: center;
-      background: rgba(255,255,255,0.96);
-      border-radius: 24px;
-      color: #666;
-      line-height: 1.6;
-      border: 1px solid rgba(0,0,0,0.06);
-    }
-
-    .status {
-      margin: 10px 0 22px;
-      color: #00a6bc;
-      font-size: 14px;
-      min-height: 20px;
-    }
-
-    @media (max-width: 950px) {
-      .grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .toolbar {
-        grid-template-columns: 1fr;
-      }
-
-      .header {
-        align-items: flex-start;
-      }
-
-      .header h1 {
-        font-size: 26px;
-      }
-    }
-
-    @media (max-width: 620px) {
-      .grid {
-        grid-template-columns: 1fr;
-      }
-
-      .header {
-        flex-direction: column;
-      }
-    }
+    .button.secondary { background: #ffffff; color: #111; border: 1px solid #d7dde7; box-shadow: none; }
+    .empty { padding: 34px; text-align: center; background: rgba(255,255,255,0.96); border-radius: 24px; color: #666; line-height: 1.6; border: 1px solid rgba(0,0,0,0.06); }
+    .status { margin: 10px 0 22px; color: #00a6bc; font-size: 14px; min-height: 20px; }
+    @media (max-width: 950px) { .grid { grid-template-columns: repeat(2, 1fr); } .toolbar { grid-template-columns: 1fr; } .header { align-items: flex-start; } .header h1 { font-size: 26px; } }
+    @media (max-width: 620px) { .grid { grid-template-columns: 1fr; } .header { flex-direction: column; } }
   </style>
 </head>
-
 <body>
   <main class="page">
-
     <section class="header">
       <img src="https://ndaprove.newdigitalapp.it/docs/MARASENSELOGO.png" alt="MaraSense Logo" />
       <div>
         <h1>MaraSense Experiences</h1>
-        <p>
-          Raccolta pubblica delle esperienze AR generate con il gestionale MaraSense,
-          suddivise per settore.
-        </p>
+        <p>Raccolta pubblica delle esperienze AR generate con il gestionale MaraSense, suddivise per settore.</p>
       </div>
     </section>
 
     <section class="toolbar">
       <input id="searchInput" type="text" placeholder="Cerca esperienza..." />
-
       <select id="sectorFilter">
         <option value="">Tutti i settori</option>
         <option value="food">Food</option>
@@ -289,41 +134,21 @@
     </section>
 
     <div class="status" id="status"></div>
-
     <section id="showcase"></section>
-
   </main>
 
   <script>
     const INDEX_URL = "./index.json";
     const FALLBACK_IMAGE = "https://ndaprove.newdigitalapp.it/docs/MARASENSELOGO.png";
-
-    const SECTOR_LABELS = {
-      food: "Food",
-      painting: "Painting",
-      sport: "Sport",
-      eventi: "Eventi",
-      matrimoni: "Matrimoni",
-      museo: "Museo",
-      retail: "Retail",
-      custom: "Custom"
-    };
-
+    const SECTOR_LABELS = { food: "Food", painting: "Painting", sport: "Sport", eventi: "Eventi", matrimoni: "Matrimoni", museo: "Museo", retail: "Retail", custom: "Custom" };
     let allExperiences = [];
 
     function formatDate(value) {
       if (!value) return "-";
-
       try {
         const date = new Date(value);
-
         if (Number.isNaN(date.getTime())) return "-";
-
-        return date.toLocaleDateString("it-IT", {
-          year: "numeric",
-          month: "2-digit",
-          day: "2-digit"
-        });
+        return date.toLocaleDateString("it-IT", { year: "numeric", month: "2-digit", day: "2-digit" });
       } catch (error) {
         return "-";
       }
@@ -334,20 +159,31 @@
       return String(value);
     }
 
+    function normalizeTargetIds(rawTargetIds, fallbackId) {
+      const rawList = Array.isArray(rawTargetIds) ? rawTargetIds : rawTargetIds === undefined || rawTargetIds === null ? [fallbackId] : [rawTargetIds];
+      const uniqueIds = [];
+      rawList.forEach((value) => {
+        const parsed = Number.parseInt(String(value), 10);
+        if (Number.isInteger(parsed) && parsed >= 0 && !uniqueIds.includes(parsed)) uniqueIds.push(parsed);
+      });
+      if (uniqueIds.length > 0) return uniqueIds;
+      if (Number.isInteger(fallbackId) && fallbackId >= 0) return [fallbackId];
+      return [0];
+    }
+
+    function isAbsoluteUrl(value) {
+      return /^https?:\/\//i.test(String(value || ""));
+    }
+
     function normalizeExperience(item) {
       const meta = item.meta || {};
-
       const folder = item.folder || meta.generatedFolder || "";
-      const publicUrl =
-        item.publicUrl ||
-        meta.publicUrl ||
-        (folder ? "https://marasenseexperiences-ar.web.app/" + folder : "#");
-
-      const sharedImage =
-        item.sharedImage ||
-        item.shared ||
-        meta.sharedImage ||
-        "shared.jpg";
+      const publicUrl = item.publicUrl || meta.publicUrl || (folder ? "https://marasenseexperiences-ar.web.app/" + folder : "#");
+      const sharedImage = item.sharedImage || item.shared || meta.sharedImage || "shared.jpg";
+      const contents = (Array.isArray(item.contents) ? item.contents : []).map((content, index) => ({
+        ...content,
+        targetIds: normalizeTargetIds(content.targetIds, content.targetId ?? index)
+      }));
 
       return {
         id: item.id || `${item.sector || "custom"}/${item.slug || meta.slug || ""}`,
@@ -361,84 +197,52 @@
         publicUrl,
         sharedImage,
         targetImages: Array.isArray(item.targetImages) ? item.targetImages : [],
-        contents: Array.isArray(item.contents) ? item.contents : []
+        contents
       };
     }
 
     async function loadExperiences() {
       const status = document.getElementById("status");
-
       status.textContent = "Caricamento esperienze...";
-
       try {
-        const response = await fetch(INDEX_URL, {
-          cache: "no-store"
-        });
-
-        if (!response.ok) {
-          throw new Error("index.json non trovato.");
-        }
-
+        const response = await fetch(INDEX_URL, { cache: "no-store" });
+        if (!response.ok) throw new Error("index.json non trovato.");
         const data = await response.json();
-
-        if (!Array.isArray(data)) {
-          throw new Error("index.json non valido.");
-        }
-
+        if (!Array.isArray(data)) throw new Error("index.json non valido.");
         allExperiences = data.map(normalizeExperience);
-
-        status.textContent =
-          allExperiences.length === 0
-            ? "Nessuna esperienza ancora pubblicata."
-            : "";
-
+        status.textContent = allExperiences.length === 0 ? "Nessuna esperienza ancora pubblicata." : "";
         renderShowcase();
       } catch (error) {
         console.error(error);
-        status.textContent =
-          "Non riesco a caricare managed-experiences/index.json.";
-        document.getElementById("showcase").innerHTML =
-          '<div class="empty">Nessuna esperienza disponibile.</div>';
+        status.textContent = "Non riesco a caricare managed-experiences/index.json.";
+        document.getElementById("showcase").innerHTML = '<div class="empty">Nessuna esperienza disponibile.</div>';
       }
     }
 
     function getFilteredExperiences() {
       const search = document.getElementById("searchInput").value.trim().toLowerCase();
       const sector = document.getElementById("sectorFilter").value;
-
       return allExperiences.filter((item) => {
-        const text = [
-          item.name,
-          item.sector,
-          item.type,
-          item.slug,
-          item.folder
-        ].join(" ").toLowerCase();
-
+        const text = [item.name, item.sector, item.type, item.slug, item.folder].join(" ").toLowerCase();
         if (search && !text.includes(search)) return false;
         if (sector && item.sector !== sector) return false;
-
         return true;
       });
     }
 
     function groupBySector(items) {
       const groups = {};
-
       items.forEach((item) => {
         const sector = item.sector || "custom";
-
-        if (!groups[sector]) {
-          groups[sector] = [];
-        }
-
+        if (!groups[sector]) groups[sector] = [];
         groups[sector].push(item);
       });
-
       return groups;
     }
 
     function getSharedUrl(item) {
+      if (!item.sharedImage) return FALLBACK_IMAGE;
+      if (isAbsoluteUrl(item.sharedImage)) return item.sharedImage;
       if (!item.folder) return FALLBACK_IMAGE;
       return "./" + item.folder.replace(/^managed-experiences\//, "") + item.sharedImage;
     }
@@ -446,30 +250,21 @@
     function renderShowcase() {
       const container = document.getElementById("showcase");
       const filtered = getFilteredExperiences();
-
       if (filtered.length === 0) {
-        container.innerHTML =
-          '<div class="empty">Nessuna esperienza trovata con questi filtri.</div>';
+        container.innerHTML = '<div class="empty">Nessuna esperienza trovata con questi filtri.</div>';
         return;
       }
-
       const groups = groupBySector(filtered);
-
       const orderedSectors = Object.keys(SECTOR_LABELS).filter((sector) => groups[sector]);
-
       container.innerHTML = orderedSectors.map((sector) => {
         const items = groups[sector];
-
         return `
           <section class="sector">
             <div class="sector-title">
               <h2>${SECTOR_LABELS[sector] || sector}</h2>
               <span class="sector-count">${items.length} esperienze</span>
             </div>
-
-            <div class="grid">
-              ${items.map(renderCard).join("")}
-            </div>
+            <div class="grid">${items.map(renderCard).join("")}</div>
           </section>
         `;
       }).join("");
@@ -477,28 +272,22 @@
 
     function renderCard(item) {
       const sharedUrl = getSharedUrl(item);
-
       return `
         <article class="card">
           <div class="thumb">
             <img src="${sharedUrl}" alt="${safeText(item.name)}" onerror="this.src='${FALLBACK_IMAGE}'" />
             <span class="badge">${safeText(item.type)}</span>
           </div>
-
           <div class="content">
             <h3>${safeText(item.name)}</h3>
-
             <div class="meta">
               Settore: ${safeText(SECTOR_LABELS[item.sector] || item.sector)}<br>
               Creata: ${formatDate(item.createdAt)}<br>
               Target: ${item.targetImages.length} · Contenuti: ${item.contents.length}
             </div>
-
             <div class="actions">
               <a class="button" href="${item.publicUrl}" target="_blank">Apri esperienza</a>
-              <button class="button secondary" onclick="copyLink('${item.publicUrl.replace(/'/g, "\\'")}')">
-                Copia link
-              </button>
+              <button class="button secondary" onclick="copyLink('${item.publicUrl.replace(/'/g, "\\'")}')">Copia link</button>
             </div>
           </div>
         </article>
@@ -507,19 +296,13 @@
 
     function copyLink(link) {
       if (!link || link === "#") return;
-
       navigator.clipboard.writeText(link)
-        .then(() => {
-          document.getElementById("status").textContent = "Link copiato.";
-        })
-        .catch(() => {
-          document.getElementById("status").textContent = "Copia manualmente il link.";
-        });
+        .then(() => { document.getElementById("status").textContent = "Link copiato."; })
+        .catch(() => { document.getElementById("status").textContent = "Copia manualmente il link."; });
     }
 
     document.getElementById("searchInput").addEventListener("input", renderShowcase);
     document.getElementById("sectorFilter").addEventListener("change", renderShowcase);
-
     window.addEventListener("load", loadExperiences);
   </script>
 </body>
