@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MaraSense - Demo esperienza</title>
+  <link rel="icon" href="https://ndaprove.newdigitalapp.it/docs/MARASENSELOGO.png" />
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.4/build/qrcode.min.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at top left, rgba(138, 43, 226, 0.12), transparent 34%),
+        radial-gradient(circle at bottom right, rgba(0, 234, 255, 0.10), transparent 34%),
+        #f5f7fb;
+      color: #111;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+    .page { max-width: 960px; margin: 0 auto; padding: 28px 18px 42px; }
+    .card {
+      background: rgba(255,255,255,.96);
+      border: 1px solid rgba(0,0,0,.06);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: 0 8px 30px rgba(0,0,0,.05);
+      margin-bottom: 18px;
+    }
+    .header { display: flex; align-items: center; gap: 18px; }
+    .header img { width: 74px; height: 74px; object-fit: contain; animation: rotateLogo 8s linear infinite; }
+    @keyframes rotateLogo { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    h1,h2 { margin-top: 0; }
+    p { color: #555; line-height: 1.6; }
+    .actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+    a, button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      border-radius: 14px;
+      padding: 13px 18px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 700;
+      text-decoration: none;
+      color: white;
+      background: linear-gradient(135deg, #8a2be2, #00bcd4);
+      box-shadow: 0 8px 24px rgba(138,43,226,.20);
+    }
+    a.secondary, button.secondary {
+      background: #fff;
+      color: #111;
+      border: 1px solid #d7dde7;
+      box-shadow: none;
+    }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+    .preview-line { margin: 8px 0; color: #333; font-size: 14px; word-break: break-word; }
+    .preview-line strong { color: #111; }
+    #qrCanvas {
+      width: 220px !important;
+      height: 220px !important;
+      background: #fff;
+      padding: 12px;
+      border-radius: 20px;
+      border: 1px solid #e7ebf3;
+    }
+    .status { color: #00a6bc; min-height: 20px; }
+    @media (max-width: 780px) { .grid { grid-template-columns: 1fr; } .header { align-items: flex-start; } }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="card header">
+      <img src="https://ndaprove.newdigitalapp.it/docs/MARASENSELOGO.png" alt="MaraSense Logo" />
+      <div>
+        <h1 id="experienceName">Demo esperienza</h1>
+        <p>
+          Pagina rapida per prove da telefono: nome esperienza, link pubblico, QR code e accesso diretto all’esperienza.
+        </p>
+      </div>
+    </section>
+
+    <section class="grid">
+      <div class="card">
+        <h2>Dati esperienza</h2>
+        <div class="preview-line"><strong>Settore:</strong> <span id="experienceSector">-</span></div>
+        <div class="preview-line"><strong>Tipo:</strong> <span id="experienceType">-</span></div>
+        <div class="preview-line"><strong>Target registrati:</strong> <span id="targetCount">0</span></div>
+        <div class="preview-line"><strong>Contenuti registrati:</strong> <span id="contentCount">0</span></div>
+        <div class="preview-line"><strong>Link:</strong><br><span id="experienceLink">-</span></div>
+        <div class="actions">
+          <a id="openExperience" href="#" target="_blank">Avvia esperienza</a>
+          <button class="secondary" id="copyLinkButton">Copia link</button>
+          <a class="secondary" id="editExperience" href="#">Modifica</a>
+        </div>
+        <div class="status" id="status"></div>
+      </div>
+
+      <div class="card">
+        <h2>QR test telefono</h2>
+        <canvas id="qrCanvas"></canvas>
+        <p>Apri questa pagina dal computer, inquadra il QR con il telefono e fai le prove in modo sempre coerente.</p>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const INDEX_URL = "../managed-experiences/index.json";
+
+    function getFolder(item) {
+      return item.folder || (item.meta && item.meta.generatedFolder) || "";
+    }
+
+    function getPublicUrl(item) {
+      return item.publicUrl || (item.meta && item.meta.publicUrl) || `https://marasenseexperiences-ar.web.app/${getFolder(item)}`;
+    }
+
+    async function loadDemo() {
+      const status = document.getElementById("status");
+      try {
+        const id = decodeURIComponent(new URLSearchParams(location.search).get("id") || "");
+        const response = await fetch(INDEX_URL, { cache: "no-store" });
+        const list = await response.json();
+        const record = list.find((item) => item.id === id || getFolder(item).replace(/^managed-experiences\//, "").replace(/\/$/, "") === id);
+        if (!record) throw new Error("Esperienza non trovata");
+
+        const publicUrl = getPublicUrl(record);
+        document.getElementById("experienceName").textContent = record.name || record.title || "Demo esperienza";
+        document.getElementById("experienceSector").textContent = record.sector || "-";
+        document.getElementById("experienceType").textContent = record.type || "-";
+        document.getElementById("targetCount").textContent = Array.isArray(record.targetImages) ? record.targetImages.length : 0;
+        document.getElementById("contentCount").textContent = Array.isArray(record.contents) ? record.contents.length : 0;
+        document.getElementById("experienceLink").textContent = publicUrl;
+        document.getElementById("openExperience").href = publicUrl;
+        document.getElementById("editExperience").href = `./edit.html?id=${encodeURIComponent(record.id || id)}`;
+        document.getElementById("copyLinkButton").onclick = () => {
+          navigator.clipboard.writeText(publicUrl)
+            .then(() => { status.textContent = "Link copiato."; })
+            .catch(() => { status.textContent = "Copia manualmente il link."; });
+        };
+
+        await QRCode.toCanvas(document.getElementById("qrCanvas"), publicUrl, { width: 320, margin: 1 });
+        status.textContent = "Demo pronta.";
+      } catch (error) {
+        console.error(error);
+        status.textContent = "Errore: " + error.message;
+      }
+    }
+
+    window.addEventListener("load", loadDemo);
+  </script>
+</body>
+</html>
