@@ -17,6 +17,7 @@
       --text:#fff4df;
       --muted:rgba(255,244,223,.82);
       --line:rgba(255,225,169,.42);
+      --bg:url("assets/sfondo/sfondo.png");
     }
 
     *{box-sizing:border-box}
@@ -32,75 +33,69 @@
     .hero{
       min-height:100svh;
       background:
-        linear-gradient(180deg,rgba(0,0,0,.18),rgba(0,0,0,.72)),
-        url("assets/sfondo/sfondo.png") center/cover no-repeat;
+        linear-gradient(180deg,rgba(0,0,0,.22),rgba(0,0,0,.76)),
+        var(--bg) center/cover no-repeat;
       display:flex;
       align-items:center;
       justify-content:center;
       text-align:center;
-      padding:30px 18px;
-      border:1px solid var(--line);
+      padding:28px 18px;
     }
 
     .hero-content{
-      width:min(520px,100%);
+      width:min(460px,100%);
       margin:auto;
       text-shadow:
         0 0 14px rgba(0,0,0,.95),
-        0 0 32px rgba(255,225,169,.22);
+        0 0 34px rgba(255,225,169,.24);
     }
 
     .top-text{
-      letter-spacing:.30em;
-      font-size:.82rem;
+      letter-spacing:.26em;
+      font-size:.74rem;
       color:var(--muted);
-      margin-bottom:14px;
+      margin-bottom:12px;
     }
 
     .dora{
       font-family:"Great Vibes",cursive;
-      font-size:clamp(6.5rem,30vw,10.5rem);
+      font-size:clamp(5.6rem,25vw,9rem);
       line-height:.78;
       font-weight:400;
       margin:0;
-      color:var(--white);
+      color:white;
       text-shadow:
-        0 0 10px rgba(255,255,255,.45),
-        0 0 30px rgba(255,225,169,.26);
+        0 0 10px rgba(255,255,255,.46),
+        0 0 30px rgba(255,225,169,.28);
     }
 
     .birthday{
-      font-size:clamp(2rem,10vw,4.2rem);
-      letter-spacing:.15em;
+      font-size:clamp(1.65rem,8vw,3.4rem);
+      letter-spacing:.13em;
       color:var(--gold2);
-      margin:10px 0 4px;
+      margin:8px 0 3px;
       font-weight:500;
-      text-shadow:
-        0 0 10px rgba(217,168,92,.35),
-        0 0 26px rgba(255,225,169,.18);
     }
 
     .party{
       font-family:"Great Vibes",cursive;
-      font-size:clamp(2.8rem,12vw,4.8rem);
-      color:var(--white);
-      margin:0 0 4px;
+      font-size:clamp(2.35rem,10vw,4rem);
+      color:white;
+      margin:0 0 2px;
       line-height:1;
-      text-shadow:0 0 20px rgba(255,255,255,.22);
     }
 
     .party-small{
-      letter-spacing:.42em;
-      font-size:1.05rem;
-      margin-bottom:28px;
-      color:var(--text);
+      letter-spacing:.36em;
+      font-size:.95rem;
+      margin-bottom:22px;
     }
 
     .divider{
-      width:190px;
+      width:170px;
       height:1px;
       background:linear-gradient(90deg,transparent,var(--gold),transparent);
-      margin:18px auto;
+      margin:16px auto;
       position:relative;
     }
 
@@ -113,43 +108,43 @@
       background:#030303;
       padding:0 10px;
       color:var(--gold);
-      font-size:1rem;
     }
 
     .event-info{
       display:grid;
-      gap:14px;
-      margin-top:22px;
+      gap:12px;
+      margin-top:20px;
     }
 
     .event-info div{
       color:var(--text);
-      letter-spacing:.18em;
-      font-size:1.05rem;
+      letter-spacing:.15em;
+      font-size:.98rem;
+      line-height:1.4;
     }
 
     .event-info strong{
       display:block;
       color:var(--gold);
-      font-size:.78rem;
+      font-size:.72rem;
       margin-bottom:4px;
-      letter-spacing:.18em;
+      letter-spacing:.16em;
     }
 
     .dress{
-      font-size:1.28rem!important;
-      color:var(--white)!important;
+      font-size:1.08rem!important;
+      color:white!important;
       line-height:1.35;
     }
 
     .actions{
       display:grid;
-      gap:12px;
-      margin-top:32px;
+      gap:10px;
+      margin-top:28px;
     }
 
     .btn,.btn2,button{
-      min-height:52px;
+      min-height:50px;
       border-radius:999px;
       border:1px solid var(--line);
       display:flex;
@@ -173,7 +168,7 @@
 
     .btn2{
       color:var(--gold);
-      background:rgba(0,0,0,.42);
+      background:rgba(0,0,0,.44);
       box-shadow:
         0 0 16px rgba(255,225,169,.16),
         inset 0 0 12px rgba(255,225,169,.04);
@@ -182,12 +177,12 @@
     .section{
       width:min(920px,calc(100% - 24px));
       margin:14px auto;
-      padding:24px 18px;
+      padding:22px 16px;
       border:1px solid var(--line);
       border-radius:26px;
       background:
-        linear-gradient(180deg,rgba(0,0,0,.78),rgba(0,0,0,.92)),
-        url("assets/sfondo/sfondo.png") center/cover no-repeat;
+        linear-gradient(180deg,rgba(0,0,0,.78),rgba(0,0,0,.94)),
+        var(--bg) center/cover no-repeat;
       text-align:center;
       box-shadow:
         0 0 28px rgba(255,225,169,.08),
@@ -196,9 +191,10 @@
 
     h2{
       color:var(--gold);
-      font-size:clamp(2rem,9vw,3.3rem);
+      font-size:clamp(1.65rem,7.5vw,3rem);
       margin:0 0 10px;
       font-weight:500;
+      line-height:1.1;
       text-shadow:
         0 0 16px rgba(255,225,169,.30),
         0 0 34px rgba(217,168,92,.15);
@@ -207,9 +203,10 @@
     .subtitle{
       color:var(--muted);
       text-transform:uppercase;
-      letter-spacing:.1em;
+      letter-spacing:.08em;
       margin:0 0 18px;
       line-height:1.5;
+      font-size:.86rem;
     }
 
     .countdown{
@@ -222,21 +219,21 @@
     .count-box{
       border:1px solid var(--line);
       border-radius:18px;
-      padding:14px 8px;
-      background:rgba(0,0,0,.52);
+      padding:12px 8px;
+      background:rgba(0,0,0,.54);
     }
 
     .count-box strong{
       display:block;
-      font-size:clamp(2.2rem,11vw,3.4rem);
+      font-size:clamp(2rem,9vw,3.2rem);
       color:var(--gold);
       text-shadow:0 0 20px rgba(255,225,169,.22);
     }
 
     .count-box span{
       color:var(--muted);
-      font-size:.78rem;
-      letter-spacing:.16em;
+      font-size:.72rem;
+      letter-spacing:.14em;
     }
 
     form{
@@ -247,13 +244,14 @@
 
     input,textarea{
       width:100%;
-      min-height:52px;
+      min-height:50px;
       border:1px solid var(--line);
       border-radius:14px;
-      background:rgba(0,0,0,.50);
+      background:rgba(0,0,0,.52);
       color:var(--text);
       padding:14px;
       font:inherit;
+      font-size:1rem;
     }
 
     textarea{min-height:92px}
@@ -264,6 +262,7 @@
       align-items:center;
       gap:10px;
       color:var(--muted);
+      font-size:.9rem;
     }
 
     .participants-list{
@@ -277,7 +276,7 @@
       padding:12px;
       display:grid;
       gap:10px;
-      background:rgba(0,0,0,.38);
+      background:rgba(0,0,0,.40);
     }
 
     .participant-head{
@@ -285,10 +284,11 @@
       justify-content:space-between;
       align-items:center;
       color:var(--gold);
+      font-size:.88rem;
     }
 
     .remove-btn{
-      min-height:36px;
+      min-height:34px;
       padding:0 12px;
       border-radius:999px;
       background:rgba(0,0,0,.45);
@@ -300,19 +300,22 @@
       padding:14px;
       border:1px solid var(--line);
       border-radius:16px;
-      background:rgba(0,0,0,.52);
+      background:rgba(0,0,0,.54);
       text-align:left;
       word-break:break-word;
+      font-size:.9rem;
+      line-height:1.5;
     }
 
     .result[hidden]{display:none}
 
     .gift-title{
-      font-size:clamp(3.4rem,16vw,6.4rem);
+      font-size:clamp(2.7rem,13vw,5.8rem);
       text-transform:uppercase;
       letter-spacing:.08em;
       color:var(--gold);
       margin:0;
+      line-height:1;
       text-shadow:
         0 0 12px rgba(255,241,200,.55),
         0 0 32px rgba(255,225,169,.42),
@@ -327,8 +330,8 @@
 
     .community-box{
       max-width:640px;
-      margin:26px auto 0;
-      padding:30px 22px;
+      margin:24px auto 0;
+      padding:26px 18px;
       border:1px solid rgba(255,225,169,.30);
       border-radius:26px;
       background:rgba(0,0,0,.42);
@@ -341,8 +344,10 @@
     .community-box h3{
       margin:0 0 14px;
       color:var(--gold);
-      font-size:clamp(1.8rem,7vw,2.6rem);
+      font-family:"Cormorant Garamond",serif;
+      font-size:clamp(2rem,8vw,2.8rem);
       font-weight:500;
+      line-height:1.05;
       text-shadow:
         0 0 14px rgba(255,225,169,.32),
         0 0 30px rgba(217,168,92,.18);
@@ -352,7 +357,8 @@
       color:var(--muted);
       line-height:1.7;
       margin:0 0 24px;
-      font-size:1.05rem;
+      font-size:1rem;
+      font-family:"Cormorant Garamond",serif;
     }
 
     @media(min-width:760px){
@@ -477,26 +483,26 @@
         return;
       }
 
-      days.textContent = pad(Math.floor(distance/(1000*60*60*24)));
-      hours.textContent = pad(Math.floor((distance/(1000*60*60))%24));
-      minutes.textContent = pad(Math.floor((distance/(1000*60))%60));
-      seconds.textContent = pad(Math.floor((distance/1000)%60));
+      document.getElementById("days").textContent = pad(Math.floor(distance/(1000*60*60*24)));
+      document.getElementById("hours").textContent = pad(Math.floor((distance/(1000*60*60))%24));
+      document.getElementById("minutes").textContent = pad(Math.floor((distance/(1000*60))%60));
+      document.getElementById("seconds").textContent = pad(Math.floor((distance/1000)%60));
     }
 
     updateCountdown();
     setInterval(updateCountdown,1000);
 
-    cardPaymentLink.href = CONFIG.cardPaymentLink;
-    communityLink.href = CONFIG.communityLink;
+    document.getElementById("cardPaymentLink").href = CONFIG.cardPaymentLink;
+    document.getElementById("communityLink").href = CONFIG.communityLink;
 
-    askIbanLink.href =
+    document.getElementById("askIbanLink").href =
       `https://wa.me/${CONFIG.whatsappNumber}?text=${encodeURIComponent("Ciao Dora, preferirei fare il bonifico. Mi puoi inviare l'IBAN per il regalo?")}`;
 
     const list = document.getElementById("participantsList");
     const count = document.getElementById("guestCount");
     let index = 0;
 
-    addParticipant.addEventListener("click", () => {
+    document.getElementById("addParticipant").addEventListener("click", () => {
       index++;
       const item = document.createElement("div");
       item.className = "participant-item";
@@ -525,24 +531,23 @@
       }).join(" | ");
     }
 
-    const rsvpForm = document.getElementById("rsvp-form");
-
-    rsvpForm.addEventListener("submit", e => {
+    document.getElementById("rsvp-form").addEventListener("submit", e => {
       e.preventDefault();
 
       const message = [
         "RSVP DORA 40",
-        `Nome: ${firstName.value} ${lastName.value}`,
-        `Mail: ${email.value}`,
-        `Telefono: ${phone.value}`,
-        `Partecipanti totali: ${guestCount.value}`,
+        `Nome: ${document.getElementById("firstName").value} ${document.getElementById("lastName").value}`,
+        `Mail: ${document.getElementById("email").value}`,
+        `Telefono: ${document.getElementById("phone").value}`,
+        `Partecipanti totali: ${document.getElementById("guestCount").value}`,
         `Partecipanti aggiuntivi: ${participantsText()}`,
-        `Note: ${notes.value || "Nessuna nota"}`
+        `Note: ${document.getElementById("notes").value || "Nessuna nota"}`
       ].join(" | ");
 
-      rsvpText.textContent = message;
-      whatsappLink.href = `https://wa.me/${CONFIG.whatsappNumber}?text=${encodeURIComponent(message)}`;
-      rsvpResult.hidden = false;
+      document.getElementById("rsvpText").textContent = message;
+      document.getElementById("whatsappLink").href =
+        `https://wa.me/${CONFIG.whatsappNumber}?text=${encodeURIComponent(message)}`;
+      document.getElementById("rsvpResult").hidden = false;
     });
   </script>
 </body>
