@@ -7,41 +7,25 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<<<<<<< HEAD
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Great+Vibes&family=Cormorant+Garamond:wght@400;500;600&display=swap" rel="stylesheet">
-=======
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Cormorant+Garamond:wght@400;500;600;700&family=Great+Vibes&display=swap" rel="stylesheet">
->>>>>>> 2901f05e1f41ad1616097d16b23bc200ef16ae05
 
   <style>
     :root{
       --gold:#ffe1a9;
-<<<<<<< HEAD
       --gold2:#d9a85c;
       --white:#ffffff;
       --text:#fff4df;
       --muted:rgba(255,244,223,.82);
       --line:rgba(255,225,169,.42);
-=======
-      --gold-dark:#d9a85c;
-      --text:#f7ecda;
-      --muted:rgba(247,236,218,.78);
-      --line:rgba(255,225,169,.28);
-      --panel:rgba(6,5,4,.88);
->>>>>>> 2901f05e1f41ad1616097d16b23bc200ef16ae05
     }
 
     *{box-sizing:border-box}
     html{scroll-behavior:smooth}
-<<<<<<< HEAD
 
-=======
->>>>>>> 2901f05e1f41ad1616097d16b23bc200ef16ae05
     body{
       margin:0;
       background:#030303;
       color:var(--text);
-<<<<<<< HEAD
       font-family:"Cinzel",serif;
     }
 
@@ -162,101 +146,6 @@
       display:grid;
       gap:12px;
       margin-top:32px;
-=======
-      font-family:"Cormorant Garamond",serif;
-    }
-
-    .wrap{width:min(1040px,calc(100% - 24px));margin:auto}
-
-    .hero{
-      min-height:100svh;
-      margin:12px auto;
-      border:1px solid var(--line);
-      border-radius:30px;
-      overflow:hidden;
-      position:relative;
-      background:
-        linear-gradient(180deg,rgba(0,0,0,.25),rgba(0,0,0,.86)),
-        url("assets/gift-list.jpg") center/cover no-repeat;
-    }
-
-    .hero-inner{
-      min-height:100svh;
-      padding:22px 18px;
-      display:flex;
-      flex-direction:column;
-      justify-content:space-between;
-    }
-
-    .top{display:flex;justify-content:flex-end}
-
-    .chip{
-      border:1px solid rgba(255,225,169,.7);
-      border-radius:999px;
-      padding:10px 18px;
-      color:var(--gold);
-      text-decoration:none;
-      font-family:"Cinzel",serif;
-      background:rgba(0,0,0,.38);
-      box-shadow:0 0 20px rgba(255,225,169,.22);
-    }
-
-    .hero-copy{text-shadow:0 0 26px rgba(0,0,0,.85)}
-
-    .kicker{
-      font-family:"Cinzel",serif;
-      letter-spacing:.28em;
-      text-transform:uppercase;
-      color:var(--gold);
-      font-size:.78rem;
-    }
-
-    .title{
-      font-family:"Great Vibes",cursive;
-      font-size:clamp(5.2rem,24vw,8rem);
-      line-height:.85;
-      margin:8px 0 0;
-      color:var(--gold);
-      font-weight:400;
-      text-shadow:0 0 18px rgba(255,225,169,.28);
-    }
-
-    .age{
-      font-family:"Cinzel",serif;
-      font-size:clamp(3rem,18vw,4.8rem);
-      margin:0;
-      color:var(--gold);
-      text-shadow:0 0 18px rgba(255,225,169,.22);
-    }
-
-    .subtitle{
-      font-family:"Cinzel",serif;
-      text-transform:uppercase;
-      letter-spacing:.12em;
-      font-size:clamp(1.2rem,5.8vw,2rem);
-      margin:8px 0 0;
-    }
-
-    .meta{
-      font-family:"Cinzel",serif;
-      color:var(--gold);
-      font-size:clamp(1.05rem,4.8vw,1.4rem);
-      line-height:1.5;
-      margin-top:18px;
-    }
-
-    .quote{
-      font-size:1.2rem;
-      line-height:1.55;
-      margin-top:18px;
-    }
-
-    .actions{
-      display:flex;
-      flex-direction:column;
-      gap:10px;
-      margin-top:22px;
->>>>>>> 2901f05e1f41ad1616097d16b23bc200ef16ae05
     }
 
     .btn,.btn2,button{
@@ -266,7 +155,6 @@
       display:flex;
       align-items:center;
       justify-content:center;
-<<<<<<< HEAD
       text-decoration:none;
       padding:0 18px;
       font-family:"Cinzel",serif;
@@ -369,169 +257,6 @@
     }
 
     textarea{min-height:92px}
-=======
-      padding:0 18px;
-      font:inherit;
-      text-decoration:none;
-      cursor:pointer;
-    }
-
-    .btn{
-      background:linear-gradient(135deg,#fff1c8,#ffe1a9,#d9a85c);
-      color:#241404;
-      border:1px solid rgba(255,225,169,.85);
-      box-shadow:
-        0 0 14px rgba(255,225,169,.45),
-        0 0 32px rgba(223,179,111,.28),
-        inset 0 0 10px rgba(255,255,255,.28);
-    }
-
-    .btn2{
-      background:rgba(255,225,169,.06);
-      color:var(--gold);
-      border:1px solid rgba(255,225,169,.45);
-      box-shadow:
-        0 0 10px rgba(255,225,169,.18),
-        inset 0 0 10px rgba(255,225,169,.06);
-    }
-
-    .countdown{
-      margin-top:24px;
-      padding-top:18px;
-      border-top:1px solid var(--line);
-    }
-
-    .count-title{
-      font-family:"Great Vibes",cursive;
-      text-align:center;
-      font-size:clamp(2rem,10vw,3.4rem);
-      color:var(--gold);
-      margin:0 0 14px;
-      text-shadow:0 0 18px rgba(255,225,169,.25);
-    }
-
-    .counter{
-      display:grid;
-      grid-template-columns:repeat(2,1fr);
-      gap:10px;
-    }
-
-    .box{
-      background:rgba(0,0,0,.45);
-      border:1px solid var(--line);
-      border-radius:18px;
-      text-align:center;
-      padding:14px 10px;
-    }
-
-    .box strong{
-      display:block;
-      font-family:"Cinzel",serif;
-      color:var(--gold);
-      font-size:clamp(2.2rem,10vw,3.4rem);
-      text-shadow:0 0 16px rgba(255,225,169,.18);
-    }
-
-    .box small{
-      font-family:"Cinzel",serif;
-      color:var(--muted);
-      text-transform:uppercase;
-      letter-spacing:.16em;
-    }
-
-    section{padding:10px 0}
-
-    .card{
-      background:var(--panel);
-      border:1px solid var(--line);
-      border-radius:28px;
-      padding:18px;
-      overflow:hidden;
-    }
-
-    .head{text-align:center;margin-bottom:16px}
-
-    .label{
-      font-family:"Cinzel",serif;
-      color:var(--gold);
-      text-transform:uppercase;
-      letter-spacing:.22em;
-      font-size:.76rem;
-    }
-
-    h2{
-      font-family:"Cinzel",serif;
-      color:var(--gold);
-      font-size:clamp(2rem,8.6vw,3.2rem);
-      font-weight:500;
-      margin:8px 0;
-      text-shadow:0 0 20px rgba(255,225,169,.24);
-    }
-
-    .small-subtitle{
-      font-family:"Cinzel",serif;
-      color:var(--muted);
-      font-size:1rem;
-      text-transform:uppercase;
-      letter-spacing:.08em;
-      margin:0;
-    }
-
-    .gift-title{
-      font-family:"Cinzel",serif;
-      font-size:clamp(3.4rem,16vw,6.4rem);
-      text-transform:uppercase;
-      letter-spacing:.08em;
-      color:var(--gold);
-      margin:0;
-      text-shadow:
-        0 0 12px rgba(255,241,200,.55),
-        0 0 28px rgba(255,225,169,.42),
-        0 0 52px rgba(223,179,111,.28);
-    }
-
-    .grid{display:grid;gap:14px}
-
-    .info,.formbox,.giftbox{
-      border:1px solid rgba(255,225,169,.16);
-      background:rgba(255,255,255,.025);
-      border-radius:22px;
-      padding:16px;
-    }
-
-    .info strong,.giftbox h3,.formbox h3{
-      font-family:"Cinzel",serif;
-      color:var(--gold);
-      font-size:1.4rem;
-      margin:0 0 8px;
-      display:block;
-      font-weight:500;
-    }
-
-    .info p,.giftbox p{
-      margin:0;
-      color:var(--muted);
-      line-height:1.6;
-      font-size:1.05rem;
-    }
-
-    form{display:grid;gap:12px}
-    .field{display:grid;gap:6px}
-    label{color:var(--muted);font-size:1.05rem}
-
-    input,textarea{
-      width:100%;
-      min-height:52px;
-      padding:14px 15px;
-      border:1px solid rgba(255,225,169,.18);
-      border-radius:14px;
-      background:rgba(255,255,255,.04);
-      color:var(--text);
-      font:inherit;
-    }
-
-    textarea{min-height:100px;resize:vertical}
->>>>>>> 2901f05e1f41ad1616097d16b23bc200ef16ae05
 
     .participants-head{
       display:flex;
@@ -541,7 +266,6 @@
       color:var(--muted);
     }
 
-<<<<<<< HEAD
     .participants-list{
       display:grid;
       gap:10px;
@@ -549,28 +273,17 @@
 
     .participant-item{
       border:1px solid var(--line);
-=======
-    .participants-list{display:grid;gap:10px}
-
-    .participant-item{
-      border:1px solid rgba(255,225,169,.12);
->>>>>>> 2901f05e1f41ad1616097d16b23bc200ef16ae05
       border-radius:16px;
       padding:12px;
       display:grid;
       gap:10px;
-<<<<<<< HEAD
       background:rgba(0,0,0,.38);
-=======
-      background:rgba(255,255,255,.02);
->>>>>>> 2901f05e1f41ad1616097d16b23bc200ef16ae05
     }
 
     .participant-head{
       display:flex;
       justify-content:space-between;
       align-items:center;
-<<<<<<< HEAD
       color:var(--gold);
     }
 
@@ -590,31 +303,10 @@
       background:rgba(0,0,0,.52);
       text-align:left;
       word-break:break-word;
-=======
-    }
-
-    .remove-btn{
-      min-height:38px;
-      border-radius:999px;
-      border:1px solid var(--line);
-      background:rgba(255,255,255,.03);
-      color:var(--muted);
-      padding:0 12px;
-    }
-
-    .result{
-      display:grid;
-      gap:12px;
-      border:1px solid rgba(255,225,169,.14);
-      border-radius:16px;
-      padding:14px;
-      background:rgba(255,255,255,.02);
->>>>>>> 2901f05e1f41ad1616097d16b23bc200ef16ae05
     }
 
     .result[hidden]{display:none}
 
-<<<<<<< HEAD
     .gift-title{
       font-size:clamp(3.4rem,16vw,6.4rem);
       text-transform:uppercase;
@@ -667,42 +359,11 @@
       .countdown{grid-template-columns:repeat(4,1fr)}
       .gift-buttons{grid-template-columns:repeat(2,1fr)}
       .actions{grid-template-columns:repeat(2,1fr)}
-=======
-    .gift-section{
-      min-height:520px;
-      border-radius:28px;
-      border:1px solid var(--line);
-      background:
-        linear-gradient(180deg,rgba(0,0,0,.12),rgba(0,0,0,.78)),
-        url("assets/gift-list.jpg") center/cover no-repeat;
-      padding:28px 18px;
-      display:flex;
-      flex-direction:column;
-      justify-content:flex-end;
-      text-align:center;
-      box-shadow:
-        inset 0 0 0 1px rgba(255,225,169,.08),
-        0 0 32px rgba(255,225,169,.12);
-    }
-
-    .gift-buttons{
-      margin-top:22px;
-      display:grid;
-      gap:12px;
-    }
-
-    @media(min-width:760px){
-      .counter{grid-template-columns:repeat(4,1fr)}
-      .grid{grid-template-columns:repeat(2,1fr)}
-      .actions{flex-direction:row}
-      .gift-buttons{grid-template-columns:repeat(2,1fr)}
->>>>>>> 2901f05e1f41ad1616097d16b23bc200ef16ae05
     }
   </style>
 </head>
 
 <body>
-<<<<<<< HEAD
 
   <section class="hero">
     <div class="hero-content">
@@ -797,129 +458,12 @@
     </div>
   </section>
 
-=======
-  <div class="page">
-    <section class="hero">
-      <div class="hero-inner">
-        <div class="top">
-          <a class="chip" href="#rsvp">RSVP</a>
-        </div>
-
-        <div class="hero-copy">
-          <p class="kicker">You are invited to</p>
-          <h1 class="title">Dora</h1>
-          <p class="age">40th</p>
-          <p class="subtitle">Birthday Party</p>
-          <p class="meta">21 Luglio 2026 • Ore 20:30 • Labelon</p>
-
-          <div class="quote">
-            <p>La vera ricchezza del tempo sono le persone con cui lo condividiamo.</p>
-            <p>Ogni momento ha lasciato un segno. Ogni persona ha lasciato un ricordo.</p>
-          </div>
-
-          <div class="actions">
-            <a class="btn" href="#rsvp">Conferma la tua presenza</a>
-            <a class="btn2" href="#gift">Gift List</a>
-          </div>
-        </div>
-
-        <div class="countdown">
-          <p class="count-title">Il tempo che ci separa dalla festa</p>
-          <div class="counter">
-            <div class="box"><strong id="days">00</strong><small>Giorni</small></div>
-            <div class="box"><strong id="hours">00</strong><small>Ore</small></div>
-            <div class="box"><strong id="minutes">00</strong><small>Minuti</small></div>
-            <div class="box"><strong id="seconds">00</strong><small>Secondi</small></div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <main class="wrap">
-      <section>
-        <div class="card">
-          <div class="head">
-            <span class="label">Dettagli evento</span>
-            <h2>Location, data e dress code</h2>
-          </div>
-
-          <div class="grid">
-            <div class="info"><strong>Data</strong><p>Martedì 21 Luglio 2026</p></div>
-            <div class="info"><strong>Orario</strong><p>Ore 20:30</p></div>
-            <div class="info"><strong>Location</strong><p>Labelon</p></div>
-            <div class="info"><strong>Dress code</strong><p>A night painted only in black & white</p></div>
-          </div>
-        </div>
-      </section>
-
-      <section id="rsvp">
-        <div class="card">
-          <div class="head">
-            <span class="label">Conferma presenza</span>
-            <h2>RSVP via WhatsApp</h2>
-            <p class="small-subtitle">La conferma arriva direttamente a Dora</p>
-          </div>
-
-          <div class="formbox">
-            <h3>Compila il modulo</h3>
-
-            <form id="rsvp-form">
-              <div class="field"><label>Nome</label><input id="firstName" required></div>
-              <div class="field"><label>Cognome</label><input id="lastName" required></div>
-              <div class="field"><label>Mail</label><input id="email" type="email" required></div>
-              <div class="field"><label>Telefono</label><input id="phone" type="tel" required></div>
-
-              <div class="field">
-                <label>Quanti partecipanti siete in totale</label>
-                <input id="guestCount" type="number" min="1" value="1" required>
-              </div>
-
-              <div class="participants-head">
-                <span>Partecipanti aggiuntivi</span>
-                <button type="button" class="btn2" id="addParticipant">+ Aggiungi</button>
-              </div>
-
-              <div id="participantsList" class="participants-list"></div>
-
-              <div class="field"><label>Note o richieste</label><textarea id="notes"></textarea></div>
-
-              <button class="btn" type="submit">Invia conferma</button>
-
-              <div id="rsvpResult" class="result" hidden>
-                <strong>Messaggio pronto</strong>
-                <p id="rsvpText"></p>
-                <a class="btn" id="whatsappLink" href="#" target="_blank">Apri WhatsApp</a>
-              </div>
-            </form>
-          </div>
-        </div>
-      </section>
-
-      <section id="gift">
-        <div class="gift-section">
-          <h2 class="gift-title">Gift List</h2>
-          <p class="small-subtitle">Pagamento con carta o bonifico bancario</p>
-
-          <div class="gift-buttons">
-            <a class="btn" id="cardPaymentLink" href="#" target="_blank">Paga con carta</a>
-            <a class="btn2" id="askIbanLink" href="#" target="_blank">Chiedi IBAN a Dora</a>
-          </div>
-        </div>
-      </section>
-    </main>
-  </div>
-
->>>>>>> 2901f05e1f41ad1616097d16b23bc200ef16ae05
   <script>
     const CONFIG = {
       eventDate: "2026-07-21T20:30:00+02:00",
       whatsappNumber: "393336564297",
-<<<<<<< HEAD
       cardPaymentLink: "#",
       communityLink: "#"
-=======
-      cardPaymentLink: "#"
->>>>>>> 2901f05e1f41ad1616097d16b23bc200ef16ae05
     };
 
     function pad(v){return String(v).padStart(2,"0")}
@@ -933,42 +477,26 @@
         return;
       }
 
-<<<<<<< HEAD
       days.textContent = pad(Math.floor(distance/(1000*60*60*24)));
       hours.textContent = pad(Math.floor((distance/(1000*60*60))%24));
       minutes.textContent = pad(Math.floor((distance/(1000*60))%60));
       seconds.textContent = pad(Math.floor((distance/1000)%60));
-=======
-      document.getElementById("days").textContent = pad(Math.floor(distance/(1000*60*60*24)));
-      document.getElementById("hours").textContent = pad(Math.floor((distance/(1000*60*60))%24));
-      document.getElementById("minutes").textContent = pad(Math.floor((distance/(1000*60))%60));
-      document.getElementById("seconds").textContent = pad(Math.floor((distance/1000)%60));
->>>>>>> 2901f05e1f41ad1616097d16b23bc200ef16ae05
     }
 
     updateCountdown();
     setInterval(updateCountdown,1000);
 
-<<<<<<< HEAD
     cardPaymentLink.href = CONFIG.cardPaymentLink;
     communityLink.href = CONFIG.communityLink;
 
     askIbanLink.href =
-=======
-    document.getElementById("cardPaymentLink").href = CONFIG.cardPaymentLink;
-    document.getElementById("askIbanLink").href =
->>>>>>> 2901f05e1f41ad1616097d16b23bc200ef16ae05
       `https://wa.me/${CONFIG.whatsappNumber}?text=${encodeURIComponent("Ciao Dora, preferirei fare il bonifico. Mi puoi inviare l'IBAN per il regalo?")}`;
 
     const list = document.getElementById("participantsList");
     const count = document.getElementById("guestCount");
     let index = 0;
 
-<<<<<<< HEAD
     addParticipant.addEventListener("click", () => {
-=======
-    document.getElementById("addParticipant").addEventListener("click", () => {
->>>>>>> 2901f05e1f41ad1616097d16b23bc200ef16ae05
       index++;
       const item = document.createElement("div");
       item.className = "participant-item";
@@ -997,7 +525,6 @@
       }).join(" | ");
     }
 
-<<<<<<< HEAD
     const rsvpForm = document.getElementById("rsvp-form");
 
     rsvpForm.addEventListener("submit", e => {
@@ -1013,29 +540,10 @@
         `Note: ${notes.value || "Nessuna nota"}`
       ].join(" | ");
 
-=======
-    document.getElementById("rsvp-form").addEventListener("submit", e => {
-      e.preventDefault();
-
-      const message = [
-        "RSVP DORA 40",
-        `Nome: ${firstName.value} ${lastName.value}`,
-        `Mail: ${email.value}`,
-        `Telefono: ${phone.value}`,
-        `Partecipanti totali: ${guestCount.value}`,
-        `Partecipanti aggiuntivi: ${participantsText()}`,
-        `Note: ${notes.value || "Nessuna nota"}`
-      ].join(" | ");
-
->>>>>>> 2901f05e1f41ad1616097d16b23bc200ef16ae05
       rsvpText.textContent = message;
       whatsappLink.href = `https://wa.me/${CONFIG.whatsappNumber}?text=${encodeURIComponent(message)}`;
       rsvpResult.hidden = false;
     });
   </script>
 </body>
-<<<<<<< HEAD
 </html>
-=======
-</html>
->>>>>>> 2901f05e1f41ad1616097d16b23bc200ef16ae05
