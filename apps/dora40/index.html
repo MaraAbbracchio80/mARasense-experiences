@@ -1,573 +1,571 @@
-&lt;!DOCTYPE html&gt;
-&lt;html lang=&quot;it&quot;&gt;
-&lt;head&gt;
-&lt;meta charset=&quot;UTF-8&quot; /&gt;
-&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot; /&gt;
-&lt;title&gt;Dora 40 | Black &amp; White Party&lt;/title&gt;
-
-&lt;link rel=&quot;preconnect&quot; href=&quot;https://fonts.googleapis.com&quot;&gt;
-&lt;link rel=&quot;preconnect&quot; href=&quot;https://fonts.gstatic.com&quot; crossorigin&gt;
-&lt;link
-href=&quot;https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&amp;family=Great+Vibes&amp;f
-amily=Cormorant+Garamond:wght@400;500;600&amp;display=swap&quot; rel=&quot;stylesheet&quot;&gt;
-
-&lt;style&gt;
-:root{
---gold:#ffe1a9;
---gold2:#d9a85c;
---white:#ffffff;
---text:#fff4df;
---muted:rgba(255,244,223,.82);
---line:rgba(255,225,169,.42);
---bg:url(&quot;assets/sfondo/sfondo.png&quot;);
-}
-
-*{box-sizing:border-box}
-html{scroll-behavior:smooth}
-
-body{
-margin:0;
-background:#030303;
-color:var(--text);
-font-family:&quot;Cinzel&quot;,serif;
-}
-
-.hero{
-min-height:100svh;
-background:
-linear-gradient(180deg,rgba(0,0,0,.22),rgba(0,0,0,.76)),
-var(--bg) center/cover no-repeat;
-display:flex;
-align-items:center;
-justify-content:center;
-text-align:center;
-padding:28px 18px;
-}
-
-.hero-content{
-width:min(460px,100%);
-margin:auto;
-text-shadow:
-0 0 14px rgba(0,0,0,.95),
-0 0 34px rgba(255,225,169,.24);
-}
-
-.top-text{
-letter-spacing:.26em;
-font-size:.74rem;
-color:var(--muted);
-margin-bottom:40px;
-}
-
-.dora{
-font-family:&quot;Great Vibes&quot;,cursive;
-font-size:clamp(5.6rem,25vw,9rem);
-line-height:.78;
-font-weight:400;
-margin:0;
-
-color:white;
-text-shadow:
-0 0 10px rgba(255,255,255,.46),
-0 0 30px rgba(255,225,169,.28);
-}
-
-.birthday{
-font-size:clamp(1.65rem,8vw,3.4rem);
-letter-spacing:.13em;
-color:var(--gold2);
-margin:8px 0 3px;
-font-weight:500;
-}
-
-.party{
-font-family:&quot;Great Vibes&quot;,cursive;
-font-size:clamp(2.35rem,10vw,4rem);
-color:white;
-margin:0 0 2px;
-line-height:1;
-}
-
-.party-small{
-letter-spacing:.36em;
-font-size:.95rem;
-margin-bottom:22px;
-}
-
-.divider{
-width:170px;
-height:1px;
-background:linear-gradient(90deg,transparent,var(--gold),transparent);
-margin:16px auto;
-
-position:relative;
-}
-
-.divider:after{
-content:&quot;♡&quot;;
-position:absolute;
-left:50%;
-top:50%;
-transform:translate(-50%,-54%);
-background:#030303;
-padding:0 10px;
-color:var(--gold);
-}
-
-.event-info{
-display:grid;
-gap:12px;
-margin-top:20px;
-}
-
-.event-info div{
-color:var(--text);
-letter-spacing:.15em;
-font-size:.98rem;
-line-height:1.4;
-}
-
-.event-info strong{
-display:block;
-color:var(--gold);
-font-size:.72rem;
-margin-bottom:4px;
-letter-spacing:.16em;
-
-}
-
-.dress{
-font-size:1.08rem!important;
-color:white!important;
-line-height:1.35;
-}
-
-.actions{
-display:grid;
-gap:10px;
-margin-top:28px;
-}
-
-.btn,.btn2,button{
-min-height:50px;
-border-radius:999px;
-border:1px solid var(--line);
-display:flex;
-align-items:center;
-justify-content:center;
-text-decoration:none;
-padding:0 18px;
-font-family:&quot;Cinzel&quot;,serif;
-cursor:pointer;
-letter-spacing:.06em;
-}
-
-.btn{
-color:#231403;
-background:linear-gradient(135deg,#fff5d4,#ffe1a9,#d9a85c);
-box-shadow:
-0 0 14px rgba(255,225,169,.48),
-
-0 0 34px rgba(217,168,92,.26),
-inset 0 0 10px rgba(255,255,255,.25);
-}
-
-.btn2{
-color:var(--gold);
-background:rgba(0,0,0,.44);
-box-shadow:
-0 0 16px rgba(255,225,169,.16),
-inset 0 0 12px rgba(255,225,169,.04);
-}
-
-.section{
-width:min(920px,calc(100% - 24px));
-margin:14px auto;
-padding:22px 16px;
-border:1px solid var(--line);
-border-radius:26px;
-background:
-linear-gradient(180deg,rgba(0,0,0,.78),rgba(0,0,0,.94)),
-var(--bg) center/cover no-repeat;
-text-align:center;
-box-shadow:
-0 0 28px rgba(255,225,169,.08),
-inset 0 0 30px rgba(0,0,0,.42);
-}
-
-h2{
-color:var(--gold);
-font-size:clamp(1.65rem,7.5vw,3rem);
-margin:0 0 10px;
-font-weight:500;
-line-height:1.1;
-
-text-shadow:
-0 0 16px rgba(255,225,169,.30),
-0 0 34px rgba(217,168,92,.15);
-}
-
-.subtitle{
-color:var(--muted);
-text-transform:uppercase;
-letter-spacing:.08em;
-margin:0 0 18px;
-line-height:1.5;
-font-size:.86rem;
-}
-
-.countdown{
-display:grid;
-grid-template-columns:repeat(2,1fr);
-gap:10px;
-margin-top:16px;
-}
-
-.count-box{
-border:1px solid var(--line);
-border-radius:18px;
-padding:12px 8px;
-background:rgba(0,0,0,.54);
-}
-
-.count-box strong{
-display:block;
-font-size:clamp(2rem,9vw,3.2rem);
-color:var(--gold);
-text-shadow:0 0 20px rgba(255,225,169,.22);
-
-}
-
-.count-box span{
-color:var(--muted);
-font-size:.72rem;
-letter-spacing:.14em;
-}
-
-form{
-display:grid;
-gap:12px;
-margin-top:16px;
-}
-
-input,textarea{
-width:100%;
-min-height:50px;
-border:1px solid var(--line);
-border-radius:14px;
-background:rgba(0,0,0,.52);
-color:var(--text);
-padding:14px;
-font:inherit;
-font-size:1rem;
-}
-
-textarea{min-height:92px}
-
-.participants-head{
-display:flex;
-justify-content:space-between;
-align-items:center;
-gap:10px;
-
-color:var(--muted);
-font-size:.9rem;
-}
-
-.participants-list{
-display:grid;
-gap:10px;
-}
-
-.participant-item{
-border:1px solid var(--line);
-border-radius:16px;
-padding:12px;
-display:grid;
-gap:10px;
-background:rgba(0,0,0,.40);
-}
-
-.participant-head{
-display:flex;
-justify-content:space-between;
-align-items:center;
-color:var(--gold);
-font-size:.88rem;
-}
-
-.remove-btn{
-min-height:34px;
-padding:0 12px;
-border-radius:999px;
-background:rgba(0,0,0,.45);
-color:var(--muted);
-}
-
-.result{
-margin-top:12px;
-padding:14px;
-border:1px solid var(--line);
-border-radius:16px;
-background:rgba(0,0,0,.54);
-text-align:left;
-word-break:break-word;
-font-size:.9rem;
-line-height:1.5;
-}
-
-.result[hidden]{display:none}
-
-.gift-title{
-font-size:clamp(2.7rem,13vw,5.8rem);
-text-transform:uppercase;
-letter-spacing:.08em;
-color:var(--gold);
-margin:0;
-line-height:1;
-text-shadow:
-0 0 12px rgba(255,241,200,.55),
-0 0 32px rgba(255,225,169,.42),
-0 0 58px rgba(217,168,92,.28);
-}
-
-.gift-buttons{
-display:grid;
-gap:12px;
-margin-top:22px;
-}
-
-.community-box{
-max-width:640px;
-margin:24px auto 0;
-padding:26px 18px;
-border:1px solid rgba(255,225,169,.30);
-border-radius:26px;
-background:rgba(0,0,0,.42);
-box-shadow:
-0 0 22px rgba(255,225,169,.12),
-inset 0 0 24px rgba(255,225,169,.04);
-backdrop-filter:blur(8px);
-}
-
-.community-box h3{
-margin:0 0 14px;
-color:var(--gold);
-font-family:&quot;Cormorant Garamond&quot;,serif;
-font-size:clamp(2rem,8vw,2.8rem);
-font-weight:500;
-line-height:1.05;
-text-shadow:
-0 0 14px rgba(255,225,169,.32),
-0 0 30px rgba(217,168,92,.18);
-}
-
-.community-box p{
-color:var(--muted);
-line-height:1.7;
-margin:0 0 24px;
-font-size:1rem;
-font-family:&quot;Cormorant Garamond&quot;,serif;
-}
-
-@media(min-width:760px){
-.countdown{grid-template-columns:repeat(4,1fr)}
-.gift-buttons{grid-template-columns:repeat(2,1fr)}
-.actions{grid-template-columns:repeat(2,1fr)}
-}
-&lt;/style&gt;
-&lt;/head&gt;
-
-&lt;body&gt;
-
-&lt;section class=&quot;hero&quot;&gt;
-&lt;div class=&quot;hero-content&quot;&gt;
-&lt;div class=&quot;top-text&quot;&gt;SEI INVITATO A&lt;/div&gt;
-
-&lt;h1 class=&quot;dora&quot;&gt;Dora&lt;/h1&gt;
-&lt;div class=&quot;birthday&quot;&gt;COMPLEANNO&lt;/div&gt;
-&lt;div class=&quot;party&quot;&gt;Black &amp; White&lt;/div&gt;
-&lt;div class=&quot;party-small&quot;&gt;PARTY&lt;/div&gt;
-
-&lt;div class=&quot;divider&quot;&gt;&lt;/div&gt;
-
-&lt;div class=&quot;event-info&quot;&gt;
-&lt;div&gt;&lt;strong&gt;DATA&lt;/strong&gt;21 LUGLIO 2026&lt;/div&gt;
-&lt;div&gt;&lt;strong&gt;INIZIO&lt;/strong&gt;20:30&lt;/div&gt;
-&lt;div&gt;&lt;strong&gt;LOCATION&lt;/strong&gt;LABELON&lt;/div&gt;
-&lt;div&gt;&lt;strong&gt;DRESS CODE&lt;/strong&gt;&lt;span class=&quot;dress&quot;&gt;UNA NOTTE
-DIPINTA&lt;br&gt;SOLO IN BIANCO E NERO&lt;/span&gt;&lt;/div&gt;
-&lt;/div&gt;
-
-&lt;div class=&quot;actions&quot;&gt;
-&lt;a class=&quot;btn&quot; href=&quot;#rsvp&quot;&gt;CONFERMA PRESENZA&lt;/a&gt;
-&lt;a class=&quot;btn2&quot; href=&quot;#gift&quot;&gt;LISTA REGALO&lt;/a&gt;
-
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/section&gt;
-
-&lt;section class=&quot;section&quot;&gt;
-&lt;h2&gt;Il tempo che ci separa dalla festa&lt;/h2&gt;
-&lt;p class=&quot;subtitle&quot;&gt;La vera ricchezza del tempo sono le persone con cui lo condividiamo.&lt;/p&gt;
-
-&lt;div class=&quot;countdown&quot;&gt;
-&lt;div class=&quot;count-box&quot;&gt;&lt;strong id=&quot;days&quot;&gt;00&lt;/strong&gt;&lt;span&gt;GIORNI&lt;/span&gt;&lt;/div&gt;
-&lt;div class=&quot;count-box&quot;&gt;&lt;strong id=&quot;hours&quot;&gt;00&lt;/strong&gt;&lt;span&gt;ORE&lt;/span&gt;&lt;/div&gt;
-&lt;div class=&quot;count-box&quot;&gt;&lt;strong id=&quot;minutes&quot;&gt;00&lt;/strong&gt;&lt;span&gt;MINUTI&lt;/span&gt;&lt;/div&gt;
-&lt;div class=&quot;count-box&quot;&gt;&lt;strong id=&quot;seconds&quot;&gt;00&lt;/strong&gt;&lt;span&gt;SECONDI&lt;/span&gt;&lt;/div&gt;
-&lt;/div&gt;
-&lt;/section&gt;
-
-&lt;section class=&quot;section&quot; id=&quot;rsvp&quot;&gt;
-&lt;h2&gt;Conferma la tua presenza tramite WhatsApp&lt;/h2&gt;
-&lt;p class=&quot;subtitle&quot;&gt;La conferma arriva direttamente a Dora&lt;/p&gt;
-
-&lt;form id=&quot;rsvp-form&quot;&gt;
-&lt;input id=&quot;firstName&quot; placeholder=&quot;Nome&quot; required&gt;
-&lt;input id=&quot;lastName&quot; placeholder=&quot;Cognome&quot; required&gt;
-&lt;input id=&quot;email&quot; type=&quot;email&quot; placeholder=&quot;Mail&quot; required&gt;
-&lt;input id=&quot;phone&quot; type=&quot;tel&quot; placeholder=&quot;Telefono&quot; required&gt;
-
-&lt;input id=&quot;guestCount&quot; type=&quot;number&quot; min=&quot;1&quot; value=&quot;1&quot; required&gt;
-
-&lt;div class=&quot;participants-head&quot;&gt;
-&lt;span&gt;Partecipanti aggiuntivi&lt;/span&gt;
-&lt;button type=&quot;button&quot; class=&quot;btn2&quot; id=&quot;addParticipant&quot;&gt;+ Aggiungi&lt;/button&gt;
-&lt;/div&gt;
-
-&lt;div id=&quot;participantsList&quot; class=&quot;participants-list&quot;&gt;&lt;/div&gt;
-
-&lt;textarea id=&quot;notes&quot; placeholder=&quot;Note o richieste&quot;&gt;&lt;/textarea&gt;
-
-&lt;button class=&quot;btn&quot; type=&quot;submit&quot;&gt;INVIA CONFERMA&lt;/button&gt;
-
-&lt;div id=&quot;rsvpResult&quot; class=&quot;result&quot; hidden&gt;
-&lt;strong&gt;Messaggio pronto&lt;/strong&gt;
-&lt;p id=&quot;rsvpText&quot;&gt;&lt;/p&gt;
-&lt;a class=&quot;btn&quot; id=&quot;whatsappLink&quot; href=&quot;#&quot; target=&quot;_blank&quot;&gt;Apri WhatsApp&lt;/a&gt;
-&lt;/div&gt;
-&lt;/form&gt;
-&lt;/section&gt;
-
-&lt;section class=&quot;section&quot; id=&quot;community&quot;&gt;
-&lt;h2 class=&quot;gift-title&quot;&gt;I Vostri Ricordi&lt;/h2&gt;
-&lt;p class=&quot;subtitle&quot;&gt;Foto, auguri e messaggi per Dora&lt;/p&gt;
-
-&lt;div class=&quot;community-box&quot;&gt;
-&lt;h3&gt;Lascia un Ricordo a Dora&lt;/h3&gt;
-
-&lt;p&gt;
-Ogni momento ha lasciato un segno. Ogni persona ha lasciato un ricordo.
-&lt;/p&gt;
-
-&lt;a class=&quot;btn&quot; id=&quot;communityLink&quot; href=&quot;#&quot; target=&quot;_blank&quot;&gt;
-ENTRA NELLA COMMUNITY
-&lt;/a&gt;
-&lt;/div&gt;
-&lt;/section&gt;
-
-&lt;section class=&quot;section&quot; id=&quot;gift&quot;&gt;
-&lt;h2 class=&quot;gift-title&quot;&gt;Gift List&lt;/h2&gt;
-
-&lt;p class=&quot;subtitle&quot;&gt;Pagamento con carta o bonifico bancario&lt;/p&gt;
-
-&lt;div class=&quot;gift-buttons&quot;&gt;
-&lt;a class=&quot;btn&quot; id=&quot;cardPaymentLink&quot; href=&quot;#&quot; target=&quot;_blank&quot;&gt;PAGA CON CARTA&lt;/a&gt;
-&lt;a class=&quot;btn2&quot; id=&quot;askIbanLink&quot; href=&quot;#&quot; target=&quot;_blank&quot;&gt;CHIEDI IBAN A DORA&lt;/a&gt;
-&lt;/div&gt;
-&lt;/section&gt;
-
-&lt;script&gt;
-const CONFIG = {
-eventDate: &quot;2026-07-21T20:30:00+02:00&quot;,
-whatsappNumber: &quot;393336564297&quot;,
-cardPaymentLink: &quot;https://www.newdigitalapp.com/donate&quot;,
-communityLink: &quot;https://www.newdigitalapp.com/group/dora40/discussion&quot;
-};
-
-function pad(v){return String(v).padStart(2,&quot;0&quot;)}
-
-function updateCountdown(){
-const target = new Date(CONFIG.eventDate).getTime();
-const distance = target - Date.now();
-
-if(distance &lt;= 0){
-[&quot;days&quot;,&quot;hours&quot;,&quot;minutes&quot;,&quot;seconds&quot;].forEach(id =&gt; document.getElementById(id).textContent
-= &quot;00&quot;);
-return;
-}
-
-document.getElementById(&quot;days&quot;).textContent = pad(Math.floor(distance/(1000*60*60*24)));
-document.getElementById(&quot;hours&quot;).textContent =
-pad(Math.floor((distance/(1000*60*60))%24));
-document.getElementById(&quot;minutes&quot;).textContent = pad(Math.floor((distance/(1000*60))%60));
-document.getElementById(&quot;seconds&quot;).textContent = pad(Math.floor((distance/1000)%60));
-}
-
-updateCountdown();
-setInterval(updateCountdown,1000);
-
-document.getElementById(&quot;cardPaymentLink&quot;).href = CONFIG.cardPaymentLink;
-document.getElementById(&quot;communityLink&quot;).href = CONFIG.communityLink;
-
-document.getElementById(&quot;askIbanLink&quot;).href =
-`https://wa.me/${CONFIG.whatsappNumber}?text=${encodeURIComponent(&quot;Ciao Dora,
-preferirei fare il bonifico. Mi puoi inviare l&#39;IBAN per il regalo?&quot;)}`;
-
-const list = document.getElementById(&quot;participantsList&quot;);
-const count = document.getElementById(&quot;guestCount&quot;);
-let index = 0;
-
-document.getElementById(&quot;addParticipant&quot;).addEventListener(&quot;click&quot;, () =&gt; {
-index++;
-const item = document.createElement(&quot;div&quot;);
-item.className = &quot;participant-item&quot;;
-item.innerHTML = `
-&lt;div class=&quot;participant-head&quot;&gt;
-&lt;strong&gt;Partecipante aggiuntivo ${index}&lt;/strong&gt;
-&lt;button type=&quot;button&quot; class=&quot;remove-btn&quot;&gt;Rimuovi&lt;/button&gt;
-&lt;/div&gt;
-&lt;input placeholder=&quot;Nome partecipante&quot; required&gt;
-&lt;input placeholder=&quot;Cognome partecipante&quot; required&gt;
-`;
-item.querySelector(&quot;.remove-btn&quot;).onclick = () =&gt; {
-item.remove();
-count.value = list.querySelectorAll(&quot;.participant-item&quot;).length + 1;
-};
-list.appendChild(item);
-count.value = list.querySelectorAll(&quot;.participant-item&quot;).length + 1;
-
-});
-
-function participantsText(){
-const items = [...list.querySelectorAll(&quot;.participant-item&quot;)];
-if(!items.length) return &quot;Nessun partecipante aggiuntivo&quot;;
-return items.map((item,i)=&gt;{
-const inputs = item.querySelectorAll(&quot;input&quot;);
-return `${i+1}. ${inputs[0].value} ${inputs[1].value}`;
-}).join(&quot; | &quot;);
-}
-
-document.getElementById(&quot;rsvp-form&quot;).addEventListener(&quot;submit&quot;, e =&gt; {
-e.preventDefault();
-
-const message = [
-&quot;RSVP DORA 40&quot;,
-`Nome: ${document.getElementById(&quot;firstName&quot;).value}
-${document.getElementById(&quot;lastName&quot;).value}`,
-`Email: ${document.getElementById(&quot;email&quot;).value}`,
-`Telefono: ${document.getElementById(&quot;phone&quot;).value}`,
-`Partecipanti totali: ${document.getElementById(&quot;guestCount&quot;).value}`,
-`Partecipanti aggiuntivi: ${participantsText()}`,
-`Note: ${document.getElementById(&quot;notes&quot;).value || &quot;Nessuna nota&quot;}`
-].join(&quot; | &quot;);
-
-document.getElementById(&quot;rsvpText&quot;).textContent = message;
-document.getElementById(&quot;whatsappLink&quot;).href =
-`https://wa.me/${CONFIG.whatsappNumber}?text=${encodeURIComponent(message)}`;
-document.getElementById(&quot;rsvpResult&quot;).hidden = false;
-});
-&lt;/script&gt;
-&lt;/body&gt;
-&lt;/html&gt;
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dora 40 | Black & White Party</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Great+Vibes&family=Cormorant+Garamond:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --gold: #ffe1a9;
+      --gold2: #d9a85c;
+      --white: #ffffff;
+      --text: #fff4df;
+      --muted: rgba(255, 244, 223, 0.82);
+      --line: rgba(255, 225, 169, 0.42);
+      --bg: url("assets/sfondo/sfondo.png");
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      background: #030303;
+      color: var(--text);
+      font-family: "Cinzel", serif;
+    }
+
+    .hero {
+      min-height: 100svh;
+      background:
+        linear-gradient(180deg, rgba(0, 0, 0, 0.22), rgba(0, 0, 0, 0.76)),
+        var(--bg) center / cover no-repeat;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 28px 18px;
+    }
+
+    .hero-content {
+      width: min(460px, 100%);
+      margin: auto;
+      text-shadow:
+        0 0 14px rgba(0, 0, 0, 0.95),
+        0 0 34px rgba(255, 225, 169, 0.24);
+    }
+
+    .top-text {
+      letter-spacing: 0.26em;
+      font-size: 0.74rem;
+      color: var(--muted);
+      margin-bottom: 40px;
+    }
+
+    .dora {
+      font-family: "Great Vibes", cursive;
+      font-size: clamp(5.6rem, 25vw, 9rem);
+      line-height: 0.78;
+      font-weight: 400;
+      margin: 0;
+      color: white;
+      text-shadow:
+        0 0 10px rgba(255, 255, 255, 0.46),
+        0 0 30px rgba(255, 225, 169, 0.28);
+    }
+
+    .birthday {
+      font-size: clamp(1.65rem, 8vw, 3.4rem);
+      letter-spacing: 0.13em;
+      color: var(--gold2);
+      margin: 8px 0 3px;
+      font-weight: 500;
+    }
+
+    .party {
+      font-family: "Great Vibes", cursive;
+      font-size: clamp(2.35rem, 10vw, 4rem);
+      color: white;
+      margin: 0 0 2px;
+      line-height: 1;
+    }
+
+    .party-small {
+      letter-spacing: 0.36em;
+      font-size: 0.95rem;
+      margin-bottom: 22px;
+    }
+
+    .divider {
+      width: 170px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      margin: 16px auto;
+      position: relative;
+    }
+
+    .divider::after {
+      content: "♡";
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -54%);
+      background: #030303;
+      padding: 0 10px;
+      color: var(--gold);
+    }
+
+    .event-info {
+      display: grid;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .event-info div {
+      color: var(--text);
+      letter-spacing: 0.15em;
+      font-size: 0.98rem;
+      line-height: 1.4;
+    }
+
+    .event-info strong {
+      display: block;
+      color: var(--gold);
+      font-size: 0.72rem;
+      margin-bottom: 4px;
+      letter-spacing: 0.16em;
+    }
+
+    .dress {
+      font-size: 1.08rem !important;
+      color: white !important;
+      line-height: 1.35;
+    }
+
+    .actions {
+      display: grid;
+      gap: 10px;
+      margin-top: 28px;
+    }
+
+    .btn,
+    .btn2,
+    button {
+      min-height: 50px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      padding: 0 18px;
+      font-family: "Cinzel", serif;
+      cursor: pointer;
+      letter-spacing: 0.06em;
+    }
+
+    .btn {
+      color: #231403;
+      background: linear-gradient(135deg, #fff5d4, #ffe1a9, #d9a85c);
+      box-shadow:
+        0 0 14px rgba(255, 225, 169, 0.48),
+        0 0 34px rgba(217, 168, 92, 0.26),
+        inset 0 0 10px rgba(255, 255, 255, 0.25);
+    }
+
+    .btn2 {
+      color: var(--gold);
+      background: rgba(0, 0, 0, 0.44);
+      box-shadow:
+        0 0 16px rgba(255, 225, 169, 0.16),
+        inset 0 0 12px rgba(255, 225, 169, 0.04);
+    }
+
+    .section {
+      width: min(920px, calc(100% - 24px));
+      margin: 14px auto;
+      padding: 22px 16px;
+      border: 1px solid var(--line);
+      border-radius: 26px;
+      background:
+        linear-gradient(180deg, rgba(0, 0, 0, 0.78), rgba(0, 0, 0, 0.94)),
+        var(--bg) center / cover no-repeat;
+      text-align: center;
+      box-shadow:
+        0 0 28px rgba(255, 225, 169, 0.08),
+        inset 0 0 30px rgba(0, 0, 0, 0.42);
+    }
+
+    h2 {
+      color: var(--gold);
+      font-size: clamp(1.65rem, 7.5vw, 3rem);
+      margin: 0 0 10px;
+      font-weight: 500;
+      line-height: 1.1;
+      text-shadow:
+        0 0 16px rgba(255, 225, 169, 0.30),
+        0 0 34px rgba(217, 168, 92, 0.15);
+    }
+
+    .subtitle {
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin: 0 0 18px;
+      line-height: 1.5;
+      font-size: 0.86rem;
+    }
+
+    .countdown {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .count-box {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 12px 8px;
+      background: rgba(0, 0, 0, 0.54);
+    }
+
+    .count-box strong {
+      display: block;
+      font-size: clamp(2rem, 9vw, 3.2rem);
+      color: var(--gold);
+      text-shadow: 0 0 20px rgba(255, 225, 169, 0.22);
+    }
+
+    .count-box span {
+      color: var(--muted);
+      font-size: 0.72rem;
+      letter-spacing: 0.14em;
+    }
+
+    form {
+      display: grid;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    input,
+    textarea {
+      width: 100%;
+      min-height: 50px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: rgba(0, 0, 0, 0.52);
+      color: var(--text);
+      padding: 14px;
+      font: inherit;
+      font-size: 1rem;
+    }
+
+    textarea {
+      min-height: 92px;
+    }
+
+    .participants-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .participants-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .participant-item {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 12px;
+      display: grid;
+      gap: 10px;
+      background: rgba(0, 0, 0, 0.40);
+    }
+
+    .participant-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--gold);
+      font-size: 0.88rem;
+    }
+
+    .remove-btn {
+      min-height: 34px;
+      padding: 0 12px;
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.45);
+      color: var(--muted);
+    }
+
+    .result {
+      margin-top: 12px;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: rgba(0, 0, 0, 0.54);
+      text-align: left;
+      word-break: break-word;
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    .result[hidden] {
+      display: none;
+    }
+
+    .gift-title {
+      font-size: clamp(2.7rem, 13vw, 5.8rem);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--gold);
+      margin: 0;
+      line-height: 1;
+      text-shadow:
+        0 0 12px rgba(255, 241, 200, 0.55),
+        0 0 32px rgba(255, 225, 169, 0.42),
+        0 0 58px rgba(217, 168, 92, 0.28);
+    }
+
+    .gift-buttons {
+      display: grid;
+      gap: 12px;
+      margin-top: 22px;
+    }
+
+    .community-box {
+      max-width: 640px;
+      margin: 24px auto 0;
+      padding: 26px 18px;
+      border: 1px solid rgba(255, 225, 169, 0.30);
+      border-radius: 26px;
+      background: rgba(0, 0, 0, 0.42);
+      box-shadow:
+        0 0 22px rgba(255, 225, 169, 0.12),
+        inset 0 0 24px rgba(255, 225, 169, 0.04);
+      backdrop-filter: blur(8px);
+    }
+
+    .community-box h3 {
+      margin: 0 0 14px;
+      color: var(--gold);
+      font-family: "Cormorant Garamond", serif;
+      font-size: clamp(2rem, 8vw, 2.8rem);
+      font-weight: 500;
+      line-height: 1.05;
+      text-shadow:
+        0 0 14px rgba(255, 225, 169, 0.32),
+        0 0 30px rgba(217, 168, 92, 0.18);
+    }
+
+    .community-box p {
+      color: var(--muted);
+      line-height: 1.7;
+      margin: 0 0 24px;
+      font-size: 1rem;
+      font-family: "Cormorant Garamond", serif;
+    }
+
+    @media (min-width: 760px) {
+      .countdown {
+        grid-template-columns: repeat(4, 1fr);
+      }
+
+      .gift-buttons {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .actions {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+  <section class="hero">
+    <div class="hero-content">
+      <div class="top-text">SEI INVITATO A</div>
+      <h1 class="dora">Dora</h1>
+      <div class="birthday">COMPLEANNO</div>
+      <div class="party">Black &amp; White</div>
+      <div class="party-small">PARTY</div>
+      <div class="divider"></div>
+
+      <div class="event-info">
+        <div><strong>DATA</strong>21 LUGLIO 2026</div>
+        <div><strong>INIZIO</strong>20:30</div>
+        <div><strong>LOCATION</strong>LABELON</div>
+        <div><strong>DRESS CODE</strong><span class="dress">UNA NOTTE DIPINTA<br>SOLO IN BIANCO E NERO</span></div>
+      </div>
+
+      <div class="actions">
+        <a class="btn" href="#rsvp">CONFERMA PRESENZA</a>
+        <a class="btn2" href="#gift">LISTA REGALO</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>Il tempo che ci separa dalla festa</h2>
+    <p class="subtitle">La vera ricchezza del tempo sono le persone con cui lo condividiamo.</p>
+
+    <div class="countdown">
+      <div class="count-box"><strong id="days">00</strong><span>GIORNI</span></div>
+      <div class="count-box"><strong id="hours">00</strong><span>ORE</span></div>
+      <div class="count-box"><strong id="minutes">00</strong><span>MINUTI</span></div>
+      <div class="count-box"><strong id="seconds">00</strong><span>SECONDI</span></div>
+    </div>
+  </section>
+
+  <section class="section" id="rsvp">
+    <h2>Conferma la tua presenza tramite WhatsApp</h2>
+    <p class="subtitle">La conferma arriva direttamente a Dora</p>
+
+    <form id="rsvp-form">
+      <input id="firstName" placeholder="Nome" required>
+      <input id="lastName" placeholder="Cognome" required>
+      <input id="email" type="email" placeholder="Mail" required>
+      <input id="phone" type="tel" placeholder="Telefono" required>
+      <input id="guestCount" type="number" min="1" value="1" required>
+
+      <div class="participants-head">
+        <span>Partecipanti aggiuntivi</span>
+        <button type="button" class="btn2" id="addParticipant">+ Aggiungi</button>
+      </div>
+
+      <div id="participantsList" class="participants-list"></div>
+      <textarea id="notes" placeholder="Note o richieste"></textarea>
+      <button class="btn" type="submit">INVIA CONFERMA</button>
+
+      <div id="rsvpResult" class="result" hidden>
+        <strong>Messaggio pronto</strong>
+        <p id="rsvpText"></p>
+        <a class="btn" id="whatsappLink" href="#" target="_blank" rel="noopener">Apri WhatsApp</a>
+      </div>
+    </form>
+  </section>
+
+  <section class="section" id="community">
+    <h2 class="gift-title">I Vostri Ricordi</h2>
+    <p class="subtitle">Foto, auguri e messaggi per Dora</p>
+
+    <div class="community-box">
+      <h3>Lascia un Ricordo a Dora</h3>
+      <p>Ogni momento ha lasciato un segno. Ogni persona ha lasciato un ricordo.</p>
+      <a class="btn" id="communityLink" href="#" target="_blank" rel="noopener">ENTRA NELLA COMMUNITY</a>
+    </div>
+  </section>
+
+  <section class="section" id="gift">
+    <h2 class="gift-title">Gift List</h2>
+    <p class="subtitle">Pagamento con carta o bonifico bancario</p>
+
+    <div class="gift-buttons">
+      <a class="btn" id="cardPaymentLink" href="#" target="_blank" rel="noopener">PAGA CON CARTA</a>
+      <a class="btn2" id="askIbanLink" href="#" target="_blank" rel="noopener">CHIEDI IBAN A DORA</a>
+    </div>
+  </section>
+
+  <script>
+    const CONFIG = {
+      eventDate: "2026-07-21T20:30:00+02:00",
+      whatsappNumber: "393336564297",
+      cardPaymentLink: "https://www.newdigitalapp.com/donate",
+      communityLink: "https://www.newdigitalapp.com/group/dora40/discussion"
+    };
+
+    function pad(value) {
+      return String(value).padStart(2, "0");
+    }
+
+    function updateCountdown() {
+      const target = new Date(CONFIG.eventDate).getTime();
+      const distance = target - Date.now();
+
+      if (distance <= 0) {
+        ["days", "hours", "minutes", "seconds"].forEach((id) => {
+          document.getElementById(id).textContent = "00";
+        });
+        return;
+      }
+
+      document.getElementById("days").textContent = pad(Math.floor(distance / (1000 * 60 * 60 * 24)));
+      document.getElementById("hours").textContent = pad(Math.floor((distance / (1000 * 60 * 60)) % 24));
+      document.getElementById("minutes").textContent = pad(Math.floor((distance / (1000 * 60)) % 60));
+      document.getElementById("seconds").textContent = pad(Math.floor((distance / 1000) % 60));
+    }
+
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+
+    document.getElementById("cardPaymentLink").href = CONFIG.cardPaymentLink;
+    document.getElementById("communityLink").href = CONFIG.communityLink;
+    document.getElementById("askIbanLink").href = `https://wa.me/${CONFIG.whatsappNumber}?text=${encodeURIComponent("Ciao Dora, preferirei fare il bonifico. Mi puoi inviare l'IBAN per il regalo?")}`;
+
+    const list = document.getElementById("participantsList");
+    const count = document.getElementById("guestCount");
+    let index = 0;
+
+    document.getElementById("addParticipant").addEventListener("click", () => {
+      index += 1;
+
+      const item = document.createElement("div");
+      item.className = "participant-item";
+      item.innerHTML = `
+        <div class="participant-head">
+          <strong>Partecipante aggiuntivo ${index}</strong>
+          <button type="button" class="remove-btn">Rimuovi</button>
+        </div>
+        <input placeholder="Nome partecipante" required>
+        <input placeholder="Cognome partecipante" required>
+      `;
+
+      item.querySelector(".remove-btn").onclick = () => {
+        item.remove();
+        count.value = list.querySelectorAll(".participant-item").length + 1;
+      };
+
+      list.appendChild(item);
+      count.value = list.querySelectorAll(".participant-item").length + 1;
+    });
+
+    function participantsText() {
+      const items = [...list.querySelectorAll(".participant-item")];
+
+      if (!items.length) {
+        return "Nessun partecipante aggiuntivo";
+      }
+
+      return items.map((item, i) => {
+        const inputs = item.querySelectorAll("input");
+        return `${i + 1}. ${inputs[0].value} ${inputs[1].value}`;
+      }).join(" | ");
+    }
+
+    document.getElementById("rsvp-form").addEventListener("submit", (event) => {
+      event.preventDefault();
+
+      const message = [
+        "RSVP DORA 40",
+        `Nome: ${document.getElementById("firstName").value} ${document.getElementById("lastName").value}`,
+        `Email: ${document.getElementById("email").value}`,
+        `Telefono: ${document.getElementById("phone").value}`,
+        `Partecipanti totali: ${document.getElementById("guestCount").value}`,
+        `Partecipanti aggiuntivi: ${participantsText()}`,
+        `Note: ${document.getElementById("notes").value || "Nessuna nota"}`
+      ].join(" | ");
+
+      document.getElementById("rsvpText").textContent = message;
+      document.getElementById("whatsappLink").href = `https://wa.me/${CONFIG.whatsappNumber}?text=${encodeURIComponent(message)}`;
+      document.getElementById("rsvpResult").hidden = false;
+    });
+  </script>
+</body>
+</html>
