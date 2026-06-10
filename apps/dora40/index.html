@@ -105,7 +105,7 @@
     }
 
     .divider::after {
-      content: "♡";
+      content: "\2661";
       position: absolute;
       left: 50%;
       top: 50%;
@@ -336,8 +336,14 @@
 
     .gift-buttons {
       display: grid;
+      grid-template-columns: 1fr;
+      justify-items: center;
       gap: 12px;
       margin-top: 22px;
+    }
+
+    .gift-buttons .btn {
+      width: min(320px, 100%);
     }
 
     .community-box {
@@ -378,10 +384,6 @@
         grid-template-columns: repeat(4, 1fr);
       }
 
-      .gift-buttons {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
       .actions {
         grid-template-columns: repeat(2, 1fr);
       }
@@ -391,23 +393,23 @@
 <body>
   <section class="hero">
     <div class="hero-content">
-      <div class="top-text">SEI INVITATO A</div>
+      <div class="top-text">YOU ARE INVITED TO</div>
       <h1 class="dora">Dora</h1>
-      <div class="birthday">COMPLEANNO</div>
+      <div class="birthday">BIRTHDAY</div>
       <div class="party">Black &amp; White</div>
       <div class="party-small">PARTY</div>
       <div class="divider"></div>
 
       <div class="event-info">
         <div><strong>DATA</strong>21 LUGLIO 2026</div>
-        <div><strong>INIZIO</strong>20:30</div>
+        <div><strong>START</strong>20:00</div>
         <div><strong>LOCATION</strong>LABELON</div>
-        <div><strong>DRESS CODE</strong><span class="dress">A NIGHT PAINTED<br>ONLY IN BLACK & WHITE</span></div>
+        <div><strong>DRESS CODE</strong><span class="dress">A NIGHT PAINTED<br>ONLY IN BLACK &amp; WHITE</span></div>
       </div>
 
       <div class="actions">
         <a class="btn" href="#rsvp">CONFERMA PRESENZA</a>
-        <a class="btn2" href="#gift">LISTA REGALO</a>
+        <a class="btn2" href="#gift">GIFT LIST</a>
       </div>
     </div>
   </section>
@@ -425,8 +427,8 @@
   </section>
 
   <section class="section" id="rsvp">
-    <h2>Conferma la tua presenza tramite WhatsApp</h2>
-    <p class="subtitle">La conferma arriva direttamente a Dora</p>
+    <h2>&Egrave; gradita la conferma della presenza</h2>
+    <p class="subtitle">Per conferma presenza &amp; gift list</p>
 
     <form id="rsvp-form">
       <input id="firstName" placeholder="Nome" required>
@@ -457,25 +459,24 @@
     <p class="subtitle">Foto, auguri e messaggi per Dora</p>
 
     <div class="community-box">
-      <h3>Lasciami un Ricordo</h3>
+      <h3>Lasciami un ricordo</h3>
       <p>Ogni momento ha lasciato un segno. Ogni persona ha lasciato un ricordo.</p>
       <a class="btn" id="communityLink" href="#" target="_blank" rel="noopener">ENTRA NELLA COMMUNITY</a>
     </div>
   </section>
 
   <section class="section" id="gift">
-    <h2 class="gift-title">Gift List</h2>
-    <p class="subtitle">Pagamento con carta o bonifico bancario</p>
+    <h2 class="gift-title">The Gift List</h2>
+    <p class="subtitle">Curated for the night.<br>Available upon request.</p>
 
     <div class="gift-buttons">
-      <a class="btn" id="cardPaymentLink" href="#" target="_blank" rel="noopener">PAGA CON CARTA</a>
-      <a class="btn2" id="askIbanLink" href="#" target="_blank" rel="noopener">CHIEDI IBAN A DORA</a>
+      <a class="btn" id="cardPaymentLink" href="#" target="_blank" rel="noopener">GIFT LIST</a>
     </div>
   </section>
 
   <script>
     const CONFIG = {
-      eventDate: "2026-07-21T20:30:00+02:00",
+      eventDate: "2026-07-21T20:00:00+02:00",
       whatsappNumber: "393336564297",
       cardPaymentLink: "https://www.newdigitalapp.com/donate",
       communityLink: "https://www.newdigitalapp.com/group/dora40/discussion"
@@ -507,7 +508,6 @@
 
     document.getElementById("cardPaymentLink").href = CONFIG.cardPaymentLink;
     document.getElementById("communityLink").href = CONFIG.communityLink;
-    document.getElementById("askIbanLink").href = `https://wa.me/${CONFIG.whatsappNumber}?text=${encodeURIComponent("Ciao Dora, preferirei fare il bonifico. Mi puoi inviare l'IBAN per il regalo?")}`;
 
     const list = document.getElementById("participantsList");
     const count = document.getElementById("guestCount");
