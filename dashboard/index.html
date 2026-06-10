@@ -6,6 +6,7 @@
   <title>MaraSense Experience Manager</title>
   <link rel="icon" href="https://ndaprove.newdigitalapp.it/docs/MARASENSELOGO.png" />
   <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.4/build/qrcode.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image.prod.js"></script>
   <style>
     * { box-sizing: border-box; }
     body {
@@ -239,14 +240,17 @@
         </div>
 
         <div class="field">
-          <label for="mindFile">1. Carica file MindAR (.mind)</label>
+          <label for="mindFile">1. Target MindAR (.mind)</label>
+          <p class="note">
+            Puoi lasciare vuoto questo campo: il manager genera automaticamente targets.mind dalle immagini target qui sotto. Carica un file .mind solo se vuoi usare un target gia compilato.
+          </p>
           <input id="mindFile" type="file" accept=".mind" />
         </div>
 
         <div class="field">
-          <label>2. Immagini target usate nel .mind</label>
+          <label>2. Immagini target da compilare</label>
           <p class="note">
-            Registra qui tutte le immagini inserite nel file MindAR, nell’ordine reale del target index.
+            Carica qui le immagini target nell’ordine reale del target index: immagine 1 = target 0, immagine 2 = target 1, e cosi via.
           </p>
           <div id="targetImagesContainer"></div>
           <button type="button" class="secondary" onclick="addTargetImageBlock()">+ Aggiungi immagine target</button>
@@ -560,7 +564,8 @@
         type,
         slug,
         originalMindFile,
-        targetFile: originalMindFile === "-" ? "-" : "targets.mind",
+        mindMode: originalMindFile === "-" ? "automatico" : "manuale",
+        targetFile: "targets.mind",
         originalSharedImage,
         sharedImage: normalizeSharedName(originalSharedImage),
         targetImages,
@@ -632,7 +637,6 @@
     function validateData(data) {
       if (!data.name) return "Inserisci il nome esperienza.";
       if (!data.slug) return "Nome esperienza non valido.";
-      if (data.originalMindFile === "-") return "Carica il file .mind.";
       if (data.targetImages.length === 0) return "Aggiungi almeno un’immagine target.";
       if (data.targetImages.some((target) => target.originalFile === "-")) return "Ogni target deve avere la sua immagine.";
       if (data.contents.length === 0) return "Aggiungi almeno un contenuto.";
@@ -645,17 +649,20 @@
       const folder = `managed-experiences/${data.sector}/${data.slug}/`;
       const link = `${BASE_URL}/${folder}`;
       const id = `${data.sector}/${data.slug}`;
+      const mindText = data.originalMindFile === "-"
+        ? "generazione automatica da immagini target -> targets.mind"
+        : `${data.originalMindFile} -> ${data.targetFile}`;
 
       document.getElementById("pSector").textContent = data.sector;
       document.getElementById("pName").textContent = data.name;
       document.getElementById("pSlug").textContent = data.slug;
       document.getElementById("pType").textContent = data.type;
-      document.getElementById("pMind").textContent = `${data.originalMindFile} → ${data.targetFile}`;
-      document.getElementById("pTargetImages").textContent = data.targetImages.map((target) => `${target.id}: ${target.originalFile} → ${target.file}`).join(" | ");
-      document.getElementById("pShared").textContent = data.originalSharedImage === "-" ? "-" : `${data.originalSharedImage} → ${data.sharedImage}`;
+      document.getElementById("pMind").textContent = mindText;
+      document.getElementById("pTargetImages").textContent = data.targetImages.map((target) => `${target.id}: ${target.originalFile} -> ${target.file}`).join(" | ");
+      document.getElementById("pShared").textContent = data.originalSharedImage === "-" ? "-" : `${data.originalSharedImage} -> ${data.sharedImage}`;
       document.getElementById("pContents").textContent = data.contents.map((content) => {
         const audioText = content.audioFile ? ` + audio ${content.audioFile}` : "";
-        return `${content.label} → target ${content.targetIds.join(", ")} → ${content.file}${audioText}`;
+        return `${content.label} -> target ${content.targetIds.join(", ")} -> ${content.file}${audioText}`;
       }).join(" | ");
       document.getElementById("pFolder").textContent = folder;
 
@@ -683,7 +690,9 @@
       }
       const config = buildConfig(data);
       updatePreview(data, config);
-      status.textContent = "Anteprima, JSON e QR generati correttamente.";
+      status.textContent = data.originalMindFile === "-"
+        ? "Anteprima generata. Il file targets.mind verra compilato automaticamente quando crei l’esperienza."
+        : "Anteprima, JSON e QR generati correttamente.";
     }
 
     async function uploadFileToStorage(file, storagePath) {
@@ -713,14 +722,69 @@
       return result.downloadUrl;
     }
 
+    function getMindCompiler() {
+      const mindar = window.MINDAR || {};
+      return mindar.Compiler || (mindar.IMAGE && mindar.IMAGE.Compiler) || null;
+    }
+
+    function loadImageFromFile(file) {
+      return new Promise((resolve, reject) => {
+        const image = new Image();
+        const objectUrl = URL.createObjectURL(file);
+        image.onload = () => {
+          URL.revokeObjectURL(objectUrl);
+          resolve(image);
+        };
+        image.onerror = () => {
+          URL.revokeObjectURL(objectUrl);
+          reject(new Error(`Impossibile leggere l’immagine target: ${file.name}`));
+        };
+        image.src = objectUrl;
+      });
+    }
+
+    async function compileMindFileFromTargets(onProgress) {
+      const Compiler = getMindCompiler();
+      if (!Compiler) {
+        throw new Error("Compiler MindAR non caricato. Ricarica la dashboard e controlla la connessione alla CDN MindAR.");
+      }
+
+      const targetFiles = Array.from(document.querySelectorAll(".target-image-block .target-file"))
+        .map((input) => input.files && input.files[0])
+        .filter(Boolean);
+
+      if (targetFiles.length === 0) {
+        throw new Error("Aggiungi almeno un’immagine target per generare targets.mind.");
+      }
+
+      const images = await Promise.all(targetFiles.map(loadImageFromFile));
+      const compiler = new Compiler();
+      await compiler.compileImageTargets(images, (progress) => {
+        if (typeof onProgress === "function") onProgress(progress);
+      });
+      const exportedBuffer = await compiler.exportData();
+      return new Blob([exportedBuffer], { type: "application/octet-stream" });
+    }
+
     async function collectUploadedFiles(config, data) {
       const folder = `managed-experiences/${data.sector}/${data.slug}/storage/`;
       const mindFile = document.getElementById("mindFile").files[0];
       const sharedFile = document.getElementById("sharedImage").files[0];
+      const status = document.getElementById("status");
 
       if (mindFile) {
+        status.textContent = "Caricamento file MindAR manuale su Firebase Storage...";
         config.targetFile = await uploadFileToStorage(mindFile, folder + "targets.mind");
+      } else {
+        status.textContent = "Generazione automatica targets.mind in corso...";
+        const generatedMindFile = await compileMindFileFromTargets((progress) => {
+          const percent = Math.max(0, Math.min(100, Math.round(Number(progress || 0) * 100)));
+          status.textContent = `Generazione automatica targets.mind in corso... ${percent}%`;
+        });
+        status.textContent = "Caricamento targets.mind generato su Firebase Storage...";
+        config.targetFile = await uploadFileToStorage(generatedMindFile, folder + "targets.mind");
       }
+
       if (sharedFile) {
         config.sharedImage = await uploadFileToStorage(sharedFile, folder + config.sharedImage);
       }
@@ -772,7 +836,7 @@
       try {
         const config = buildConfig(data);
         updatePreview(data, config);
-        status.textContent = "Caricamento file su Firebase Storage in corso...";
+        status.textContent = "Preparazione file esperienza in corso...";
         await collectUploadedFiles(config, data);
 
         const payload = {
@@ -821,7 +885,7 @@
         status.textContent = "Esperienza creata su GitHub con commit remoto. Attendi il deploy automatico e poi apri il link.";
       } catch (requestError) {
         console.error(requestError);
-        status.textContent = "Errore di connessione alla Function. Controlla console o deploy.";
+        status.textContent = requestError.message || "Errore di connessione alla Function. Controlla console o deploy.";
       }
     }
 
