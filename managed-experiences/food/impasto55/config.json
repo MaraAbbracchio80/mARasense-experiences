@@ -1,0 +1,55 @@
+{
+  "title": "Impasto55",
+  "type": "multi-target",
+  "sector": "food",
+  "targetFile": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Ffood%2Fimpasto55%2Fstorage%2Ftargets.mind?alt=media&token=44243961-b563-490e-b006-a85ea43b92db",
+  "sharedImage": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Ffood%2Fimpasto55%2Fstorage%2Fshared.png?alt=media&token=c7821b54-0b54-4670-bcc2-1f730a0d83df",
+  "contentFile": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Ffood%2Fimpasto55%2Fstorage%2Fcontent-1.mp4?alt=media&token=44ddec5e-2264-4c41-87c1-e91988055f6a",
+  "autoPlay": true,
+  "requireContentEnd": true,
+  "stopOnTargetLost": true,
+  "transparentBg": true,
+  "lensUi": true,
+  "multiTarget": true,
+  "targetImages": [
+    {
+      "id": 0,
+      "label": "tovagliolo",
+      "file": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Ffood%2Fimpasto55%2Fstorage%2Ftarget-1.png?alt=media&token=53b66187-9c61-4cad-b4cc-badfb4f5e83f",
+      "originalFile": "impasto_55.png"
+    }
+  ],
+  "contents": [
+    {
+      "id": 0,
+      "label": "video instagram",
+      "targetIds": [
+        0
+      ],
+      "targetId": 0,
+      "file": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Ffood%2Fimpasto55%2Fstorage%2Fcontent-1.mp4?alt=media&token=44ddec5e-2264-4c41-87c1-e91988055f6a",
+      "kind": "video",
+      "originalFile": "impasto55.mp4",
+      "audioFile": "",
+      "audioOriginalFile": "-"
+    }
+  ],
+  "targets": [
+    {
+      "id": 0,
+      "contentId": 0,
+      "content": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Ffood%2Fimpasto55%2Fstorage%2Fcontent-1.mp4?alt=media&token=44ddec5e-2264-4c41-87c1-e91988055f6a",
+      "audioFile": "",
+      "kind": "video",
+      "label": "video instagram"
+    }
+  ],
+  "meta": {
+    "slug": "impasto55",
+    "notes": "",
+    "generatedFolder": "managed-experiences/food/impasto55/",
+    "publicUrl": "https://marasenseexperiences-ar.web.app/managed-experiences/food/impasto55/",
+    "createdAt": "2026-06-11T11:11:14.782Z",
+    "updatedAt": "2026-06-11T11:11:14.782Z"
+  }
+}
