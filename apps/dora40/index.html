@@ -250,7 +250,8 @@
     }
 
     input,
-    textarea {
+textarea,
+select {
       width: 100%;
       min-height: 50px;
       border: 1px solid var(--line);
@@ -431,18 +432,15 @@
     <p class="subtitle">Per conferma presenza &amp; gift list</p>
 
     <form id="rsvp-form">
-      <input id="firstName" placeholder="Nome" required>
-      <input id="lastName" placeholder="Cognome" required>
-      <input id="email" type="email" placeholder="Mail" required>
-      <input id="phone" type="tel" placeholder="Telefono" required>
-      <input id="guestCount" type="number" min="1" value="1" required>
+      <input id="firstName" placeholder="Nome e Cognome" required>
 
-      <div class="participants-head">
-        <span>Partecipanti aggiuntivi</span>
-        <button type="button" class="btn2" id="addParticipant">+ Aggiungi</button>
-      </div>
+<select id="attendance" required>
+  <option value="">Conferma presenza</option>
+  <option value="SI">SI</option>
+  <option value="NO">NO</option>
+</select>
 
-      <div id="participantsList" class="participants-list"></div>
+      
       <textarea id="notes" placeholder="Note o richieste"></textarea>
       <button class="btn" type="submit">INVIA CONFERMA</button>
 
@@ -475,97 +473,53 @@
   </section>
 
   <script>
-    const CONFIG = {
-      eventDate: "2026-07-21T20:00:00+02:00",
-      whatsappNumber: "393336564297",
-      cardPaymentLink: "https://www.newdigitalapp.com/donate",
-      communityLink: "https://www.newdigitalapp.com/group/dora40/discussion"
-    };
+  const CONFIG = {
+    eventDate: "2026-07-21T20:00:00+02:00",
+    whatsappNumber: "393336564297",
+    cardPaymentLink: "https://www.newdigitalapp.com/donate",
+    communityLink: "https://www.newdigitalapp.com/group/dora40/discussion"
+  };
 
-    function pad(value) {
-      return String(value).padStart(2, "0");
+  function pad(value) {
+    return String(value).padStart(2, "0");
+  }
+
+  function updateCountdown() {
+    const target = new Date(CONFIG.eventDate).getTime();
+    const distance = target - Date.now();
+
+    if (distance <= 0) {
+      ["days", "hours", "minutes", "seconds"].forEach((id) => {
+        document.getElementById(id).textContent = "00";
+      });
+      return;
     }
 
-    function updateCountdown() {
-      const target = new Date(CONFIG.eventDate).getTime();
-      const distance = target - Date.now();
+    document.getElementById("days").textContent = pad(Math.floor(distance / (1000 * 60 * 60 * 24)));
+    document.getElementById("hours").textContent = pad(Math.floor((distance / (1000 * 60 * 60)) % 24));
+    document.getElementById("minutes").textContent = pad(Math.floor((distance / (1000 * 60)) % 60));
+    document.getElementById("seconds").textContent = pad(Math.floor((distance / 1000) % 60));
+  }
 
-      if (distance <= 0) {
-        ["days", "hours", "minutes", "seconds"].forEach((id) => {
-          document.getElementById(id).textContent = "00";
-        });
-        return;
-      }
+  updateCountdown();
+  setInterval(updateCountdown, 1000);
 
-      document.getElementById("days").textContent = pad(Math.floor(distance / (1000 * 60 * 60 * 24)));
-      document.getElementById("hours").textContent = pad(Math.floor((distance / (1000 * 60 * 60)) % 24));
-      document.getElementById("minutes").textContent = pad(Math.floor((distance / (1000 * 60)) % 60));
-      document.getElementById("seconds").textContent = pad(Math.floor((distance / 1000) % 60));
-    }
+  document.getElementById("cardPaymentLink").href = CONFIG.cardPaymentLink;
+  document.getElementById("communityLink").href = CONFIG.communityLink;
 
-    updateCountdown();
-    setInterval(updateCountdown, 1000);
+  document.getElementById("rsvp-form").addEventListener("submit", (event) => {
+    event.preventDefault();
 
-    document.getElementById("cardPaymentLink").href = CONFIG.cardPaymentLink;
-    document.getElementById("communityLink").href = CONFIG.communityLink;
+    const message = [
+      "RSVP DORA 40",
+      `Nome: ${document.getElementById("firstName").value}`,
+      `Presenza: ${document.getElementById("attendance").value}`,
+      `Note: ${document.getElementById("notes").value || "Nessuna nota"}`
+    ].join(" | ");
 
-    const list = document.getElementById("participantsList");
-    const count = document.getElementById("guestCount");
-    let index = 0;
-
-    document.getElementById("addParticipant").addEventListener("click", () => {
-      index += 1;
-
-      const item = document.createElement("div");
-      item.className = "participant-item";
-      item.innerHTML = `
-        <div class="participant-head">
-          <strong>Partecipante aggiuntivo ${index}</strong>
-          <button type="button" class="remove-btn">Rimuovi</button>
-        </div>
-        <input placeholder="Nome partecipante" required>
-        <input placeholder="Cognome partecipante" required>
-      `;
-
-      item.querySelector(".remove-btn").onclick = () => {
-        item.remove();
-        count.value = list.querySelectorAll(".participant-item").length + 1;
-      };
-
-      list.appendChild(item);
-      count.value = list.querySelectorAll(".participant-item").length + 1;
-    });
-
-    function participantsText() {
-      const items = [...list.querySelectorAll(".participant-item")];
-
-      if (!items.length) {
-        return "Nessun partecipante aggiuntivo";
-      }
-
-      return items.map((item, i) => {
-        const inputs = item.querySelectorAll("input");
-        return `${i + 1}. ${inputs[0].value} ${inputs[1].value}`;
-      }).join(" | ");
-    }
-
-    document.getElementById("rsvp-form").addEventListener("submit", (event) => {
-      event.preventDefault();
-
-      const message = [
-        "RSVP DORA 40",
-        `Nome: ${document.getElementById("firstName").value} ${document.getElementById("lastName").value}`,
-        `Email: ${document.getElementById("email").value}`,
-        `Telefono: ${document.getElementById("phone").value}`,
-        `Partecipanti totali: ${document.getElementById("guestCount").value}`,
-        `Partecipanti aggiuntivi: ${participantsText()}`,
-        `Note: ${document.getElementById("notes").value || "Nessuna nota"}`
-      ].join(" | ");
-
-      document.getElementById("rsvpText").textContent = message;
-      document.getElementById("whatsappLink").href = `https://wa.me/${CONFIG.whatsappNumber}?text=${encodeURIComponent(message)}`;
-      document.getElementById("rsvpResult").hidden = false;
-    });
-  </script>
-</body>
-</html>
+    document.getElementById("rsvpText").textContent = message;
+    document.getElementById("whatsappLink").href =
+      `https://wa.me/${CONFIG.whatsappNumber}?text=${encodeURIComponent(message)}`;
+    document.getElementById("rsvpResult").hidden = false;
+  });
+</script>
