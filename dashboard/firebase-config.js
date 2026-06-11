@@ -8,10 +8,16 @@ window.MARASENSE_FIREBASE_CONFIG = {
 };
 
 window.MARASENSE_ACCESS = {
-  superAdmins: [
+  dashboardAdmins: [
     "m.abbracchio@newdigitalapp.com"
   ],
   managers: [
+    "m.abbracchio@newdigitalapp.com"
+  ],
+  analyticsAdmins: [
+    "m.abbracchio@newdigitalapp.com"
+  ],
+  analyticsViewers: [
     "a.celotto@newdigitalapp.com"
   ],
   clientAnalytics: []
