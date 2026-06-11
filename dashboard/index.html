@@ -6,7 +6,6 @@
   <title>MaraSense Experience Manager</title>
   <link rel="icon" href="https://ndaprove.newdigitalapp.it/docs/MARASENSELOGO.png" />
   <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.4/build/qrcode.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image.prod.js"></script>
   <style>
     * { box-sizing: border-box; }
     body {
@@ -368,11 +367,13 @@
     const BASE_URL = "https://marasenseexperiences-ar.web.app";
     const API_CREATE_EXPERIENCE = "https://europe-west1-marasenseexperiences-ar.cloudfunctions.net/api/createManagedExperience";
     const API_GET_UPLOAD_URL = "https://europe-west1-marasenseexperiences-ar.cloudfunctions.net/api/getUploadUrl";
+    const MINDAR_COMPILER_URL = "https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image.prod.js";
 
     let lastGeneratedConfig = null;
     let lastGeneratedId = "";
     let targetImageCounter = 0;
     let contentCounter = 0;
+    let mindCompilerConstructor = null;
 
     function slugify(text) {
       return text
@@ -419,6 +420,19 @@
       if (lower.endsWith(".mp3") || lower.endsWith(".wav") || lower.endsWith(".m4a")) return "audio";
       if (lower.endsWith(".jpg") || lower.endsWith(".jpeg") || lower.endsWith(".png") || lower.endsWith(".webp")) return "image";
       return "video";
+    }
+
+    function renderQrCode(link) {
+      const qrBox = document.getElementById("qrBox");
+      const qrCanvas = document.getElementById("qrCanvas");
+      if (!window.QRCode || typeof window.QRCode.toCanvas !== "function") {
+        qrBox.style.display = "none";
+        return;
+      }
+      qrBox.style.display = "flex";
+      window.QRCode.toCanvas(qrCanvas, link, { width: 220, margin: 1 }, (error) => {
+        if (error) qrBox.style.display = "none";
+      });
     }
 
     function addTargetImageBlock() {
@@ -673,8 +687,7 @@
       document.getElementById("resultBox").style.display = "block";
       document.getElementById("configBox").style.display = "block";
       document.getElementById("configPreview").textContent = JSON.stringify(config, null, 2);
-      document.getElementById("qrBox").style.display = "flex";
-      QRCode.toCanvas(document.getElementById("qrCanvas"), link, { width: 220, margin: 1 });
+      renderQrCode(link);
 
       lastGeneratedConfig = config;
       lastGeneratedId = id;
@@ -722,9 +735,22 @@
       return result.downloadUrl;
     }
 
-    function getMindCompiler() {
+    async function getMindCompiler() {
+      if (mindCompilerConstructor) return mindCompilerConstructor;
+
       const mindar = window.MINDAR || {};
-      return mindar.Compiler || (mindar.IMAGE && mindar.IMAGE.Compiler) || null;
+      mindCompilerConstructor = mindar.Compiler || (mindar.IMAGE && mindar.IMAGE.Compiler) || null;
+      if (mindCompilerConstructor) return mindCompilerConstructor;
+
+      const mindarModule = await import(MINDAR_COMPILER_URL);
+      mindCompilerConstructor =
+        mindarModule.Compiler ||
+        (mindarModule.IMAGE && mindarModule.IMAGE.Compiler) ||
+        (mindarModule.default && mindarModule.default.Compiler) ||
+        (mindarModule.default && mindarModule.default.IMAGE && mindarModule.default.IMAGE.Compiler) ||
+        null;
+
+      return mindCompilerConstructor;
     }
 
     function loadImageFromFile(file) {
@@ -744,7 +770,7 @@
     }
 
     async function compileMindFileFromTargets(onProgress) {
-      const Compiler = getMindCompiler();
+      const Compiler = await getMindCompiler();
       if (!Compiler) {
         throw new Error("Compiler MindAR non caricato. Ricarica la dashboard e controlla la connessione alla CDN MindAR.");
       }
@@ -877,8 +903,7 @@
         finalLink.textContent = result.publicUrl;
         finalLink.href = result.publicUrl;
         document.getElementById("resultBox").style.display = "block";
-        document.getElementById("qrBox").style.display = "flex";
-        QRCode.toCanvas(document.getElementById("qrCanvas"), result.publicUrl, { width: 220, margin: 1 });
+        renderQrCode(result.publicUrl);
         lastGeneratedConfig = result.config;
         lastGeneratedId = result.record && result.record.id ? result.record.id : `${data.sector}/${data.slug}`;
         document.getElementById("configPreview").textContent = JSON.stringify(result.config, null, 2);
