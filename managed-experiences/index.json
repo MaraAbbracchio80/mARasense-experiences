@@ -355,17 +355,17 @@
     "type": "multi-target",
     "slug": "impasto55",
     "createdAt": "2026-06-11T11:11:14.782Z",
-    "updatedAt": "2026-06-11T11:11:14.782Z",
+    "updatedAt": "2026-06-11T11:43:36.981Z",
     "folder": "managed-experiences/food/impasto55/",
     "publicUrl": "https://marasenseexperiences-ar.web.app/managed-experiences/food/impasto55/",
-    "sharedImage": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Ffood%2Fimpasto55%2Fstorage%2Fshared.png?alt=media&token=c7821b54-0b54-4670-bcc2-1f730a0d83df",
-    "targetFile": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Ffood%2Fimpasto55%2Fstorage%2Ftargets.mind?alt=media&token=44243961-b563-490e-b006-a85ea43b92db",
-    "contentFile": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Ffood%2Fimpasto55%2Fstorage%2Fcontent-1.mp4?alt=media&token=44ddec5e-2264-4c41-87c1-e91988055f6a",
+    "sharedImage": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Ffood%2Fimpasto55%2Fstorage%2Fshared.png?alt=media&token=64ec0556-0d1e-499b-bbff-7aa7cfa6fabd",
+    "targetFile": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Ffood%2Fimpasto55%2Fstorage%2Ftargets.mind?alt=media&token=5d921014-a7a4-4552-9cb7-603e171fdbe9",
+    "contentFile": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Ffood%2Fimpasto55%2Fstorage%2Fcontent-1.mp4?alt=media&token=15444c23-e783-4355-bb23-054624eb279d",
     "targetImages": [
       {
         "id": 0,
         "label": "tovagliolo",
-        "file": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Ffood%2Fimpasto55%2Fstorage%2Ftarget-1.png?alt=media&token=53b66187-9c61-4cad-b4cc-badfb4f5e83f",
+        "file": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Ffood%2Fimpasto55%2Fstorage%2Ftarget-1.png?alt=media&token=ffe97cab-aa8b-45f8-9493-012267ab5c00",
         "originalFile": "impasto_55.png"
       }
     ],
@@ -377,7 +377,7 @@
           0
         ],
         "targetId": 0,
-        "file": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Ffood%2Fimpasto55%2Fstorage%2Fcontent-1.mp4?alt=media&token=44ddec5e-2264-4c41-87c1-e91988055f6a",
+        "file": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Ffood%2Fimpasto55%2Fstorage%2Fcontent-1.mp4?alt=media&token=15444c23-e783-4355-bb23-054624eb279d",
         "kind": "video",
         "originalFile": "impasto55.mp4",
         "audioFile": "",
@@ -388,7 +388,7 @@
       {
         "id": 0,
         "contentId": 0,
-        "content": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Ffood%2Fimpasto55%2Fstorage%2Fcontent-1.mp4?alt=media&token=44ddec5e-2264-4c41-87c1-e91988055f6a",
+        "content": "https://firebasestorage.googleapis.com/v0/b/marasenseexperiences-ar.firebasestorage.app/o/managed-experiences%2Ffood%2Fimpasto55%2Fstorage%2Fcontent-1.mp4?alt=media&token=15444c23-e783-4355-bb23-054624eb279d",
         "audioFile": "",
         "kind": "video",
         "label": "video instagram"
